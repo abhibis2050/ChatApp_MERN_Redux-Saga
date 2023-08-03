@@ -1,6 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import background from "../assets/background.png";
 import LoginImage from "../assets/login.png";
+import { faLock, faUser } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 const Login = () => {
   const navigate = useNavigate();
   return (
@@ -12,7 +15,7 @@ const Login = () => {
             {/* Left Part */}
             <div className="bg-white w-1/2 pt-10 ">
               <div>
-                <img src={LoginImage} className="mt-4 " />
+                <img src={LoginImage} className="mt-4" />
               </div>
             </div>
             {/* Right Part */}
@@ -23,28 +26,36 @@ const Login = () => {
                 </h1>
               </div>
               <form className=" mx-20 flex flex-col space-y-4 py-4">
-                <input
-                  type="text"
-                  placeholder="Enter Your Email"
-                  className="rounded-full py-2 bg-white px-6 outline-none"
-                />
+                <div className=" relative">
+                <FontAwesomeIcon icon={faUser} className="absolute top-3 left-4"/>
+                  <input
+                    type="text"
+                    placeholder="Enter Your Email"
+                    className="rounded-full py-2 bg-white pr-6 pl-12 outline-none w-full"
+                  />
+                </div>
+
+                <div className=" relative">
+                <FontAwesomeIcon icon={faLock} className="absolute top-3 left-4"/>
                 <input
                   type="text"
                   placeholder="Enter Your Password"
-                  className="rounded-full py-2 bg-white px-6 outline-none"
+                  className="rounded-full py-2 bg-white pr-6 pl-12  outline-none w-full"
                 />
+                </div>
+                
               </form>
-              <div className=" mx-20 space-x-4 pt-8">
-                <button className="bg-gradButton rounded-full text-gray-800 px-4 py-1">
-                  Create Account
+              <div className=" mx-20 space-x-4 pt-4">
+                <button className="bg-gradButton rounded-full text-gray-800 px-8 py-1  ">
+                  Sign In
                 </button>
                 <button
-                  className=" rounded-full text-white px-8 py-1 border-2 border-white "
+                  className="border-2 border-white  rounded-full text-white px-4 py-1 "
                   onClick={() => {
                     navigate("/signUp");
                   }}
                 >
-                  Sign In
+                  Create Account
                 </button>
               </div>
             </div>
