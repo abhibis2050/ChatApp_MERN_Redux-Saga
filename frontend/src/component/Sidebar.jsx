@@ -6,14 +6,25 @@ import {
   faUser,
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
-import Logo from "../assets/chatlogo.png";
+import Logo from "../assets/smily.png";
+import Chatzi from "../assets/Chatzi.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-const Sidebar = () => {
+// eslint-disable-next-line react/prop-types
+const Sidebar = ({ open, changeOpen }) => {
   return (
-    <div className=" space-y-3">
+    <div className="space-y-3">
       {/* logo */}
-      <div className="">
-        <img src={Logo} />
+      <div className="h-20">
+        {!open ? (
+          <div onClick={changeOpen}>
+            <img src={Logo} className="w-14 h-12" />
+          </div>
+        ) : (
+          <div className="flex items-center space-x-2 " onClick={changeOpen}>
+            <img src={Logo} className="w-14 h-12" />
+            <img src={Chatzi} className="w-32 h-9" />
+          </div>
+        )}
       </div>
       {/* all other button */}
       <div className="h-[78vh] py-44">
@@ -27,7 +38,7 @@ const Sidebar = () => {
       </div>
       {/* logout */}
       <div className="">
-        <SidebarComponent icon={faRightFromBracket} value={"Logout"}/>
+        <SidebarComponent icon={faRightFromBracket} value={"Logout"} />
       </div>
     </div>
   );
@@ -37,8 +48,11 @@ export default Sidebar;
 
 export const SidebarComponent = ({ icon, value }) => {
   return (
-    <div className="flex items-center space-x-4 px-4 py-2 cursor-pointer">
-      <FontAwesomeIcon icon={icon} className="text-white text-3xl" />
+    <div className="flex items-center space-x-10 py-2 px-4 cursor-pointer ">
+      <FontAwesomeIcon
+        icon={icon}
+        className="text-white text-3xl text-center"
+      />
       <h1 className="text-white text-2xl">{value}</h1>
     </div>
   );

@@ -8,16 +8,20 @@ import {
   faSearch,
 } from "@fortawesome/free-solid-svg-icons";
 import { faFaceSmile } from "@fortawesome/free-regular-svg-icons";
+import { useState } from "react";
 
 const ChatPage = () => {
+  const [open,setOpen] = useState(false)
   return (
     <div className="bg-bluebase w-full h-screen flex fixed">
       {/* sidebar */}
-      <div className=" w-[15%] mx-3 my-4">
-        <Sidebar />
+      <div className={`${open?"w-[12%]":"w-[3%]"} mx-3 my-4`}>
+        <Sidebar open={open} changeOpen={()=>{
+          setOpen(!open)
+        }}/>
       </div>
       {/* contact and chat area */}
-      <div className="bg-slate-200 flex space-x-4 w-[85%] rounded-3xl my-4 mr-3 p-4">
+      <div className={`${open?"w-[88%] ":"w-[97%] "} bg-slate-200 flex space-x-4 rounded-3xl my-4 mr-3 p-4`}>
         {/* contact search and profile */}
         <div className=" w-1/5 rounded-3xl px-2 py-2 bg-white">
           <div className="flex space-x-2 items-center bg-red-200 rounded-full">
