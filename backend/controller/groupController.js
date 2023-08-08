@@ -22,7 +22,7 @@ exports.createGroup = async (req, res) => {
         },
       }
     );
-    await User.findOneAndUpdate({ _id: req.user }, { isGroupAdmin: true });
+    // await User.findOneAndUpdate({ _id: req.user }, { isGroupAdmin: true });
 
     return res.status(201).send({
       success: true,
@@ -78,18 +78,22 @@ exports.addGroupMembers = async (req, res) => {
   }
 };
 
-exports.AddGroupAdmin = async (req, res) => {
+exports.updateAsGroupAdmin = async (req, res) => {
   try {
+    const { GroupId, userId } = req.query;
+    console.log(req.user);
+   
+
+
 
   } catch (error) {
     return res.status(500).send({ success: false, message: error.message });
   }
 };
 
-exports.RemoveGroupAdmin = async (req, res) => {
-    try {
-  
-    } catch (error) {
-      return res.status(500).send({ success: false, message: error.message });
-    }
-  };
+exports.RemovefromGroupAdmin = async (req, res) => {
+  try {
+  } catch (error) {
+    return res.status(500).send({ success: false, message: error.message });
+  }
+};
