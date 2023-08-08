@@ -48,12 +48,12 @@ export default Sidebar;
 
 export const SidebarComponent = ({ icon, value }) => {
   return (
-    <div className="flex items-center space-x-10 py-2 px-4 cursor-pointer ">
+    <div className="flex items-center space-x-10 py-2 px-4 cursor-pointer group hover:bg-white hover:rounded-full">
       <FontAwesomeIcon
         icon={icon}
-        className="text-white text-3xl text-center"
+        className={`text-white text-3xl text-center group-hover:text-blue-700`}
       />
-      <h1 className="text-white text-2xl">{value}</h1>
+      <h1 className="text-white text-2xl group-hover:text-blue-700">{value}</h1>
     </div>
   );
 };

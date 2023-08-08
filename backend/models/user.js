@@ -14,22 +14,26 @@ const userSchema = new mongoose.Schema({
     type: String,
   },
   avatar: {
-    id:{
-        type:String
+    id: {
+      type: String,
     },
-    secure_url:{
-        type:String
-    }
+    secure_url: {
+      type: String,
+    },
   },
   email: {
     type: String,
     required: [true, "Email is required"],
   },
-  refreshToken:{
-    type:String
+  password: {
+    type: "String",
+    required: [true, "please enter your password"],
   },
-  refreshTokenExpiry:{
-    type:Date
+  refresh_token: {
+    type: String,
+  },
+  refresh_token_expiry: {
+    type: Date,
   },
   forgotPasswordToken: {
     type: String,
@@ -37,21 +41,26 @@ const userSchema = new mongoose.Schema({
   forgotPasswordExpiry: {
     type: Date,
   },
-  contacts:[
+  contacts: [
     {
-      type:ObjectId,
-      ref:"user"
-    }
+      type: ObjectId,
+      ref: "user",
+    },
   ],
-  isGroupAdmin:{
+  blockContacts:[
+    {
+      type: ObjectId,
+      ref: "user",
+    },
+  ],
+  isGroupAdmin: {
     type: Boolean,
-    default:fasle
+    default: false,
   },
-  groupId:{
+  groupId: {
     type: ObjectId,
     ref: "groupMessage",
   },
 });
-
 
 module.exports = mongoose.model("user", userSchema);

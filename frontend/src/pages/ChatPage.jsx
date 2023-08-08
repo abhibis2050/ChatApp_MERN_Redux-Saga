@@ -9,35 +9,43 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faFaceSmile } from "@fortawesome/free-regular-svg-icons";
 import { useState } from "react";
+import FriendProfile from "../component/FriendProfile";
 
 const ChatPage = () => {
-  const [open,setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
   return (
     <div className="bg-bluebase w-full h-screen flex fixed">
       {/* sidebar */}
-      <div className={`${open?"w-[12%]":"w-[3%]"} mx-3 my-4`}>
-        <Sidebar open={open} changeOpen={()=>{
-          setOpen(!open)
-        }}/>
+      <div className={`${open ? "w-[12%]" : "w-[3%]"} mx-3 my-4`}>
+        <Sidebar
+          open={open}
+          changeOpen={() => {
+            setOpen(!open);
+          }}
+        />
       </div>
       {/* contact and chat area */}
-      <div className={`${open?"w-[88%] ":"w-[97%] "} bg-slate-200 flex space-x-4 rounded-3xl my-4 mr-3 p-4`}>
+      <div
+        className={`${
+          open ? "w-[88%]" : "w-[97%]"
+        } bg-slate-200 flex space-x-4 rounded-3xl my-4 mr-3 p-4`}
+      >
         {/* contact search and profile */}
         <div className=" w-1/5 rounded-3xl px-2 py-2 bg-white">
-          <div className="flex space-x-2 items-center bg-red-200 rounded-full">
+          <div className="flex space-x-2 items-center rounded-full">
             <img src={avatar} alt="" className=" w-12 h-12 rounded-full" />
             <h1>Ron</h1>
           </div>
           <div className="flex items-center rounded-full space-x-2 relative my-2">
             <input
               placeholder="Search Name"
-              className="rounded-full w-full  bg-blue-200 py-3 px-4 outline-none"
+              className="rounded-full w-full bg-slate-200 py-3 px-4 outline-none"
             />
             <FontAwesomeIcon icon={faSearch} className="absolute right-7" />
           </div>
-          <div>Recent Chats</div>
+          <div className="my-2">Recent Chats</div>
           {/* contat area */}
-          <div className="h-[85%] overflow-y-auto space-y-1 pb-4">
+          <div className="h-[80%] overflow-y-auto no-scrollbar space-y-1 pt-4 rounded-3xl ">
             <EachChatComponent />
             <EachChatComponent />
             <EachChatComponent isActive={true} />
@@ -67,11 +75,17 @@ const ChatPage = () => {
               </div>
             </div>
             <div className="flex items-center mr-4">
-              <FontAwesomeIcon icon={faBars} />
+              <FriendProfile
+                button={
+                  <FontAwesomeIcon icon={faBars} className="text-xl w-12 " />
+                }
+              />
             </div>
           </div>
           {/*chat messages area */}
-          <div className="bg-white rounded-3xl py-4 px-4 h-[71vh]">hello</div>
+          <div className="bg-white rounded-3xl py-4 px-4 h-[71vh]">
+            <ChatBubble/>
+          </div>
           {/* send messgae area*/}
           <div className="flex justify-between items-center bg-white rounded-3xl px-4 py-5">
             <div className="flex space-x-4 w-[90%]">
@@ -120,6 +134,21 @@ export const EachChatComponent = ({ isActive }) => {
       <div>
         <h1>Harry Potter</h1>
         <h1 className="text-sm"> last message</h1>
+      </div>
+    </div>
+  );
+};
+
+export const ChatBubble = () => {
+  return (
+    <div>
+      <div className="chat chat-start ">
+        <div className="chat-bubble bg-purple-800">I have the high ground.</div>
+      </div>
+      <div className={`chat chat-end`}>
+        <div className="chat-bubble bg-blue-800">
+          You underestimate my power!
+        </div>
       </div>
     </div>
   );
