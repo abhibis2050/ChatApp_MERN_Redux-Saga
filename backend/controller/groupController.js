@@ -80,12 +80,37 @@ exports.addGroupMembers = async (req, res) => {
 
 exports.updateAsGroupAdmin = async (req, res) => {
   try {
-    const { GroupId, userId } = req.query;
-    console.log(req.user);
-   
+    const { groupId, userId } = req.query;
+    // console.log(req.user);
 
+    const getGroup = await Group.findOne({ _id: groupId });
+    // console.log(getGroup?.groupMembers.includes(userId));
 
+    // getGroup?.groupMembers.includes(userId)
+    if (getGroup?.groupAdmins.includes(req.user._id) !== true) {
+      return res
+        .status(400)
+        .send({ success: false, message: "You Are Not An Admin" });
+    }
+    if (getGroup?.groupMembers.includes(userId) !== true) {
+      return res
+        .status(400)
+        .send({ success: false, message: "user is not a member of the group" });
+    } else if (getGroup?.groupAdmins.includes(userId) === true) {
+      return res
+        .status(400)
+        .send({ success: false, message: "user is already an admin" });
+    } else {
+      getGroup.groupAdmins.push(userId);
 
+      await Group.findOneAndUpdate(
+        { _id: groupId },
+        { $push: { groupAdmins: userId } }
+      );
+      return res
+        .status(200)
+        .send({ success: true, message: "user is now an admin" });
+    }
   } catch (error) {
     return res.status(500).send({ success: false, message: error.message });
   }
@@ -93,6 +118,36 @@ exports.updateAsGroupAdmin = async (req, res) => {
 
 exports.RemovefromGroupAdmin = async (req, res) => {
   try {
+    const { groupId, userId } = req.query;
+    let remainingArray;
+    let newAdmins;
+    console.log(req.user);
+
+    const getGroup = await Group.findOne({ _id: groupId });
+    // console.log(getGroup?.groupAdmins.includes(req.user._id))
+
+    if (getGroup?.groupAdmins.includes(req.user._id) !== true) {
+      return res
+        .status(400)
+        .send({ success: false, message: "You Are Not An Admin" });
+    }
+
+    if (getGroup?.groupAdmins.includes(userId) === true) {
+      remainingArray = getGroup?.groupAdmins?.filter((u) => {
+        return u.toString() !== userId;
+      });
+    }
+
+    // console.log("remainingArray--->", remainingArray);
+
+    await Group.findOneAndUpdate(
+      { _id: groupId },
+      { groupAdmins: remainingArray }
+    );
+
+    return res
+      .status(400)
+      .send({ success: false, message: "Admin Removed"});
   } catch (error) {
     return res.status(500).send({ success: false, message: error.message });
   }
