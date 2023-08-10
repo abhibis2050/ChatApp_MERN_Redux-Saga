@@ -13,6 +13,8 @@ import Sidebar from "../component/Sidebar";
 
 const ChatPage = () => {
   const [open, setOpen] = useState(false);
+  const [contactOpen, setContactOpen] = useState(false);
+
   return (
     <div className="bg-bluebase w-full h-screen flex fixed">
       {/* sidebar */}
@@ -31,6 +33,7 @@ const ChatPage = () => {
         } bg-slate-200 flex space-x-4 rounded-3xl my-4 mr-3 p-4`}
       >
         {/* contact search and profile */}
+
         <div className=" w-1/5 rounded-3xl px-2 py-2 bg-white">
           <div className="flex space-x-2 items-center rounded-full">
             <img src={avatar} alt="" className=" w-12 h-12 rounded-full" />
@@ -84,7 +87,7 @@ const ChatPage = () => {
           </div>
           {/*chat messages area */}
           <div className="bg-white rounded-3xl py-4 px-4 h-[71vh]">
-            <ChatBubble/>
+            <ChatBubble />
           </div>
           {/* send messgae area*/}
           <div className="flex justify-between items-center bg-white rounded-3xl px-4 py-5">

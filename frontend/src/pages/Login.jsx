@@ -10,18 +10,18 @@ const Login = () => {
     <div>
       <div className="fixed">
         <img src={background} className="relative" />
-        <div className="flex w-full h-[500px] absolute top-28 px-72 ">
-          <div className="flex shadow-2xl shadow-blue-400 w-full bg-red-300 z-10">
+        <div className="flex w-full h-[500px] absolute top-72 px-80">
+          <div className="flex shadow-2xl shadow-blue-400 w-full z-10">
             {/* Left Part */}
-            <div className="bg-white w-1/2 pt-10 ">
-              <div>
+            <div className="bg-white w-1/2">
+              <div className="">
                 <img src={LoginImage} className="mt-4" />
               </div>
             </div>
             {/* Right Part */}
             <div className="bg-bluebase w-1/2 py-24 space-y-3">
               <div className="mb-10">
-                <h1 className="text-white font-semibold text-5xl mx-20">
+                <h1 className="text-white font-semibold text-5xl mx-20 flex justify-center">
                   Login
                 </h1>
               </div>

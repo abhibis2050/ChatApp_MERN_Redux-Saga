@@ -1,10 +1,10 @@
-import React from "react";
 
-const Contacts = ({onClick}) => {
+
+const Contacts = () => {
   return (
-    <div>
-      <div  className="bg-white w-56 h-screen">HELLO CONTACT</div>
-    </div>
+    <>
+     
+    </>
   );
 };
 

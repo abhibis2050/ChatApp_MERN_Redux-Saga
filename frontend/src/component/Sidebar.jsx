@@ -9,8 +9,9 @@ import {
 import Logo from "../assets/smily.png";
 import Chatzi from "../assets/Chatzi.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 // eslint-disable-next-line react/prop-types
-const Sidebar = ({ open, changeOpen }) => {
+const Sidebar = ({ open, changeOpen,SidebarClick }) => {
   return (
     <div className="space-y-3">
       {/* logo */}
@@ -31,7 +32,7 @@ const Sidebar = ({ open, changeOpen }) => {
         <div className="space-y-4">
           <SidebarComponent icon={faEnvelope} value={"Messages"} />
           <SidebarComponent icon={faUsers} value={"Groups"} />
-          <SidebarComponent icon={faContactBook} value={"Contacts"}/>
+          <SidebarComponent icon={faContactBook} value={"Contacts"} />
           <SidebarComponent icon={faBell} value={"Notifications"} />
           <SidebarComponent icon={faUser} value={"Profile"} />
         </div>

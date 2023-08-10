@@ -11,12 +11,12 @@ const Register = () => {
     <div>
       <div className="fixed">
         <img src={background} className="relative" />
-        <div className="flex w-full h-[500px] absolute top-28 px-72 ">
+        <div className="flex w-full h-[500px] absolute top-72 px-72 ">
           <div className="flex shadow-2xl shadow-blue-400 w-full bg-red-300 z-10">
             {/* Left Part */}
-            <div className="bg-white w-1/2 pt-24 px-10">
+            <div className="bg-white w-1/2 pt-10 px-10">
               <div>
-                <img src={SignupImage} className="mt-4 " />
+                <img src={SignupImage} className="" />
               </div>
             </div>
             {/* Right Part */}
