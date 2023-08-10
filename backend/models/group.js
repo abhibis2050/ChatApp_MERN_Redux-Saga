@@ -36,4 +36,4 @@ const groupSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("groupMessage", groupSchema);
+module.exports = mongoose.model("group", groupSchema);

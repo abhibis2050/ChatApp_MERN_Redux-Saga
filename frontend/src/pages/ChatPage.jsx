@@ -1,4 +1,3 @@
-import Sidebar from "../component/sidebar";
 import avatar from "../assets/hp.jpg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -10,6 +9,7 @@ import {
 import { faFaceSmile } from "@fortawesome/free-regular-svg-icons";
 import { useState } from "react";
 import FriendProfile from "../component/FriendProfile";
+import Sidebar from "../component/Sidebar";
 
 const ChatPage = () => {
   const [open, setOpen] = useState(false);

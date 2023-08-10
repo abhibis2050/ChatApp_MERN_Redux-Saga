@@ -57,10 +57,10 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  groupId: {
+  groupIds: [{
     type: ObjectId,
     ref: "groupMessage",
-  },
+  }],
 });
 
 module.exports = mongoose.model("user", userSchema);

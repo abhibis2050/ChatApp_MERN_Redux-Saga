@@ -20,6 +20,10 @@ const messageSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  chatId:{
+    type: ObjectId,
+    ref: "chat",
+  },
   groupId: {
     type: ObjectId,
     ref: "groupMessage",

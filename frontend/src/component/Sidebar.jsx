@@ -1,8 +1,8 @@
 import {
   faBell,
+  faContactBook,
   faEnvelope,
   faRightFromBracket,
-  faTasks,
   faUser,
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
@@ -31,7 +31,7 @@ const Sidebar = ({ open, changeOpen }) => {
         <div className="space-y-4">
           <SidebarComponent icon={faEnvelope} value={"Messages"} />
           <SidebarComponent icon={faUsers} value={"Groups"} />
-          <SidebarComponent icon={faTasks} value={"Contacts"} />
+          <SidebarComponent icon={faContactBook} value={"Contacts"}/>
           <SidebarComponent icon={faBell} value={"Notifications"} />
           <SidebarComponent icon={faUser} value={"Profile"} />
         </div>
@@ -46,9 +46,13 @@ const Sidebar = ({ open, changeOpen }) => {
 
 export default Sidebar;
 
-export const SidebarComponent = ({ icon, value }) => {
+// eslint-disable-next-line react/prop-types
+export const SidebarComponent = ({ icon, value, onClick }) => {
   return (
-    <div className="flex items-center space-x-10 py-2 px-4 cursor-pointer group hover:bg-white hover:rounded-full">
+    <div
+      onClick={onClick}
+      className="flex items-center space-x-10 py-2 px-4 cursor-pointer group hover:bg-white hover:rounded-full"
+    >
       <FontAwesomeIcon
         icon={icon}
         className={`text-white text-3xl text-center group-hover:text-blue-700`}

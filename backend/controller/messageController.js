@@ -1,16 +1,12 @@
 const Message = require("../models/messages");
 
-
 exports.sendOneToOneMessage = async (req, res) => {
   try {
     console.log(req.user);
-    const { recieverUserId, message } = req.body;
 
-    const createMessage = await Message.create({
-      message,
-      reciever: recieverUserId,
-      sender: req.user._id,
-    });
+    req.body.sender=req.user._id
+
+    const createMessage = await Message.create(req.body);
 
     return res
       .status(201)
@@ -54,6 +50,27 @@ exports.getAllGroupMessages = async (req, res) => {
     return res
       .status(200)
       .send({ success: true, messages: getAllGroupMessages });
+  } catch (error) {
+    return res.status(500).send({ success: false, message: error.message });
+  }
+};
+
+exports.getAlloneToOneMessages = async (req, res) => {
+  try {
+    const { recieverId } = req.query;
+   
+    if (!recieverId) {
+      return res
+        .status(400)
+        .send({ success: true, messages: "Enter Reciever Id" });
+    }
+
+    const getAllMessages = await Message.find({
+      sender: req.user._id,
+      reciever: recieverId,
+    });
+
+    return res.status(200).send({ success: true, messages: getAllMessages });
   } catch (error) {
     return res.status(500).send({ success: false, message: error.message });
   }

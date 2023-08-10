@@ -176,8 +176,10 @@ exports.getAccessToken = async (req, res) => {
 
 exports.authUser = async (req, res) => {
   try {
-    // console.log(req.user)
     const getUser = await User.findOne({ _id: req.user._id })
+      .populate({
+        path: "contacts",
+      })
       .select("-refresh_token")
       .select("-refresh_token_expiry");
     return res.status(200).send({ success: true, authUser: getUser });
@@ -186,4 +188,17 @@ exports.authUser = async (req, res) => {
   }
 };
 
-exports.getUserWithName = async (req, res) => {};
+exports.getSingleUserDetailsWithId = async (req, res) => {
+  try {
+    const { userId } = req.query;
+    const getUser = await User.findOne({ _id: userId })
+      .select("-refresh_token")
+      .select("-refresh_token_expiry");
+    return res.status(200).send({ success: true, authUser: getUser });
+  } catch (error) {
+    return res.status(500).send({ success: false, message: error.message });
+  }
+};
+
+
+

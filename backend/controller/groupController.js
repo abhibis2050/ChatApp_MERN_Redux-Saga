@@ -1,9 +1,11 @@
 const Group = require("../models/group");
 const User = require("../models/user");
-const mongoose = require("mongoose");
 
+const mongoose = require("mongoose");
+var ObjectId = require("mongodb").ObjectId;
 exports.createGroup = async (req, res) => {
   try {
+    console.log(req.user);
     req.body.CreatedBy = req.user;
     const checkGroup = await Group.findOne({ groupName: req.body.groupName });
     if (checkGroup) {
@@ -17,12 +19,15 @@ exports.createGroup = async (req, res) => {
       { _id: createGroup._id },
       {
         $push: {
-          groupAdmins: req.user,
           groupMembers: req.user,
+          groupAdmins: req.user,
         },
       }
     );
-    // await User.findOneAndUpdate({ _id: req.user }, { isGroupAdmin: true });
+    await User.findOneAndUpdate(
+      { _id: req.user },
+      { $push: { groupIds: createGroup?._id } }
+    );
 
     return res.status(201).send({
       success: true,
@@ -36,12 +41,15 @@ exports.createGroup = async (req, res) => {
 
 exports.UsersNotPresentInGroup = async (req, res) => {
   const { AllUsers } = req.body;
-  const { GroupId } = req.query;
+  const { groupId } = req.query;
 
+  if (!groupId) {
+    return res.status(400).send({ success: true, messages: "Enter Group Id" });
+  }
   let remainingUser = [];
 
   const findGroup = await Group.findOneAndUpdate({
-    _id: GroupId,
+    _id: groupId,
   });
 
   const alreadyGroupMembers = findGroup?.groupMembers;
@@ -61,15 +69,23 @@ exports.UsersNotPresentInGroup = async (req, res) => {
 
 exports.addGroupMembers = async (req, res) => {
   try {
-    const { GroupId } = req.query;
+    const { groupId } = req.query;
     const { AddingGroupMembers } = req.body;
-
+    if (!groupId) {
+      return res.status(400).send({ success: true, messages: "Enter Group Id" });
+    }
     AddingGroupMembers.map(async (singleMember) => {
+      // console.log(singleMember);
       await Group.findOneAndUpdate(
-        { _id: GroupId },
+        { _id: groupId },
         { $push: { groupMembers: singleMember } }
       );
+      await User.findOneAndUpdate(
+        { _id: singleMember },
+        { $push: { groupIds: groupId } }
+      );
     });
+
     return res
       .status(200)
       .send({ success: true, message: "Users Added successfully" });
@@ -145,10 +161,12 @@ exports.RemovefromGroupAdmin = async (req, res) => {
       { groupAdmins: remainingArray }
     );
 
-    return res
-      .status(400)
-      .send({ success: false, message: "Admin Removed"});
+    return res.status(400).send({ success: false, message: "Admin Removed" });
   } catch (error) {
     return res.status(500).send({ success: false, message: error.message });
   }
 };
+
+// Remove Member From Group
+
+
