@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
+const cloudinary = require("cloudinary");
 
 //creating Refresh Token
 const createRefreshToken = (payload) => {
@@ -17,7 +18,11 @@ const createAccessToken = (payload) => {
 
 exports.registerUser = async (req, res) => {
   try {
-    const { firstName, lastName, email, password, pic } = req.body;
+    const { firstName, lastName, email, password, avatar } = req.body;
+    let profilePictureFile;
+
+    console.log(req.body);
+    console.log(req.files.avatar);
 
     if (!firstName || !lastName || !email || !password) {
       return res
@@ -50,6 +55,22 @@ exports.registerUser = async (req, res) => {
       });
     }
 
+    if (req.files) {
+      if (req.files.avatar) {
+        profilePictureFile = await cloudinary.v2.uploader.upload(
+          req.files.avatar.tempFilePath,
+          { folder: "Chat_Profile_Pictures" }
+        );
+      }
+      console.log(profilePictureFile);
+    }
+
+    const profileAvatar = profilePictureFile && {
+      id: profilePictureFile.public_id,
+      secure_url: profilePictureFile.public_secure_url,
+    };
+    req.body.avatar = profileAvatar ? profileAvatar : "";
+
     const userExists = await User.findOne({ email });
     if (userExists) {
       return res
@@ -58,13 +79,8 @@ exports.registerUser = async (req, res) => {
     }
 
     const hashPassword = await bcrypt.hash(password, 10);
-
-    const user = await User.create({
-      firstName,
-      lastName,
-      email,
-      password: hashPassword,
-    });
+    req.body.password = hashPassword
+    const user = await User.create(req.body);
 
     if (user) {
       return res.status(201).send({
@@ -199,6 +215,3 @@ exports.getSingleUserDetailsWithId = async (req, res) => {
     return res.status(500).send({ success: false, message: error.message });
   }
 };
-
-
-

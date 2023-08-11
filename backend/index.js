@@ -5,12 +5,29 @@ require("dotenv").config();
 const morgan = require("morgan");
 const connectWithMongodb = require("./config/db");
 const bodyParser = require("body-parser");
+const cloudinary = require("cloudinary");
+const fileUpload = require("express-fileupload");
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 // logger
 app.use(morgan("tiny"));
+
+app.use(
+  fileUpload({
+    useTempFiles: true,
+    tempFileDir: "/tmp/",
+  })
+);
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
 
 app.use(
   cors({
