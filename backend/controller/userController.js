@@ -115,14 +115,14 @@ exports.login = async (req, res) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res.send({ success: false, message: "User Not Found" });
+      return res.status(400).send({ success: false, message: "User Not Found" });
     }
 
     //to check if the password matches or not
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
-      res.send({
+      return res.status(400).send({
         success: false,
         message: "password didnot match,Try Again!!",
       });
