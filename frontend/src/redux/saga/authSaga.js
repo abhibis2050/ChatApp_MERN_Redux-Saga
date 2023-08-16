@@ -1,6 +1,6 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { AccessTokenAction, AuthUserAction, loginUserAction } from "../api/authAction";
-import { setAuthUser, setToken } from "../app/authSlice";
+import { setAuthUser, setAuthUserLoading, setToken } from "../app/authSlice";
 import { toast } from "react-toastify";
 
  function* loginSaga(action){
@@ -38,14 +38,16 @@ function* accessTokenSaga(action){
 
     function* authUserSaga(action){
         try {
+            yield put(setAuthUserLoading({authUserLoading:true}))
             console.log(action?.payload);
            const response =  yield call (AuthUserAction,action?.payload)
            console.log("authUserSaga resposnse",response);
            if(response.status===200){
             yield put(setAuthUser({authUser:response?.data?.authUser}))
+            yield put(setAuthUserLoading({authUserLoading:false}))
            }
         } catch (error) {
-            console.log(error.message)
+            console.log(error)
         }
         }
 

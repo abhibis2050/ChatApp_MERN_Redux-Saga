@@ -10,10 +10,15 @@ import { faFaceSmile } from "@fortawesome/free-regular-svg-icons";
 import { useState } from "react";
 import FriendProfile from "../component/FriendProfile";
 import Sidebar from "../component/Sidebar";
+import { useDispatch, useSelector } from "react-redux";
 
 const ChatPage = () => {
+  const dispatch = useDispatch()
+  const{token,authUser,authUserLoading}=useSelector(state=>state.auth)
   const [open, setOpen] = useState(false);
   const [contactOpen, setContactOpen] = useState(false);
+  
+
 
   return (
     <div className="bg-bluebase w-full h-screen flex fixed">
@@ -37,7 +42,7 @@ const ChatPage = () => {
         <div className=" w-1/5 rounded-3xl px-2 py-2 bg-white">
           <div className="flex space-x-2 items-center rounded-full">
             <img src={avatar} alt="" className=" w-12 h-12 rounded-full" />
-            <h1>Ron</h1>
+            <h1>{authUser?.firstName} {authUser?.lastName}</h1>
           </div>
           <div className="flex items-center rounded-full space-x-2 relative my-2">
             <input
