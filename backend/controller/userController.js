@@ -18,7 +18,7 @@ const createAccessToken = (payload) => {
 
 exports.registerUser = async (req, res) => {
   try {
-    const { firstName, lastName, email, password, avatar } = req.body;
+    const { firstName, lastName, email, password } = req.body;
     let profilePictureFile;
 
     console.log(req.body);
@@ -65,11 +65,13 @@ exports.registerUser = async (req, res) => {
       console.log(profilePictureFile);
     }
 
-    const profileAvatar = profilePictureFile && {
-      id: profilePictureFile.public_id,
-      secure_url: profilePictureFile.public_secure_url,
-    };
-    req.body.avatar = profileAvatar ? profileAvatar : "";
+    // const profileAvatar = profilePictureFile && {
+    //   id: profilePictureFile.public_id,
+    //   secure_url: profilePictureFile.secure_url,
+    // };
+
+    // console.log("profileAvatar",profileAvatar)
+    // req.body.avatar = profileAvatar ? profileAvatar : "";
 
     const userExists = await User.findOne({ email });
     if (userExists) {
