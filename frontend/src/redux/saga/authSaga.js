@@ -1,7 +1,22 @@
 import { call, put, takeEvery } from "redux-saga/effects";
-import { AccessTokenAction, AuthUserAction, loginUserAction } from "../api/authAction";
+import { AccessTokenAction, AuthUserAction, loginUserAction, registerUserAction } from "../api/authAction";
 import { setAuthUser, setAuthUserLoading, setToken } from "../app/authSlice";
 import { toast } from "react-toastify";
+
+
+function* registerSaga(action){
+    try {
+        console.log(action?.payload);
+       const response =  yield call (registerUserAction,action?.payload)
+       console.log("registerUserAction resposnse",response);
+    //    if(response.status===201){
+           
+    //    }
+    } catch (error) {
+        // toast.warning(error?.response?.data?.message)
+    }
+    }
+
 
  function* loginSaga(action){
 try {
@@ -56,6 +71,7 @@ function* accessTokenSaga(action){
 
 
 export function* watchAuthAsync(){
+    yield takeEvery("REGISTER",registerSaga)
     yield takeEvery("LOGIN",loginSaga)
     yield takeEvery("ACCESS_TOKEN",accessTokenSaga)
     yield takeEvery("AUTH_USER",authUserSaga)
