@@ -13,7 +13,7 @@ import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 
 const Register = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const formData = new FormData();
   const [profileImageUpload, setProfileImageUpload] = useState();
@@ -26,8 +26,8 @@ const Register = () => {
   });
 
   const addUserHandler = () => {
-    if(userRegister?.password!==userRegister?.password){
-      toast.warning("password and confirm password didnot match")
+    if (userRegister?.password !== userRegister?.confirmPassword) {
+      toast.warning("password and confirm password didnot match");
     }
     if (profileImageUpload === undefined) {
       formData.append("firstName", userRegister?.firstName);
@@ -43,11 +43,20 @@ const Register = () => {
     }
 
     dispatch({
-      type:"REGISTER",
-      payload:{
+      type: "REGISTER",
+      payload: {
         body: formData,
-      }
-    })
+      },
+    });
+
+    setUserRegister({
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    });
+    setProfileImageUpload(undefined)
   };
 
   return (

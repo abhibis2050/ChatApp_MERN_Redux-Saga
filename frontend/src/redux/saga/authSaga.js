@@ -9,18 +9,17 @@ function* registerSaga(action){
         console.log(action?.payload);
        const response =  yield call (registerUserAction,action?.payload)
        console.log("registerUserAction resposnse",response);
-    //    if(response.status===201){
-           
-    //    }
+       if(response.status===201){
+           toast.success(response?.data?.message)
+       }
     } catch (error) {
-        // toast.warning(error?.response?.data?.message)
+        toast.warning(error?.response?.data?.message)
     }
     }
 
 
  function* loginSaga(action){
 try {
-    // console.log(action?.payload);
    const response =  yield call (loginUserAction,action?.payload)
    console.log("loginSaga resposnse",response);
    localStorage.setItem("User_email", action.payload.body.email);

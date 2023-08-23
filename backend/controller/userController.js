@@ -22,7 +22,7 @@ exports.registerUser = async (req, res) => {
     let profilePictureFile;
 
     console.log(req.body);
-    console.log(req.files.avatar);
+    // console.log(req.files.avatar);
 
     if (!firstName || !lastName || !email || !password) {
       return res
@@ -65,13 +65,13 @@ exports.registerUser = async (req, res) => {
       console.log(profilePictureFile);
     }
 
-    // const profileAvatar = profilePictureFile && {
-    //   id: profilePictureFile.public_id,
-    //   secure_url: profilePictureFile.secure_url,
-    // };
+    const profileAvatar = profilePictureFile && {
+      id: profilePictureFile.public_id,
+      secure_url: profilePictureFile.secure_url,
+    };
 
-    // console.log("profileAvatar",profileAvatar)
-    // req.body.avatar = profileAvatar ? profileAvatar : "";
+    console.log("profileAvatar",profileAvatar)
+    req.body.avatar = profileAvatar ? profileAvatar : "";
 
     const userExists = await User.findOne({ email });
     if (userExists) {
@@ -88,7 +88,7 @@ exports.registerUser = async (req, res) => {
       return res.status(201).send({
         success: true,
         message: "User Created Successfully",
-        data: user,
+        // data: user,
       });
     } else {
       return res.status(400).send({ message: "user not found" });
