@@ -8,7 +8,7 @@ exports.createChat = async (req, res) => {
 
     return res.status(201).send({
       success: true,
-      message: "Group Created Successfully",
+      message: "Chat Created Successfully",
       data: createChat,
     });
   } catch (error) {
@@ -18,9 +18,11 @@ exports.createChat = async (req, res) => {
 
 exports.getAllChats = async (req, res) => {
   try {
-    const allChats = await Chat.find({ sender: req.user._id }).populate({
-      path: "reciever",
-    });
+   
+    const allChats = await Chat.find({
+      $or: [{ sender: req.user._id }, { reciever: req.user._id }],
+    })
+     
 
     return res.status(200).send({
       success: true,
@@ -31,5 +33,3 @@ exports.getAllChats = async (req, res) => {
     return res.status(500).send({ success: false, message: error.message });
   }
 };
-
-

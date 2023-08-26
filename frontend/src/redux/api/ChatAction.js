@@ -9,7 +9,7 @@ export const createChatAction = async (payload) => {
   return response;
 };
 
-export const GetAllChats = async (payload) => {
+export const GetAllChatsActions = async (payload) => {
   const response = await axios.get(`${VITE_BASE_URL}/chat/getAllChats`, {
     headers: {
       Authorization: payload.token,

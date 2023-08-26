@@ -209,10 +209,11 @@ exports.authUser = async (req, res) => {
 exports.getSingleUserDetailsWithId = async (req, res) => {
   try {
     const { userId } = req.query;
+    console.log(req.query)
     const getUser = await User.findOne({ _id: userId })
       .select("-refresh_token")
       .select("-refresh_token_expiry");
-    return res.status(200).send({ success: true, authUser: getUser });
+    return res.status(200).send({ success: true, data: getUser });
   } catch (error) {
     return res.status(500).send({ success: false, message: error.message });
   }

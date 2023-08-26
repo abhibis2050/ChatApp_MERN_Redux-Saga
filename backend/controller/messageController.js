@@ -5,6 +5,7 @@ exports.sendOneToOneMessage = async (req, res) => {
     console.log(req.user);
 
     req.body.sender=req.user._id
+    // req.body.sender="64d28267e5b4e55f01544084"
 
     const createMessage = await Message.create(req.body);
 
@@ -57,18 +58,15 @@ exports.getAllGroupMessages = async (req, res) => {
 
 exports.getAlloneToOneMessages = async (req, res) => {
   try {
-    const { recieverId } = req.query;
+    const {chatId } = req.query;
    
-    if (!recieverId) {
+    if (!chatId) {
       return res
         .status(400)
-        .send({ success: true, messages: "Enter Reciever Id" });
+        .send({ success: true, messages: "Enter chatId Id" });
     }
 
-    const getAllMessages = await Message.find({
-      sender: req.user._id,
-      reciever: recieverId,
-    });
+    const getAllMessages = await Message.find({chatId:chatId});
 
     return res.status(200).send({ success: true, messages: getAllMessages });
   } catch (error) {

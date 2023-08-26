@@ -57,6 +57,10 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  // chatId:[{
+  //   type: ObjectId,
+  //   ref: "chat",
+  // }],
   groupIds: [{
     type: ObjectId,
     ref: "groupMessage",
