@@ -7,3 +7,12 @@ export const GetSingleUserWithIdAction = async (payload) => {
   );
   return response;
 };
+
+
+export const GetAllContactsAction = async (payload) => {
+  const response = await axios.get(
+    `${VITE_BASE_URL}/user/getAllUsers`
+  );
+  return response;
+};
+

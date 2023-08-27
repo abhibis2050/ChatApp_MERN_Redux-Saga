@@ -16,16 +16,17 @@ import { useDispatch, useSelector } from "react-redux";
 const ChatPage = () => {
   const dispatch = useDispatch();
   const { token, authUser } = useSelector((state) => state.auth);
-  const { sideBarIsActive } = useSelector((state) => state.user);
+  const { sideBarIsActive, allContacts } = useSelector((state) => state.user);
   const { allChats } = useSelector((state) => state.chat);
   const { allSingleChatMessages } = useSelector((state) => state.message);
   const [open, setOpen] = useState(false);
   const [receiverId, setRecieverId] = useState("");
   const [selectedChatId, setSelectedChatId] = useState("");
 
-  console.log("receiverId------>", receiverId);
-  console.log("selectedChatId------>", selectedChatId);
-  console.log("allSingleChatMessages------>", allSingleChatMessages);
+  // console.log("receiverId------>", receiverId);
+  // console.log("selectedChatId------>", selectedChatId);
+  // console.log("allSingleChatMessages------>", allSingleChatMessages);
+  console.log("allContacts------>", allContacts);
 
   useEffect(() => {
     dispatch({
@@ -35,6 +36,12 @@ const ChatPage = () => {
       },
     });
   }, [token, dispatch]);
+
+  useEffect(() => {
+    dispatch({
+      type: "GET_ALL_CONTACTS",
+    });
+  }, []);
 
   useEffect(() => {
     if (selectedChatId !== "") {
@@ -140,7 +147,28 @@ const ChatPage = () => {
               </>
             )}
             {sideBarIsActive.group && <>group</>}
-            {sideBarIsActive.contact && <>contact</>}
+            {sideBarIsActive.contact && (
+              <>
+                <div className=" text-xl px-4">All Contacts</div>
+                <div className="">
+                  {allContacts.map((singleContact) => {
+                    return (
+                      <>
+                        <ContactComponent
+                          name={singleContact?.firstName}
+                          email={singleContact?.email}
+                          Pic={
+                            singleContact
+                              ? singleContact?.avatar?.secure_url
+                              : Blank
+                          }
+                        />
+                      </>
+                    );
+                  })}
+                </div>
+              </>
+            )}
             {sideBarIsActive.notification && <>notification</>}
           </div>
         </div>
@@ -261,6 +289,31 @@ export const EachChatComponent = ({ isActive, name, profilePic, onClick }) => {
         </div>
 
         <h1 className="text-sm">last message</h1>
+      </div>
+    </div>
+  );
+};
+
+export const ContactComponent = ({ name, Pic, onClick, email, isActive }) => {
+  return (
+    <div
+      onClick={onClick}
+      className={`flex space-x-3 items-center pl-2 pr-12 py-2 ${
+        isActive
+          ? "bg-blue-500 rounded-full text-white"
+          : "hover:bg-blue-100 hover:rounded-full"
+      }`}
+    >
+      <div>
+        <img src={Pic} alt="" className=" w-14 h-12 rounded-full" />
+      </div>
+      <div className="w-full">
+        <div className="flex justify-between w-full">
+          <h1>{name}</h1>
+          {/* <div>{email}</div> */}
+        </div>
+
+        <h1 className="text-sm">{email}</h1>
       </div>
     </div>
   );

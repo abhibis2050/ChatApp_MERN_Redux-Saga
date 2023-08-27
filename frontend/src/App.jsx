@@ -23,12 +23,17 @@ function App() {
       dispatch({
         type: "AUTH_USER",
         payload: {
-          token
-        }
-        
+          token,
+        },
       });
     }
-  }, [token,dispatch]);
+  }, [token, dispatch]);
+
+  useEffect(() => {
+    dispatch({
+      type: "GET_ALL_CONTACTS",
+    });
+  }, []);
 
   return (
     <>

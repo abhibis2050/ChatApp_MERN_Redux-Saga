@@ -70,7 +70,7 @@ exports.registerUser = async (req, res) => {
       secure_url: profilePictureFile.secure_url,
     };
 
-    console.log("profileAvatar",profileAvatar)
+    console.log("profileAvatar", profileAvatar);
     req.body.avatar = profileAvatar ? profileAvatar : "";
 
     const userExists = await User.findOne({ email });
@@ -81,7 +81,7 @@ exports.registerUser = async (req, res) => {
     }
 
     const hashPassword = await bcrypt.hash(password, 10);
-    req.body.password = hashPassword
+    req.body.password = hashPassword;
     const user = await User.create(req.body);
 
     if (user) {
@@ -117,7 +117,9 @@ exports.login = async (req, res) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res.status(400).send({ success: false, message: "User Not Found" });
+      return res
+        .status(400)
+        .send({ success: false, message: "User Not Found" });
     }
 
     //to check if the password matches or not
@@ -209,7 +211,7 @@ exports.authUser = async (req, res) => {
 exports.getSingleUserDetailsWithId = async (req, res) => {
   try {
     const { userId } = req.query;
-    console.log(req.query)
+    console.log(req.query);
     const getUser = await User.findOne({ _id: userId })
       .select("-refresh_token")
       .select("-refresh_token_expiry");
@@ -217,4 +219,12 @@ exports.getSingleUserDetailsWithId = async (req, res) => {
   } catch (error) {
     return res.status(500).send({ success: false, message: error.message });
   }
+};
+
+exports.getAllUsers = async (req, res) => {
+  try {
+    const allUser = await User.find();
+    return res.status(200).send({ success: true, data: allUser });
+  } catch (error) {}
+  return res.status(500).send({ success: false, message: error.message });
 };
