@@ -1,5 +1,5 @@
 import avatar from "../assets/hp.jpg";
-import Blank from "../assets/blankAvatar.png";
+import Blank from "../assets/blank.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faAdd,
@@ -155,10 +155,10 @@ const ChatPage = () => {
                     return (
                       <>
                         <ContactComponent
-                          name={singleContact?.firstName}
+                          name={`${singleContact?.firstName} ${singleContact?.lastName}`}
                           email={singleContact?.email}
                           Pic={
-                            singleContact
+                            singleContact?.avatar
                               ? singleContact?.avatar?.secure_url
                               : Blank
                           }
