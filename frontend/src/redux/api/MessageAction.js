@@ -4,6 +4,7 @@ import axios from "axios";
 export const SendOneToOneMessageAction = async (payload) => {
   const response = await axios.post(
     `${VITE_BASE_URL}/message/sendOneToOneMessage`,
+    payload.body,
     {
       headers: {
         Authorization: payload.token,

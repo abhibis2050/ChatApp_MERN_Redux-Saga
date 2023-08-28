@@ -12,6 +12,9 @@ import { useEffect, useState } from "react";
 import FriendProfile from "../component/FriendProfile";
 import Sidebar from "../component/Sidebar";
 import { useDispatch, useSelector } from "react-redux";
+import { io } from "socket.io-client";
+
+const socket = io("http://localhost:8080");
 
 const ChatPage = () => {
   const dispatch = useDispatch();
@@ -21,10 +24,16 @@ const ChatPage = () => {
   const { allSingleChatMessages } = useSelector((state) => state.message);
   const [open, setOpen] = useState(false);
   const [selectedChat, setSelectedChat] = useState(undefined);
+  const [sendMessage, setSendMessage] = useState("");
 
+  useEffect(() => {
+    socket;
+  }, []);
 
+  
   // console.log("allChats------>", allChats);
   console.log("selectedChat------>", selectedChat);
+  console.log("sendMessage------>", sendMessage);
   // console.log("allSingleChatMessages------>", allSingleChatMessages);
   // console.log("allContacts------>", allContacts);
 
@@ -48,12 +57,28 @@ const ChatPage = () => {
       dispatch({
         type: "GET_ALL_ONE_TO_ONE_MESSAGE",
         payload: {
-          selectedChatId:selectedChat?._id,
+          selectedChatId: selectedChat?._id,
           token,
         },
       });
     }
   }, [dispatch, selectedChat, token]);
+
+  const sendMessageHandler = () => {
+    // console.log("send mesage handler clicked")
+    dispatch({
+      type: "SEND_ONE_TO_ONE_MESSAGE",
+      payload: {
+        body: {
+          message: sendMessage,
+          reciever: selectedChat?.oppositeId._id,
+          chatId: selectedChat?._id,
+        },
+        token,
+      },
+    });
+    setSendMessage("");
+  };
 
   return (
     <div className="bg-bluebase w-full h-screen flex fixed">
@@ -103,16 +128,20 @@ const ChatPage = () => {
             {sideBarIsActive?.message && (
               <>
                 {allChats?.map((singleChat) => {
-                  
-                    {/* console.log("singleChat------->", singleChat);  */}
-                  
+                  {
+                    /* console.log("singleChat------->", singleChat);  */
+                  }
+
                   return (
                     <>
                       <div
                         key={singleChat?._id}
                         onClick={() => {
-                          console.log("single chat id-------->",singleChat?._id);
-                          console.log("single chat",singleChat);
+                          console.log(
+                            "single chat id-------->",
+                            singleChat?._id
+                          );
+                          console.log("single chat", singleChat);
                           setSelectedChat(singleChat);
                         }}
                       >
@@ -139,7 +168,7 @@ const ChatPage = () => {
                     return (
                       <>
                         <ContactComponent
-                        key={singleContact?._id}
+                          key={singleContact?._id}
                           name={`${singleContact?.firstName} ${singleContact?.lastName}`}
                           email={singleContact?.email}
                           Pic={
@@ -159,7 +188,7 @@ const ChatPage = () => {
         </div>
         {/* chat */}
         <div className=" w-4/5 rounded-3xl space-y-3">
-          {selectedChat===undefined? (
+          {selectedChat === undefined ? (
             <>
               <div className="bg-red-300">select chat</div>
             </>
@@ -170,15 +199,21 @@ const ChatPage = () => {
                 <div className="flex space-x-2 items-center">
                   <div>
                     <img
-                      src={selectedChat?.oppositeId?.avatar
-                              ? selectedChat?.oppositeId?.avatar?.secure_url
-                              : Blank}
+                      src={
+                        selectedChat?.oppositeId?.avatar
+                          ? selectedChat?.oppositeId?.avatar?.secure_url
+                          : Blank
+                      }
                       alt=""
                       className=" w-12 h-12 rounded-full"
                     />
                   </div>
                   <div>
-                    <h1>{selectedChat?`${selectedChat?.oppositeId?.firstName} ${selectedChat?.oppositeId?.lastName}`:``}</h1>
+                    <h1>
+                      {selectedChat
+                        ? `${selectedChat?.oppositeId?.firstName} ${selectedChat?.oppositeId?.lastName}`
+                        : ``}
+                    </h1>
                     <h1 className="text-sm">online</h1>
                   </div>
                 </div>
@@ -194,9 +229,11 @@ const ChatPage = () => {
                 </div>
               </div>
               {/*chat messages area */}
-              <div className="bg-white rounded-3xl py-4 px-4 h-[71vh]">
+              <div className="bg-white rounded-3xl py-4 px-4 h-[71vh] overflow-y-auto no-scrollbar">
                 {allSingleChatMessages?.map((singleMesssage) => {
-                  {/* console.log("single message---------->", singleMesssage); */}
+                  {
+                    /* console.log("single message---------->", singleMesssage); */
+                  }
                   if (singleMesssage.sender === authUser?._id) {
                     return (
                       <>
@@ -230,6 +267,15 @@ const ChatPage = () => {
                     <input
                       placeholder="type message here"
                       className="w-full rounded-full px-5 py-3 outline-none bg-blue-50 text-xl"
+                      value={sendMessage}
+                      onChange={(e) => {
+                        setSendMessage(e.target.value);
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" && sendMessage !== "") {
+                          sendMessageHandler();
+                        }
+                      }}
                     />
                   </div>
                 </div>
@@ -237,7 +283,10 @@ const ChatPage = () => {
                   <div className="px-3 py-2 ">
                     <FontAwesomeIcon icon={faFaceSmile} className="text-3xl" />
                   </div>
-                  <div className="px-3 flex items-center bg-blue-100 rounded-full">
+                  <div
+                    className="px-3 flex items-center bg-blue-100 rounded-full"
+                    onClick={sendMessageHandler}
+                  >
                     <FontAwesomeIcon
                       icon={faLocationArrow}
                       className="text-3xl text-[#0059E4]"
@@ -281,6 +330,7 @@ export const EachChatComponent = ({ isActive, name, profilePic, onClick }) => {
   );
 };
 
+// eslint-disable-next-line react/prop-types
 export const ContactComponent = ({ name, Pic, onClick, email, isActive }) => {
   return (
     <div
@@ -302,27 +352,6 @@ export const ContactComponent = ({ name, Pic, onClick, email, isActive }) => {
 
         <h1 className="text-sm">{email}</h1>
       </div>
-    </div>
-  );
-};
-
-export const ChatBubble = ({ id, message }) => {
-  return (
-    <div>
-      {id && (
-        <>
-          <div className="chat chat-start ">
-            <div className="chat-bubble bg-purple-800">{message}</div>
-          </div>
-        </>
-      )}
-      {id && (
-        <>
-          <div className={`chat chat-end`}>
-            <div className="chat-bubble bg-blue-800">{message}</div>
-          </div>
-        </>
-      )}
     </div>
   );
 };

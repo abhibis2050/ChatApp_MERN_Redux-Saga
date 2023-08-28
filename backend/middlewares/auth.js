@@ -11,8 +11,8 @@ const auth = (req, res, next) => {
     }
 
     jwt.verify(token, process.env.JWT_SECRET_ACCESS_TOKEN, (err, user) => {
-      console.log(user,"<---------auth ");
-      console.log("error-------->",err);
+      // console.log(user,"<---------auth ");
+      // console.log("error-------->",err);
       if (err) {
         return res
           .status(400)

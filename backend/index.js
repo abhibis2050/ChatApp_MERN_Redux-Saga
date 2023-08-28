@@ -8,6 +8,11 @@ const bodyParser = require("body-parser");
 const cloudinary = require("cloudinary");
 const fileUpload = require("express-fileupload");
 
+const socketio = require('socket.io');
+const server = require('http').Server(app);
+
+
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -64,6 +69,28 @@ app.use("/api/message", require("./routes/messageRoutes"));
 app.use("/api/group", require("./routes/groupRoutes"));
 app.use("/api/chat", require("./routes/chatRoute"));
 
-app.listen(PORT, () => {
+
+server.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);
 });
+
+const io = socketio(server,{
+  pingTimeOut: 600000,
+  cors: {
+    origin: allowedDomains,
+  },
+});
+
+// const io = require("socket.io")(server, {
+//   pingTimeOut: 600000,
+//   cors: {
+//     origin: " http://localhost:5174",
+//   },
+// });
+
+io.on("connection",(socket)=>{
+  console.log(socket.id)
+  console.log(`Socket ${socket.id} connected`)
+
+  
+})

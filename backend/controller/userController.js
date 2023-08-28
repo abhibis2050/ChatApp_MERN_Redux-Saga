@@ -166,7 +166,7 @@ exports.getAccessToken = async (req, res) => {
       });
     }
 
-    console.log(rf_token, "<------------rf_token");
+    // console.log(rf_token, "<------------rf_token");
 
     if (!rf_token) {
       return res.send({ success: false, message: "Please login again" });
@@ -177,7 +177,7 @@ exports.getAccessToken = async (req, res) => {
       process.env.JWT_SECRET_REFRESH_TOKEN
     );
 
-    console.log("logInUser------------------>", logInUser);
+    // console.log("logInUser------------------>", logInUser);
 
     if (!logInUser) {
       return res
@@ -186,7 +186,7 @@ exports.getAccessToken = async (req, res) => {
     }
 
     const access_Token = createAccessToken({ _id: logInUser.id });
-    console.log("access_Token------------------>", access_Token);
+    // console.log("access_Token------------------>", access_Token);
 
     return res.status(200).send({ success: true, accessToken: access_Token });
   } catch (error) {

@@ -44,7 +44,7 @@ exports.getAllChats = async (req, res) => {
       }
     });
 
-    console.log("requireChats------->", requireChats);
+    // console.log("requireChats------->", requireChats);
     return res.status(200).send({
       success: true,
       message: "All Chats",

@@ -1,5 +1,5 @@
 import { call, put, takeEvery } from "redux-saga/effects";
-import { getAlloneToOneMessagesAction } from "../api/MessageAction";
+import { SendOneToOneMessageAction, getAlloneToOneMessagesAction } from "../api/MessageAction";
 import { setAllSingleChatMessages } from "../app/messageSlice";
 
 
@@ -17,6 +17,17 @@ function* allOneToOneMessageSaga(action){
     }
     }
 
+    
+function* oneToOneMessageSaga(action){
+    try {
+        console.log(action?.payload);
+        const response =  yield call (SendOneToOneMessageAction,action?.payload)
+        console.log("oneToOneMessageSaga resposnse",response);
+    } catch (error) {
+        console.log(error)
+    }
+    }
+
 
 
 
@@ -24,4 +35,5 @@ function* allOneToOneMessageSaga(action){
 
 export function* watchMessage(){
     yield takeEvery("GET_ALL_ONE_TO_ONE_MESSAGE",allOneToOneMessageSaga)
+    yield takeEvery("SEND_ONE_TO_ONE_MESSAGE",oneToOneMessageSaga)
 }
