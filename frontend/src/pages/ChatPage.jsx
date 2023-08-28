@@ -20,13 +20,13 @@ const ChatPage = () => {
   const { allChats } = useSelector((state) => state.chat);
   const { allSingleChatMessages } = useSelector((state) => state.message);
   const [open, setOpen] = useState(false);
-  const [receiverId, setRecieverId] = useState("");
-  const [selectedChatId, setSelectedChatId] = useState("");
+  const [selectedChat, setSelectedChat] = useState(undefined);
 
-  // console.log("receiverId------>", receiverId);
-  // console.log("selectedChatId------>", selectedChatId);
+
+  // console.log("allChats------>", allChats);
+  console.log("selectedChat------>", selectedChat);
   // console.log("allSingleChatMessages------>", allSingleChatMessages);
-  console.log("allContacts------>", allContacts);
+  // console.log("allContacts------>", allContacts);
 
   useEffect(() => {
     dispatch({
@@ -44,16 +44,16 @@ const ChatPage = () => {
   }, []);
 
   useEffect(() => {
-    if (selectedChatId !== "") {
+    if (selectedChat?._id !== "") {
       dispatch({
         type: "GET_ALL_ONE_TO_ONE_MESSAGE",
         payload: {
-          selectedChatId,
+          selectedChatId:selectedChat?._id,
           token,
         },
       });
     }
-  }, [dispatch, selectedChatId, token]);
+  }, [dispatch, selectedChat, token]);
 
   return (
     <div className="bg-bluebase w-full h-screen flex fixed">
@@ -100,45 +100,29 @@ const ChatPage = () => {
           {/* contat area */}
 
           <div className="h-[80%] overflow-y-auto no-scrollbar space-y-1 pt-4 rounded-3xl ">
-            {sideBarIsActive.message && (
+            {sideBarIsActive?.message && (
               <>
                 {allChats?.map((singleChat) => {
-                  {
-                    /* console.log("singleChat------->", singleChat); */
-                  }
+                  
+                    {/* console.log("singleChat------->", singleChat);  */}
+                  
                   return (
                     <>
                       <div
                         key={singleChat?._id}
                         onClick={() => {
-                          console.log(singleChat?.reciever);
-                          console.log(singleChat?.sender);
-
-                          if (singleChat?.sender === authUser?._id) {
-                            dispatch({
-                              type: "CHAT_SINGLE_USER_DETAIL",
-                              payload: {
-                                userId: singleChat?.reciever,
-                              },
-                            });
-                          } else {
-                            dispatch({
-                              type: "CHAT_SINGLE_USER_DETAIL",
-                              payload: {
-                                userId: singleChat?.sender,
-                              },
-                            });
-                          }
-                          setSelectedChatId(singleChat?._id);
+                          console.log("single chat id-------->",singleChat?._id);
+                          console.log("single chat",singleChat);
+                          setSelectedChat(singleChat);
                         }}
                       >
                         <EachChatComponent
                           profilePic={
-                            singleChat?.reciever?.avatar
-                              ? singleChat?.reciever?.avatar?.secure_url
+                            singleChat?.oppositeId?.avatar
+                              ? singleChat?.oppositeId?.avatar?.secure_url
                               : Blank
                           }
-                          name={`${singleChat?.reciever?.firstName} ${singleChat?.reciever?.lastName}`}
+                          name={`${singleChat?.oppositeId?.firstName} ${singleChat?.oppositeId?.lastName}`}
                         />
                       </div>
                     </>
@@ -155,6 +139,7 @@ const ChatPage = () => {
                     return (
                       <>
                         <ContactComponent
+                        key={singleContact?._id}
                           name={`${singleContact?.firstName} ${singleContact?.lastName}`}
                           email={singleContact?.email}
                           Pic={
@@ -174,7 +159,7 @@ const ChatPage = () => {
         </div>
         {/* chat */}
         <div className=" w-4/5 rounded-3xl space-y-3">
-          {receiverId === "" ? (
+          {selectedChat===undefined? (
             <>
               <div className="bg-red-300">select chat</div>
             </>
@@ -185,13 +170,15 @@ const ChatPage = () => {
                 <div className="flex space-x-2 items-center">
                   <div>
                     <img
-                      src={avatar}
+                      src={selectedChat?.oppositeId?.avatar
+                              ? selectedChat?.oppositeId?.avatar?.secure_url
+                              : Blank}
                       alt=""
                       className=" w-12 h-12 rounded-full"
                     />
                   </div>
                   <div>
-                    <h1>Harry Potter</h1>
+                    <h1>{selectedChat?`${selectedChat?.oppositeId?.firstName} ${selectedChat?.oppositeId?.lastName}`:``}</h1>
                     <h1 className="text-sm">online</h1>
                   </div>
                 </div>
@@ -209,7 +196,7 @@ const ChatPage = () => {
               {/*chat messages area */}
               <div className="bg-white rounded-3xl py-4 px-4 h-[71vh]">
                 {allSingleChatMessages?.map((singleMesssage) => {
-                  console.log("single message---------->", singleMesssage);
+                  {/* console.log("single message---------->", singleMesssage); */}
                   if (singleMesssage.sender === authUser?._id) {
                     return (
                       <>
