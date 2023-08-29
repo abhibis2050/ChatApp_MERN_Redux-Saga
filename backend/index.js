@@ -8,10 +8,10 @@ const bodyParser = require("body-parser");
 const cloudinary = require("cloudinary");
 const fileUpload = require("express-fileupload");
 
-const socketio = require('socket.io');
-const server = require('http').Server(app);
-
-
+const socketio = require("socket.io");
+const server = require("http").Server(app);
+const User = require("./models/user");
+const Message = require("./models/messages");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -69,17 +69,23 @@ app.use("/api/message", require("./routes/messageRoutes"));
 app.use("/api/group", require("./routes/groupRoutes"));
 app.use("/api/chat", require("./routes/chatRoute"));
 
-
 server.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);
 });
 
-const io = socketio(server,{
+const io = socketio(server, {
   pingTimeOut: 600000,
   cors: {
     origin: allowedDomains,
   },
 });
+
+global.io = io;
+
+// app.use(( res, next) => {
+//   res.io = io;
+//   next();
+// });
 
 // const io = require("socket.io")(server, {
 //   pingTimeOut: 600000,
@@ -88,9 +94,38 @@ const io = socketio(server,{
 //   },
 // });
 
-io.on("connection",(socket)=>{
-  console.log(socket.id)
-  console.log(`Socket ${socket.id} connected`)
+io.on("connection", (socket) => {
+  console.log(`Socket ${socket.id} connected....`);
 
-  
-})
+  socket.on("user_connected", async (data) => {
+    console.log("data----->", data);
+    await User.findOneAndUpdate({ _id: data?.UserId }, { socketId: socket.id });
+  });
+
+  socket.on("Send-Message", async (data) => {
+    console.log("send message Data", data);
+
+    const createMessage = await Message.create({
+      sender: data.sender,
+      message: data.message,
+      reciever: data.reciever,
+      chatId: data.chatId,
+    });
+
+    // console.log(console.log("createdMessage----->", createMessage));
+
+    io.to(socket.id).emit("recieve_message",createMessage);
+
+    const recieverDetail = await User.findOne({ _id: data.reciever });
+    // console.log(console.log("recieverDetail----->", recieverDetail));
+
+    if (recieverDetail?.socketId) {
+      io.to(recieverDetail?.socketId).emit("recieve_message",createMessage);
+    }
+  });
+
+  socket.on("disconnect", async () => {
+    console.log(`Socket ${socket.id} disconnected....`);
+    await User.findOneAndUpdate({ socketId: socket.id }, { socketId: null });
+  });
+});

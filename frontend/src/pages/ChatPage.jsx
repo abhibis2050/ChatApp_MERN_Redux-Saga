@@ -13,6 +13,7 @@ import FriendProfile from "../component/FriendProfile";
 import Sidebar from "../component/Sidebar";
 import { useDispatch, useSelector } from "react-redux";
 import { io } from "socket.io-client";
+import { setAllSingleChatMessages } from "../redux/app/messageSlice";
 
 const socket = io("http://localhost:8080");
 
@@ -27,13 +28,25 @@ const ChatPage = () => {
   const [sendMessage, setSendMessage] = useState("");
 
   useEffect(() => {
-    socket;
-  }, []);
+    if (authUser?._id) {
+      socket.emit("user_connected", { UserId: authUser?._id });
+    }
+  }, [authUser?._id]);
 
-  
+  useEffect(() => {
+    socket.on("recieve_message", (data) => {
+      // console.log("recieve_message-------->", data);
+      dispatch(
+        setAllSingleChatMessages({
+          allSingleChatMessages: [...allSingleChatMessages, data],
+        })
+      );
+    });
+  }, [allSingleChatMessages, sendMessage]);
+
   // console.log("allChats------>", allChats);
-  console.log("selectedChat------>", selectedChat);
-  console.log("sendMessage------>", sendMessage);
+  // console.log("selectedChat------>", selectedChat);
+  // console.log("sendMessage------>", sendMessage);
   // console.log("allSingleChatMessages------>", allSingleChatMessages);
   // console.log("allContacts------>", allContacts);
 
@@ -65,19 +78,16 @@ const ChatPage = () => {
   }, [dispatch, selectedChat, token]);
 
   const sendMessageHandler = () => {
-    // console.log("send mesage handler clicked")
-    dispatch({
-      type: "SEND_ONE_TO_ONE_MESSAGE",
-      payload: {
-        body: {
-          message: sendMessage,
-          reciever: selectedChat?.oppositeId._id,
-          chatId: selectedChat?._id,
-        },
-        token,
-      },
-    });
-    setSendMessage("");
+    if (authUser._id && sendMessage !== "") {
+      // console.log("send mesage handler clicked")
+      socket.emit("Send-Message", {
+        sender: authUser?._id,
+        message: sendMessage,
+        reciever: selectedChat?.oppositeId._id,
+        chatId: selectedChat?._id,
+      });
+      setSendMessage("");
+    }
   };
 
   return (

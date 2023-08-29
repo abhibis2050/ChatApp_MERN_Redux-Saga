@@ -47,7 +47,7 @@ const userSchema = new mongoose.Schema({
       ref: "user",
     },
   ],
-  blockContacts:[
+  blockContacts: [
     {
       type: ObjectId,
       ref: "user",
@@ -57,14 +57,15 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  // chatId:[{
-  //   type: ObjectId,
-  //   ref: "chat",
-  // }],
-  groupIds: [{
-    type: ObjectId,
-    ref: "groupMessage",
-  }],
+  socketId: {
+    type: String,
+  },
+  groupIds: [
+    {
+      type: ObjectId,
+      ref: "groupMessage",
+    },
+  ],
 });
 
 module.exports = mongoose.model("user", userSchema);

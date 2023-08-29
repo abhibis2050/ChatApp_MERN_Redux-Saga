@@ -1,4 +1,5 @@
 const Message = require("../models/messages");
+const User = require("../models/user");
 
 exports.sendOneToOneMessage = async (req, res) => {
   try {
@@ -7,7 +8,18 @@ exports.sendOneToOneMessage = async (req, res) => {
     req.body.sender=req.user._id
     // req.body.sender="64d28267e5b4e55f01544084"
 
-    const createMessage = await Message.create(req.body);
+    const createMessage = await Message.create(req.body)
+
+    // const findSender = await User.findOne({_id:createMessage.sender})
+    // const findReciever = await User.findOne({_id:createMessage.reciever})
+    
+    // // console.log("create message------------------->",createMessage)
+
+
+    // global.io.to(findSender?.socketId).emit("recieveMessage",createMessage.message)
+    // global.io.to(findReciever?.socketId).emit("recieveMessage",createMessage.message)
+
+   
 
     return res
       .status(201)
