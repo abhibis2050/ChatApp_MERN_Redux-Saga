@@ -13,14 +13,19 @@ import Sidebar from "../component/Sidebar";
 import { useDispatch, useSelector } from "react-redux";
 import { io } from "socket.io-client";
 import { setAllSingleChatMessages } from "../redux/app/messageSlice";
-
+import Select from "react-select";
 const socket = io("http://localhost:8080");
 
 const ChatPage = () => {
   const dispatch = useDispatch();
   const { token, authUser } = useSelector((state) => state.auth);
-  const { sideBarIsActive, allContacts, allFriendList, allFriendRequestSent,allFriendRequestRecieved } =
-    useSelector((state) => state.user);
+  const {
+    sideBarIsActive,
+    allContacts,
+    allFriendList,
+    allFriendRequestSent,
+    allFriendRequestRecieved,
+  } = useSelector((state) => state.user);
   const { allChats } = useSelector((state) => state.chat);
   const { allSingleChatMessages } = useSelector((state) => state.message);
   const [open, setOpen] = useState(false);
@@ -29,14 +34,15 @@ const ChatPage = () => {
   const [contacts, setContacts] = useState({
     allContact: true,
     myContact: false,
-    friendRequest: false,
+    friendRequestSent: false,
+    friendRequestRecieved: false,
   });
 
   console.log("Contacts--------->", contacts);
 
   // console.log("allFriendList--------->", allFriendList);
   // console.log("allFriendRequest--------->", allFriendRequest);
-  
+
   useEffect(() => {
     if (authUser?._id) {
       socket.emit("user_connected", { UserId: authUser?._id });
@@ -222,11 +228,12 @@ const ChatPage = () => {
                         ...contacts,
                         allContact: true,
                         myContact: false,
-                        friendRequest: false,
+                        friendRequestSent: false,
+                        friendRequestRecieved: false,
                       });
                     }}
                   >
-                    All Contacts
+                    Contacts
                   </div>
                   <div
                     className={`py-2 px-3 ${
@@ -240,13 +247,44 @@ const ChatPage = () => {
                         ...contacts,
                         allContact: false,
                         myContact: true,
-                        friendRequest: false,
+                        friendRequestSent: false,
+                        friendRequestRecieved: false,
                       });
                     }}
                   >
-                    My Contacts
+                    Friends
                   </div>
-                  <div
+                  <div>
+                    <Select
+                    className="w-32"
+                      placeholder={"FriendRequest"}
+                      options={[
+                        { value: "Send", label: "Send" },
+                        { value: "recieved", label: "Recieved" },
+                      ]}
+                      onChange={(e) => {
+                        console.log("friend req", e);
+                        if (e.label === "Send") {
+                          setContacts({
+                            ...contacts,
+                            allContact: false,
+                            myContact: false,
+                            friendRequestSent: true,
+                            friendRequestRecieved: false,
+                          });
+                        } else {
+                          setContacts({
+                            ...contacts,
+                            allContact: false,
+                            myContact: false,
+                            friendRequestSent: false,
+                            friendRequestRecieved: true,
+                          });
+                        }
+                      }}
+                    />
+                  </div>
+                  {/* <div
                     className={`py-2 px-3 ${
                       contacts.friendRequest
                         ? "bg-bluebase text-white rounded-full"
@@ -263,7 +301,7 @@ const ChatPage = () => {
                     }}
                   >
                     Friend Request
-                  </div>
+                  </div> */}
                 </div>
                 {contacts.allContact === true && (
                   <>
@@ -311,7 +349,7 @@ const ChatPage = () => {
                     </div>
                   </>
                 )}
-                {contacts.friendRequest === true && (
+                {contacts.friendRequestRecieved === true && (
                   <>
                     <div>
                       {allFriendRequestRecieved?.map((singleFriendReq) => {
@@ -327,6 +365,29 @@ const ChatPage = () => {
                                   : Blank
                               }
                               tag={"Accept"}
+                            />
+                          </>
+                        );
+                      })}
+                    </div>
+                  </>
+                )}
+                {contacts.friendRequestSent === true && (
+                  <>
+                    <div>
+                      {allFriendRequestSent?.map((singleFriendReq) => {
+                        return (
+                          <>
+                            <ContactComponent
+                              key={singleFriendReq?._id}
+                              name={`${singleFriendReq?.firstName} ${singleFriendReq?.lastName}`}
+                              email={singleFriendReq?.email}
+                              Pic={
+                                singleFriendReq?.avatar
+                                  ? singleFriendReq?.avatar?.secure_url
+                                  : Blank
+                              }
+                              tag={"Sent"}
                             />
                           </>
                         );
