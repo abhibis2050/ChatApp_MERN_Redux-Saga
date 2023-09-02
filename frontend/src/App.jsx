@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 function App() {
   const dispatch = useDispatch();
-  const { token } = useSelector((state) => state.auth);
+  const { token, authUser } = useSelector((state) => state.auth);
 
   useEffect(() => {
     const email = localStorage.getItem("User_email");
@@ -34,6 +34,35 @@ function App() {
       type: "GET_ALL_CONTACTS",
     });
   }, []);
+
+  useEffect(() => {
+    if (token!=="" && authUser) {
+      dispatch({
+        type: "GET_FRIENDLIST",
+        payload: {
+          userId: authUser?._id,
+        },
+      });
+    }
+
+    if (token!=="" && authUser) {
+      dispatch({
+        type: "GET_ALL_FRIENDREQUEST_SENT",
+        payload: {
+          userId: authUser?._id,
+        },
+      });
+    }
+
+    if (token!=="" && authUser) {
+      dispatch({
+        type: "GET_ALL_FRIENDREQUEST_RECIEVED",
+        payload: {
+          userId: authUser?._id,
+        },
+      });
+    }
+  }, [authUser,token]);
 
   return (
     <>

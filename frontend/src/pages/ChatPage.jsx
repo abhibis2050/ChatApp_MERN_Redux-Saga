@@ -1,4 +1,3 @@
-import avatar from "../assets/hp.jpg";
 import Blank from "../assets/blank.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -20,13 +19,24 @@ const socket = io("http://localhost:8080");
 const ChatPage = () => {
   const dispatch = useDispatch();
   const { token, authUser } = useSelector((state) => state.auth);
-  const { sideBarIsActive, allContacts } = useSelector((state) => state.user);
+  const { sideBarIsActive, allContacts, allFriendList, allFriendRequestSent,allFriendRequestRecieved } =
+    useSelector((state) => state.user);
   const { allChats } = useSelector((state) => state.chat);
   const { allSingleChatMessages } = useSelector((state) => state.message);
   const [open, setOpen] = useState(false);
   const [selectedChat, setSelectedChat] = useState(undefined);
   const [sendMessage, setSendMessage] = useState("");
+  const [contacts, setContacts] = useState({
+    allContact: true,
+    myContact: false,
+    friendRequest: false,
+  });
 
+  console.log("Contacts--------->", contacts);
+
+  // console.log("allFriendList--------->", allFriendList);
+  // console.log("allFriendRequest--------->", allFriendRequest);
+  
   useEffect(() => {
     if (authUser?._id) {
       socket.emit("user_connected", { UserId: authUser?._id });
@@ -64,6 +74,33 @@ const ChatPage = () => {
       type: "GET_ALL_CONTACTS",
     });
   }, []);
+
+  useEffect(() => {
+    if (token !== "" && authUser) {
+      dispatch({
+        type: "GET_FRIENDLIST",
+        payload: {
+          userId: authUser?._id,
+        },
+      });
+    }
+    if (token !== "" && authUser) {
+      dispatch({
+        type: "GET_ALL_FRIENDREQUEST_SENT",
+        payload: {
+          userId: authUser?._id,
+        },
+      });
+      if (token !== "" && authUser) {
+        dispatch({
+          type: "GET_ALL_FRIENDREQUEST_RECIEVED",
+          payload: {
+            userId: authUser?._id,
+          },
+        });
+      }
+    }
+  }, [authUser, contacts.friendRequest, contacts.myContact]);
 
   useEffect(() => {
     if (selectedChat?._id !== "") {
@@ -172,25 +209,131 @@ const ChatPage = () => {
             {sideBarIsActive.group && <>group</>}
             {sideBarIsActive.contact && (
               <>
-                <div className=" text-xl px-4">All Contacts</div>
-                <div className="">
-                  {allContacts.map((singleContact) => {
-                    return (
-                      <>
-                        <ContactComponent
-                          key={singleContact?._id}
-                          name={`${singleContact?.firstName} ${singleContact?.lastName}`}
-                          email={singleContact?.email}
-                          Pic={
-                            singleContact?.avatar
-                              ? singleContact?.avatar?.secure_url
-                              : Blank
-                          }
-                        />
-                      </>
-                    );
-                  })}
+                <div className="flex text-sm justify-evenly mb-2">
+                  <div
+                    className={`py-2 px-3 ${
+                      contacts.allContact
+                        ? "bg-bluebase text-white rounded-full"
+                        : ""
+                    } cursor-default`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setContacts({
+                        ...contacts,
+                        allContact: true,
+                        myContact: false,
+                        friendRequest: false,
+                      });
+                    }}
+                  >
+                    All Contacts
+                  </div>
+                  <div
+                    className={`py-2 px-3 ${
+                      contacts.myContact
+                        ? "bg-bluebase text-white rounded-full"
+                        : ""
+                    } cursor-default`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setContacts({
+                        ...contacts,
+                        allContact: false,
+                        myContact: true,
+                        friendRequest: false,
+                      });
+                    }}
+                  >
+                    My Contacts
+                  </div>
+                  <div
+                    className={`py-2 px-3 ${
+                      contacts.friendRequest
+                        ? "bg-bluebase text-white rounded-full"
+                        : ""
+                    } cursor-default`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setContacts({
+                        ...contacts,
+                        allContact: false,
+                        myContact: false,
+                        friendRequest: true,
+                      });
+                    }}
+                  >
+                    Friend Request
+                  </div>
                 </div>
+                {contacts.allContact === true && (
+                  <>
+                    <div className="">
+                      {allContacts?.map((singleContact) => {
+                        return (
+                          <>
+                            <ContactComponent
+                              key={singleContact?._id}
+                              name={`${singleContact?.firstName} ${singleContact?.lastName}`}
+                              email={singleContact?.email}
+                              Pic={
+                                singleContact?.avatar
+                                  ? singleContact?.avatar?.secure_url
+                                  : Blank
+                              }
+                              tag={"Add"}
+                            />
+                          </>
+                        );
+                      })}
+                    </div>
+                  </>
+                )}
+                {contacts.myContact == true && (
+                  <>
+                    <div>
+                      {allFriendList?.map((singleFriend) => {
+                        return (
+                          <>
+                            <ContactComponent
+                              key={singleFriend?._id}
+                              name={`${singleFriend?.firstName} ${singleFriend?.lastName}`}
+                              email={singleFriend?.email}
+                              Pic={
+                                singleFriend?.avatar
+                                  ? singleFriend?.avatar?.secure_url
+                                  : Blank
+                              }
+                              tag={"Friends"}
+                            />
+                          </>
+                        );
+                      })}
+                    </div>
+                  </>
+                )}
+                {contacts.friendRequest === true && (
+                  <>
+                    <div>
+                      {allFriendRequestRecieved?.map((singleFriendReq) => {
+                        return (
+                          <>
+                            <ContactComponent
+                              key={singleFriendReq?._id}
+                              name={`${singleFriendReq?.firstName} ${singleFriendReq?.lastName}`}
+                              email={singleFriendReq?.email}
+                              Pic={
+                                singleFriendReq?.avatar
+                                  ? singleFriendReq?.avatar?.secure_url
+                                  : Blank
+                              }
+                              tag={"Accept"}
+                            />
+                          </>
+                        );
+                      })}
+                    </div>
+                  </>
+                )}
               </>
             )}
             {sideBarIsActive.notification && <>notification</>}
@@ -341,26 +484,39 @@ export const EachChatComponent = ({ isActive, name, profilePic, onClick }) => {
 };
 
 // eslint-disable-next-line react/prop-types
-export const ContactComponent = ({ name, Pic, onClick, email, isActive }) => {
+export const ContactComponent = ({
+  name,
+  Pic,
+  onClick,
+  email,
+  isActive,
+  onButtonClick,
+  tag,
+}) => {
   return (
     <div
       onClick={onClick}
-      className={`flex space-x-3 items-center pl-2 pr-12 py-2 ${
+      className={`flex space-x-3 items-center pl-2 pr-2 py-2 ${
         isActive
           ? "bg-blue-500 rounded-full text-white"
           : "hover:bg-blue-100 hover:rounded-full"
       }`}
     >
       <div>
-        <img src={Pic} alt="" className=" w-14 h-12 rounded-full" />
+        <img src={Pic} alt="" className=" w-14 h-8 rounded-full" />
       </div>
       <div className="w-full">
-        <div className="flex justify-between w-full">
+        <div className="flex justify-between w-full text-lg">
           <h1>{name}</h1>
           {/* <div>{email}</div> */}
         </div>
 
-        <h1 className="text-sm">{email}</h1>
+        <h1 className="text-base">{email}</h1>
+      </div>
+      <div onClick={onButtonClick}>
+        <button className="bg-bluebase text-white text-sm rounded-full px-5 py-2">
+          {tag}
+        </button>
       </div>
     </div>
   );

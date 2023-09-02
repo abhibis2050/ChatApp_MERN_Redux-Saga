@@ -228,3 +228,108 @@ exports.getAllUsers = async (req, res) => {
   } catch (error) {}
   return res.status(500).send({ success: false, message: error.message });
 };
+
+exports.sendFriendRequest = async (req, res) => {
+  try {
+    const { userId, friendId } = req.query;
+
+    await User.findOneAndUpdate(
+      { _id: friendId },
+      { $push: { friendRequestRecieved: userId } }
+    );
+
+    await User.findOneAndUpdate(
+      { _id: userId },
+      { $push: { friendRequestSent: friendId } }
+    );
+
+    return res
+      .status(200)
+      .send({ success: true, message: "Friend Request Sent" });
+  } catch (error) {
+    return res.status(500).send({ success: false, message: error.message });
+  }
+};
+
+exports.acceptFriendRequest = async (req, res) => {
+  try {
+    const { userId, friendRequestId } = req.query;
+
+    const findUser = await User.findOne({ _id: userId });
+
+    if (findUser.friendRequestRecieved.includes(friendRequestId) === true) {
+      findUser.friendRequestRecieved = findUser.friendRequestRecieved.filter(
+        (singlefriendRequestId) => (
+          singlefriendRequestId.toString()!==friendRequestId
+        )
+      );      
+      findUser.contacts.push(friendRequestId);
+    }
+    await findUser.save();
+    // console.log("findUser",findUser)
+
+
+    // update the friend user contact
+    const friendUserDetail = await User.findOne(
+      { _id: friendRequestId });
+
+      if(friendUserDetail?.friendRequestSent?.includes(userId)===true){
+        friendUserDetail.friendRequestSent=friendUserDetail.friendRequestSent.filter((reqSendId)=>(
+          reqSendId.toString()!==userId
+        ))
+        friendUserDetail.contacts.push(userId)
+      }
+
+      await friendUserDetail.save()
+
+   
+      // console.log("friendUserDetail",friendUserDetail)
+
+    return res
+      .status(200)
+      .send({ success: true, message: "Added To Friend List" });
+  } catch (error) {
+    return res.status(500).send({ success: false, message: error.message });
+  }
+};
+
+exports.getAllFriendList = async (req, res) => {
+  try {
+    const { userId } = req.query;
+    const friendList = await User.findOne({ _id: userId })
+      .select("contacts")
+      .populate("contacts");
+
+    return res.status(200).send({ success: true, data: friendList });
+  } catch (error) {
+    return res.status(500).send({ success: false, message: error.message });
+  }
+};
+
+exports.getAllRecivedFriendRequest = async (req, res) => {
+  try {
+    const { userId } = req.query;
+    const friendRequestRecieved = await User.findOne({ _id: userId })
+      .select("friendRequestRecieved")
+      .populate("friendRequestRecieved");
+    return res.status(200).send({ success: true, data: friendRequestRecieved });
+  } catch (error) {
+    return res.status(500).send({ success: false, message: error.message });
+  }
+};
+
+
+exports.getAllSendFriendRequest = async (req, res) => {
+  try {
+    const { userId } = req.query;
+    const friendRequestSent = await User.findOne({ _id: userId })
+      .select("friendRequestSent")
+      .populate("friendRequestSent");
+    return res.status(200).send({ success: true, data: friendRequestSent });
+  } catch (error) {
+    return res.status(500).send({ success: false, message: error.message });
+  }
+};
+
+// friend request not accepted
+// unfriend

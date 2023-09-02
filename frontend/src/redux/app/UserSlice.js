@@ -9,6 +9,9 @@ const initialState = {
     profile: false,
   },
   allContacts: [],
+  allFriendList: [],
+  allFriendRequestSent: [],
+  allFriendRequestRecieved: [],
 };
 
 export const userSlice = createSlice({
@@ -21,8 +24,23 @@ export const userSlice = createSlice({
     setAllContact: (state, action) => {
       state.allContacts = action.payload.allContacts;
     },
+    setAllFriendList: (state, action) => {
+      state.allFriendList = action.payload.allFriendList;
+    },
+    setAllFriendRequestSent: (state, action) => {
+      state.allFriendRequestSent = action.payload.allFriendRequestSent;
+    },
+    setAllFriendRequestRecieved: (state, action) => {
+      state.allFriendRequestRecieved = action.payload.allFriendRequestRecieved;
+    },
   },
 });
 
-export const { setSideBarIsActive,setAllContact } = userSlice.actions;
+export const {
+  setSideBarIsActive,
+  setAllContact,
+  setAllFriendList,
+  setAllFriendRequestSent,
+  setAllFriendRequestRecieved
+} = userSlice.actions;
 export const userReducer = userSlice.reducer;
