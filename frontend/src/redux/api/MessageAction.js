@@ -28,12 +28,7 @@ export const SendGroupMessageAction = async (payload) => {
 
 export const GetAllGroupMessagesAction = async (payload) => {
   const response = await axios.get(
-    `${VITE_BASE_URL}/message/getAllGroupMessages`,
-    {
-      headers: {
-        Authorization: payload.token,
-      },
-    }
+    `${VITE_BASE_URL}/message/getAllGroupMessages?groupId=${payload?.groupId}`
   );
   return response;
 };

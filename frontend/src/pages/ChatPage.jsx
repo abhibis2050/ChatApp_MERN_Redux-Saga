@@ -28,7 +28,7 @@ const socket = io("http://localhost:8080");
 const ChatPage = () => {
   const dispatch = useDispatch();
   const { token, authUser } = useSelector((state) => state.auth);
-  const { selectedGroupChatId } = useSelector((state) => state.group);
+  const { selectedGroupChatId,selectedGroupDetails } = useSelector((state) => state.group);
   const messageScrollRef = useRef(null);
   const {
     sideBarIsActive,
@@ -142,6 +142,17 @@ const ChatPage = () => {
       type: "GET_ALL_CONTACTS",
     });
   }, []);
+
+  useEffect(() => {
+    if (selectedGroupChatId) {
+      dispatch({
+        type: "GET_ALL_GROUP_MESSAGE",
+        payload: {
+          groupId: selectedGroupChatId,
+        },
+      });
+    }
+  }, [selectedGroupChatId]);
 
   useEffect(() => {
     dispatch({
@@ -641,7 +652,7 @@ const ChatPage = () => {
           {/*SINGLE MESSAGE CHAT */}
           {sideBarIsActive?.message && (
             <>
-              <div className="space-y-3 h-full rounded-3xl bg-red-400">
+              <div className="space-y-3 h-full rounded-3xl ">
                 {selectedChat === undefined ? (
                   <>
                     <div className="rounded-3xl h-full bg-white">
@@ -803,7 +814,7 @@ const ChatPage = () => {
                               ? `${selectedChat?.oppositeId?.firstName} ${selectedChat?.oppositeId?.lastName}`
                               : ``}
                           </h1>
-                          <h1 className="text-sm">online</h1>
+                          {/* <h1 className="text-sm">online</h1> */}
                         </div>
                       </div>
                       <div className="flex items-center mr-4">

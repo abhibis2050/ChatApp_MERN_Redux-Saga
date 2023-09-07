@@ -6,7 +6,7 @@ import Blank from "../assets/blank.png";
 import { setSelectedGroupChatId } from "../redux/app/GroupSlice";
 
 const Group = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const { allGroups } = useSelector((state) => state.group);
   const [groupModalOpen, setGroupModalOpen] = useState(false);
 
@@ -45,12 +45,21 @@ const Group = () => {
           }
           return (
             <>
-              <div key={singleGroup?._id}
-              onClick={
-                ()=>{
-                  dispatch(setSelectedGroupChatId({selectedGroupChatId:singleGroup?._id}))
-                }
-              }
+              <div
+                key={singleGroup?._id}
+                onClick={() => {
+                  dispatch(
+                    setSelectedGroupChatId({
+                      selectedGroupChatId: singleGroup?._id,
+                    })
+                  );
+                  dispatch({
+                    type: "GET_GROUP_DETAIL_BY_ID",
+                    payload: {
+                      groupId: singleGroup?._id,
+                    },
+                  });
+                }}
               >
                 <EachChatComponent
                   profilePic={Blank}

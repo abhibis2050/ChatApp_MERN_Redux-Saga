@@ -1,29 +1,27 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 export const initialState = {
-   allGroups:[],
-   groupDetailsById:{},
-   selectedGroupChatId:""
-    
-}
+  allGroups: [],
+  selectedGroupDetails: {},
+  selectedGroupChatId: "",
+};
 
 export const groupSlice = createSlice({
-    name:"group",
-    initialState,
-    reducers:{
-      setAllGroups:(state,action)=>{
-        state.allGroups=action.payload.allGroups
-      },
-      setAllGroupDetailsById:(state,action)=>{
-        state.groupDetailsById=action.payload.groupDetailsById
-      },
-      setSelectedGroupChatId:(state,action)=>{
-        state.selectedGroupChatId=action.payload.selectedGroupChatId
-      }
-    }
-})
+  name: "group",
+  initialState,
+  reducers: {
+    setAllGroups: (state, action) => {
+      state.allGroups = action.payload.allGroups;
+    },
+    setSelectedGroupDetails: (state, action) => {
+      state.selectedGroupDetails = action.payload.selectedGroupDetails;
+    },
+    setSelectedGroupChatId: (state, action) => {
+      state.selectedGroupChatId = action.payload.selectedGroupChatId;
+    },
+  },
+});
 
-
-
-export const {setAllGroups,setAllGroupDetailsById,setSelectedGroupChatId} = groupSlice.actions
-export const groupReducer = groupSlice.reducer
+export const { setAllGroups, setSelectedGroupDetails, setSelectedGroupChatId } =
+  groupSlice.actions;
+export const groupReducer = groupSlice.reducer;

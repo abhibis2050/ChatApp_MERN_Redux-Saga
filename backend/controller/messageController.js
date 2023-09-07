@@ -36,7 +36,7 @@ exports.sendGroupMessage = async (req, res) => {
 
     req.body.isGroupMessage = true;
     req.body.sender = req.user?._id;
-
+    
     const createGroupMessage = await Message.create(req.body);
 
     return res
