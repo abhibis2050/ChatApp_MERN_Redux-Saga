@@ -259,31 +259,33 @@ exports.acceptFriendRequest = async (req, res) => {
 
     if (findUser.friendRequestRecieved.includes(friendRequestId) === true) {
       findUser.friendRequestRecieved = findUser.friendRequestRecieved.filter(
-        (singlefriendRequestId) => (
-          singlefriendRequestId.toString()!==friendRequestId
-        )
-      );      
+        (singlefriendRequestId) =>
+          singlefriendRequestId.toString() !== friendRequestId
+      );
       findUser.contacts.push(friendRequestId);
     }
     await findUser.save();
     // console.log("findUser",findUser)
 
-
     // update the friend user contact
-    const friendUserDetail = await User.findOne(
-      { _id: friendRequestId });
+    const friendUserDetail = await User.findOne({ _id: friendRequestId });
 
-      if(friendUserDetail?.friendRequestSent?.includes(userId)===true){
-        friendUserDetail.friendRequestSent=friendUserDetail.friendRequestSent.filter((reqSendId)=>(
-          reqSendId.toString()!==userId
-        ))
-        friendUserDetail.contacts.push(userId)
-      }
+    if (friendUserDetail?.friendRequestSent?.includes(userId) === true) {
+      friendUserDetail.friendRequestSent =
+        friendUserDetail.friendRequestSent.filter(
+          (reqSendId) => reqSendId.toString() !== userId
+        );
+      friendUserDetail.contacts.push(userId);
+    }
 
-      await friendUserDetail.save()
+    await friendUserDetail.save();
 
-   
-      // console.log("friendUserDetail",friendUserDetail)
+    // console.log("friendUserDetail",friendUserDetail)
+
+    // console.log("SOCKET ID________________",findUser.socketId)
+    global.io
+      .to(findUser.socketId)
+      .emit("accept_friend_request", { friendRequestId });
 
     return res
       .status(200)
@@ -311,13 +313,14 @@ exports.getAllRecivedFriendRequest = async (req, res) => {
     const { userId } = req.query;
     const friendRequestRecieved = await User.findOne({ _id: userId })
       .select("friendRequestRecieved")
-      .populate("friendRequestRecieved");
+      .populate({
+        path: "friendRequestRecieved",
+      });
     return res.status(200).send({ success: true, data: friendRequestRecieved });
   } catch (error) {
     return res.status(500).send({ success: false, message: error.message });
   }
 };
-
 
 exports.getAllSendFriendRequest = async (req, res) => {
   try {
@@ -331,5 +334,152 @@ exports.getAllSendFriendRequest = async (req, res) => {
   }
 };
 
-// friend request not accepted
+exports.getAllFriendId = async (req, res) => {
+  try {
+    const { userId } = req.query;
+    const friendList = await User.findOne({ _id: userId }).select("contacts");
+
+    return res.status(200).send({ success: true, data: friendList });
+  } catch (error) {
+    return res.status(500).send({ success: false, message: error.message });
+  }
+};
+
+exports.getAllRecivedFriendRequestId = async (req, res) => {
+  try {
+    const { userId } = req.query;
+    const friendRequestRecieved = await User.findOne({ _id: userId }).select(
+      "friendRequestRecieved"
+    );
+
+    return res.status(200).send({ success: true, data: friendRequestRecieved });
+  } catch (error) {
+    return res.status(500).send({ success: false, message: error.message });
+  }
+};
+
+exports.getAllSendFriendRequestId = async (req, res) => {
+  try {
+    const { userId } = req.query;
+    const friendRequestSent = await User.findOne({ _id: userId }).select(
+      "friendRequestSent"
+    );
+
+    return res.status(200).send({ success: true, data: friendRequestSent });
+  } catch (error) {
+    return res.status(500).send({ success: false, message: error.message });
+  }
+};
+
+// cancel Sent friend request
+
+exports.CancelSendFriendRequest = async (req, res) => {
+  try {
+    const { userId,friendId } = req.query;
+
+    const userDetail = await User.findOne({ _id: userId }).select("friendRequestSent");
+
+    userDetail.friendRequestSent = userDetail.friendRequestSent.filter(
+      (singleContact) => singleContact.toString() !== friendId
+    );
+
+    // console.log("userDetail", userDetail);
+    userDetail.save();
+
+    const friendUserDetail = await User.findOne({ _id: friendId }).select(
+      "friendRequestRecieved"
+    );
+
+ 
+
+    friendUserDetail.friendRequestRecieved = friendUserDetail.friendRequestRecieved.filter(
+      (singleContact) => singleContact.toString() !== userId
+    );
+
+    // console.log("userDetail 2", friendUserDetail);
+    friendUserDetail.save();
+
+
+
+    
+    return res
+      .status(200)
+      .send({ success: true, message: "Sent Friend Request Cancelled Successfully" });
+
+
+  } catch (error) {
+    return res.status(500).send({ success: false, message: error.message });
+  }
+};
+
+// cancel Recieved friend request
+exports.CancelRecivedFriendRequest = async (req, res) => {
+  try {
+    const { userId,friendId } = req.query;
+
+    const userDetail = await User.findOne({ _id: userId }).select("friendRequestRecieved");
+
+    userDetail.friendRequestRecieved = userDetail.friendRequestRecieved.filter(
+      (singleContact) => singleContact.toString() !== friendId
+    );
+    
+    console.log("userDetail", userDetail);
+    userDetail.save();
+
+    const friendUserDetail = await User.findOne({ _id: friendId }).select(
+      "friendRequestSent"
+    );
+
+ 
+
+    friendUserDetail.friendRequestSent = friendUserDetail.friendRequestSent.filter(
+      (singleContact) => singleContact.toString() !== userId
+    );
+
+    console.log("userDetail 2", friendUserDetail);
+    friendUserDetail.save();
+
+    return res
+      .status(200)
+      .send({ success: true, message: "Cancelled Successfully" });
+
+
+  } catch (error) {
+    return res.status(500).send({ success: false, message: error.message });
+  }
+};
+
 // unfriend
+exports.Unfriend = async (req, res) => {
+  try {
+    const { userId, unfriendId } = req.query;
+    const userDetail = await User.findOne({ _id: userId }).select("contacts");
+
+    userDetail.contacts = userDetail.contacts.filter(
+      (singleContact) => singleContact.toString() !== unfriendId
+    );
+
+    // console.log("userDetail 2", userDetail);
+    userDetail.save();
+
+    const unfriendUserDetail = await User.findOne({ _id: unfriendId }).select(
+      "contacts"
+    );
+
+ 
+
+    unfriendUserDetail.contacts = unfriendUserDetail.contacts.filter(
+      (singleContact) => singleContact.toString() !== userId
+    );
+
+    // console.log("userDetail 2", unfriendUserDetail);
+    unfriendUserDetail.save();
+
+    return res
+      .status(200)
+      .send({ success: true, message: "User Unfriened Successfully" });
+
+  } catch (error) {
+    return res.status(500).send({ success: false, message: error.message });
+  }
+};

@@ -10,9 +10,14 @@ const {
   sendFriendRequest,
   acceptFriendRequest,
   getAllFriendList,
-  getAllSentFriendRequest,
   getAllRecivedFriendRequest,
   getAllSendFriendRequest,
+  getAllFriendId,
+  getAllRecivedFriendRequestId,
+  getAllSendFriendRequestId,
+  CancelRecivedFriendRequest,
+  Unfriend,
+  CancelSendFriendRequest,
 } = require("../controller/userController");
 
 const router = express.Router();
@@ -28,4 +33,10 @@ router.route("/acceptFriendRequest").get(acceptFriendRequest);
 router.route("/getAllFriendList").get(getAllFriendList);
 router.route("/getAllRecivedFriendRequest").get(getAllRecivedFriendRequest);
 router.route("/getAllSendFriendRequest").get(getAllSendFriendRequest);
+router.route("/getAllFriendId").get(getAllFriendId);
+router.route("/getAllRecivedFriendRequestId").get(getAllRecivedFriendRequestId);
+router.route("/getAllSendFriendRequestId").get(getAllSendFriendRequestId);
+router.route("/CancelSendFriendRequest").get(CancelSendFriendRequest);
+router.route("/CancelRecivedFriendRequest").get(CancelRecivedFriendRequest);
+router.route("/Unfriend").get(Unfriend);
 module.exports = router;

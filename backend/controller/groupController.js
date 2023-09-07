@@ -4,8 +4,6 @@ const User = require("../models/user");
 const mongoose = require("mongoose");
 var ObjectId = require("mongodb").ObjectId;
 
-
-
 exports.createGroup = async (req, res) => {
   try {
     console.log(req.user);
@@ -75,7 +73,9 @@ exports.addGroupMembers = async (req, res) => {
     const { groupId } = req.query;
     const { AddingGroupMembers } = req.body;
     if (!groupId) {
-      return res.status(400).send({ success: true, messages: "Enter Group Id" });
+      return res
+        .status(400)
+        .send({ success: true, messages: "Enter Group Id" });
     }
     AddingGroupMembers.map(async (singleMember) => {
       // console.log(singleMember);
@@ -164,7 +164,7 @@ exports.RemovefromGroupAdmin = async (req, res) => {
       { groupAdmins: remainingArray }
     );
 
-    return res.status(400).send({ success: false, message: "Admin Removed" });
+    return res.status(200).send({ success: false, message: "Admin Removed" });
   } catch (error) {
     return res.status(500).send({ success: false, message: error.message });
   }
@@ -173,3 +173,43 @@ exports.RemovefromGroupAdmin = async (req, res) => {
 // Remove Member From Group
 
 
+// Get All Groups
+
+exports.getAllGroups = async (req, res) => {
+  try {
+    const { userId } = req.query;
+    const allGroups = await Group.find({ groupMembers: { $in: userId } });
+
+    if (!allGroups) {
+      return res
+        .status(400)
+        .send({ success: false, message: "User Is Not present in any group"});
+    }
+
+    return res
+      .status(200)
+      .send({ success: true, message: "Groups Found", data: allGroups });
+  } catch (error) {
+    return res.status(500).send({ success: false, message: error.message });
+  }
+};
+
+// Get Single Group Detail Based On ID
+
+exports.getGroupById = async (req, res) => {
+  try {
+    const { groupId } = req.query;
+    const groupsDetails = await Group.findOne({ _id: groupId });
+    if (!groupsDetails) {
+      return res
+        .status(400)
+        .send({ success: false, message: "No Group Found"});
+    }
+
+    return res
+      .status(200)
+      .send({ success: true, message: "Groups Found", data: groupsDetails });
+  } catch (error) {
+    return res.status(500).send({ success: false, message: error.message });
+  }
+};

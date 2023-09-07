@@ -1,0 +1,68 @@
+import { useState } from "react";
+import ModalComponent from "./Modal";
+import { useDispatch, useSelector } from "react-redux";
+import { EachChatComponent } from "../pages/ChatPage";
+import Blank from "../assets/blank.png";
+import { setSelectedGroupChatId } from "../redux/app/GroupSlice";
+
+const Group = () => {
+  const dispatch = useDispatch()
+  const { allGroups } = useSelector((state) => state.group);
+  const [groupModalOpen, setGroupModalOpen] = useState(false);
+
+  return (
+    <div className="space-y-2">
+      <ModalComponent
+        isAddGroup={true}
+        label={"Add Group"}
+        openModal={groupModalOpen}
+        closeModal={() => {
+          setGroupModalOpen(false);
+        }}
+        buttonlabel={"Save"}
+        onClickButton={() => {
+          setGroupModalOpen(false);
+        }}
+      />
+
+      {/* ADD Group */}
+      <div className="flex justify-end">
+        <button
+          className="bg-bluebase text-white text-base rounded-full px-5 py-2"
+          onClick={() => {
+            setGroupModalOpen(true);
+          }}
+        >
+          Add Group
+        </button>
+      </div>
+
+      {/* Group Chats */}
+      <div className="overflow-y-auto h-[70vh] no-scrollbar rounded-b-3xl pt-6">
+        {allGroups.map((singleGroup) => {
+          {
+            /* console.log("singleGroup--------->",singleGroup) */
+          }
+          return (
+            <>
+              <div key={singleGroup?._id}
+              onClick={
+                ()=>{
+                  dispatch(setSelectedGroupChatId({selectedGroupChatId:singleGroup?._id}))
+                }
+              }
+              >
+                <EachChatComponent
+                  profilePic={Blank}
+                  name={singleGroup?.groupName}
+                />
+              </div>
+            </>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
+export default Group;

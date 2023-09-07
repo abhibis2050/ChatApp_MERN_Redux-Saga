@@ -65,3 +65,20 @@ export const RemovefromGroupAdminAction = async (payload) => {
     );
     return response;
   };
+
+  
+  export const GetAllGroupsAction = async (payload) => {
+    const response = await axios.get(
+      `${VITE_BASE_URL}/group/getAllGroups?userId=${payload?.userId}`,
+    );
+    return response;
+  };
+
+
+   
+  export const GetGroupsByIdAction = async (payload) => {
+    const response = await axios.get(
+      `${VITE_BASE_URL}/group/getGroupById?groupId=${payload?.groupId}`,      
+    );
+    return response;
+  };

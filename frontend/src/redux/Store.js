@@ -5,6 +5,7 @@ import { rootSaga } from "./saga/rootSaga";
 import { userReducer } from "./app/UserSlice";
 import { chatReducer } from "./app/ChatSlice";
 import { messageReducer } from "./app/messageSlice";
+import { groupReducer } from "./app/GroupSlice";
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -14,7 +15,7 @@ export const Store = configureStore({
     user:userReducer,
     chat:chatReducer,
     message:messageReducer,
-    // group:groupReducer
+    group:groupReducer
   },
   middleware: [sagaMiddleware],
 });

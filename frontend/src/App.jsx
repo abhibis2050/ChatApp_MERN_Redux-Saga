@@ -36,33 +36,53 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (token!=="" && authUser) {
+    if (token !== "" && authUser) {
       dispatch({
         type: "GET_FRIENDLIST",
         payload: {
           userId: authUser?._id,
         },
       });
-    }
 
-    if (token!=="" && authUser) {
       dispatch({
         type: "GET_ALL_FRIENDREQUEST_SENT",
         payload: {
           userId: authUser?._id,
         },
       });
-    }
 
-    if (token!=="" && authUser) {
       dispatch({
         type: "GET_ALL_FRIENDREQUEST_RECIEVED",
         payload: {
           userId: authUser?._id,
         },
       });
+      dispatch({
+        type: "GET_FRIENDLIST_ID",
+        payload: {
+          userId: authUser?._id,
+        },
+      });
+      dispatch({
+        type: "GET_ALL_FRIENDREQUEST_SENT_ID",
+        payload: {
+          userId: authUser?._id,
+        },
+      });
+      dispatch({
+        type: "GET_ALL_FRIENDREQUEST_RECIEVED_ID",
+        payload: {
+          userId: authUser?._id,
+        },
+      });
+      dispatch({
+        type: "GET_ALL_GROUPS",
+        payload: {
+          userId: authUser?._id,
+        },
+      });
     }
-  }, [authUser,token]);
+  }, [authUser, token]);
 
   return (
     <>

@@ -124,6 +124,26 @@ io.on("connection", (socket) => {
     }
   });
 
+  socket.on("send_Friend_Request",async(data)=>{
+    console.log(data,socket.id)
+   await User.findOneAndUpdate(
+      { _id: data.friendId },
+      { $push: { friendRequestRecieved: data.userId } }
+    );
+
+    await User.findOneAndUpdate(
+      { _id:  data.userId },
+      { $push: { friendRequestSent: data.friendId } }
+    );
+
+    io.to(socket.id).emit("after_add_friend",data.friendId)
+  })
+
+
+  // socket.on("Accept_friend_Request",async(data)=>{
+  //   console.log(data)
+  // })
+
   socket.on("disconnect", async () => {
     console.log(`Socket ${socket.id} disconnected....`);
     await User.findOneAndUpdate({ socketId: socket.id }, { socketId: null });

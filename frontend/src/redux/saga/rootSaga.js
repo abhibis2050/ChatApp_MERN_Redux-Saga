@@ -3,6 +3,7 @@ import { watchAuthAsync } from "./authSaga";
 import { watchChat } from "./chatSaga";
 import { watchMessage } from "./messageSaga";
 import { watchUser } from "./userSaga";
+import { watchGroup } from "./groupSaga";
 
 
 
@@ -11,6 +12,7 @@ export function* rootSaga(){
         watchAuthAsync(),
         watchChat(),
         watchMessage(),
-        watchUser()
+        watchUser(),
+        watchGroup()
     ])
 }

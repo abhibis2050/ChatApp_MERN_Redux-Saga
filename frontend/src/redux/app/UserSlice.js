@@ -12,6 +12,9 @@ const initialState = {
   allFriendList: [],
   allFriendRequestSent: [],
   allFriendRequestRecieved: [],
+  allFriendListId: [],
+  allFriendRequestSentId: [],
+  allFriendRequestRecievedId: [],
 };
 
 export const userSlice = createSlice({
@@ -33,6 +36,15 @@ export const userSlice = createSlice({
     setAllFriendRequestRecieved: (state, action) => {
       state.allFriendRequestRecieved = action.payload.allFriendRequestRecieved;
     },
+    setAllFriendListId: (state, action) => {
+      state.allFriendListId = action.payload.allFriendListId;
+    },
+    setAllFriendRequestSentId: (state, action) => {
+      state.allFriendRequestSentId = action.payload.allFriendRequestSentId;
+    },
+    setAllFriendRequestRecievedId: (state, action) => {
+      state.allFriendRequestRecievedId = action.payload.allFriendRequestRecievedId;
+    },
   },
 });
 
@@ -41,6 +53,9 @@ export const {
   setAllContact,
   setAllFriendList,
   setAllFriendRequestSent,
-  setAllFriendRequestRecieved
+  setAllFriendRequestRecieved,
+  setAllFriendListId,
+  setAllFriendRequestSentId,
+  setAllFriendRequestRecievedId,
 } = userSlice.actions;
 export const userReducer = userSlice.reducer;

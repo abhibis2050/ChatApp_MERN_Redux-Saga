@@ -17,16 +17,16 @@ export const GetAllContactsAction = async () => {
 };
 
 
-export const SendFriendListAction = async (payload) => {
-  const response = await axios.get(
-    `${VITE_BASE_URL}/user/sendFriendRequest?userId=${payload?.userId}&friendRequestId=${payload?.friendRequestId}`
-  );
-  return response;
-};
+// export const SendFriendRequestAction = async (payload) => {
+//   const response = await axios.get(
+//     `${VITE_BASE_URL}/user/sendFriendRequest?userId=${payload?.userId}&friendId=${payload?.friendRequestId}`
+//   );
+//   return response;
+// };
 
-export const SendFriendRequestAction = async (payload) => {
+export const AcceptFriendRequestAction = async (payload) => {
   const response = await axios.get(
-    `${VITE_BASE_URL}/user/acceptFriendRequest?userId=${payload?.userId}&friendId=${payload?.friendRequestId}`
+    `${VITE_BASE_URL}/user/acceptFriendRequest?userId=${payload?.userId}&friendRequestId=${payload?.friendRequestId}`
   );
   return response;
 };
@@ -54,4 +54,51 @@ export const GetAllRecievedFriendRequestAction = async (payload) => {
 };
 
 
+
+
+export const GetAllFriendIdAction = async (payload) => {
+  const response = await axios.get(
+    `${VITE_BASE_URL}/user/getAllFriendId?userId=${payload?.userId}`
+  );
+  return response;
+};
+
+
+export const GetAllSentFriendRequestIdAction = async (payload) => {
+  const response = await axios.get(
+    `${VITE_BASE_URL}/user/getAllSendFriendRequestId?userId=${payload?.userId}`
+  );
+  return response;
+};
+
+export const GetAllRecievedFriendRequestIdAction = async (payload) => {
+  const response = await axios.get(
+    `${VITE_BASE_URL}/user/getAllRecivedFriendRequestId?userId=${payload?.userId}`
+  );
+  return response;
+};
+
+
+
+export const CancelSendFriendRequestAction = async (payload) => {
+  const response = await axios.get(
+    `${VITE_BASE_URL}/user/CancelSendFriendRequest?userId=${payload?.userId}&friendId=${payload?.friendId}`
+  );
+  return response;
+};
+
+
+export const CancelRecivedFriendRequestAction = async (payload) => {
+  const response = await axios.get(
+    `${VITE_BASE_URL}/user/CancelRecivedFriendRequest?userId=${payload?.userId}&friendId=${payload?.friendId}`
+  );
+  return response;
+};
+
+export const UnfriendAction = async (payload) => {
+  const response = await axios.get(
+    `${VITE_BASE_URL}/user/Unfriend?userId=${payload?.userId}&unfriendId=${payload?.unfriendId}`
+  );
+  return response;
+};
 
