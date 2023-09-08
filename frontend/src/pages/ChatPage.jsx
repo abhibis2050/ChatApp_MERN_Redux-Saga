@@ -10,7 +10,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faFaceSmile } from "@fortawesome/free-regular-svg-icons";
 import { useEffect, useRef, useState } from "react";
-import FriendProfile from "../component/FriendProfile";
 import Sidebar from "../component/Sidebar";
 import { useDispatch, useSelector } from "react-redux";
 import { io } from "socket.io-client";
@@ -23,6 +22,7 @@ import {
   setAllFriendRequestSentId,
 } from "../redux/app/UserSlice";
 import Group from "../component/Group";
+import DetailProfile from "../component/DetailProfile";
 const socket = io("http://localhost:8080");
 
 const ChatPage = () => {
@@ -41,7 +41,7 @@ const ChatPage = () => {
     allFriendRequestRecievedId,
   } = useSelector((state) => state.user);
   const { allChats } = useSelector((state) => state.chat);
-  const { allSingleChatMessages } = useSelector((state) => state.message);
+  const { allSingleChatMessages,allGroupMessages } = useSelector((state) => state.message);
   const [open, setOpen] = useState(false);
   const [selectedChat, setSelectedChat] = useState(undefined);
   const [sendMessage, setSendMessage] = useState("");
@@ -649,7 +649,7 @@ const ChatPage = () => {
         </div>
         {/* chat */}
         <div className=" w-3/4 rounded-3xl">
-          {/*SINGLE MESSAGE CHAT */}
+          {/********************************************************SINGLE MESSAGE CHAT ********************************************************/}
           {sideBarIsActive?.message && (
             <>
               <div className="space-y-3 h-full rounded-3xl ">
@@ -689,7 +689,7 @@ const ChatPage = () => {
                         </div>
                       </div>
                       <div className="flex items-center mr-4">
-                        <FriendProfile
+                        <DetailProfile
                           button={
                             <FontAwesomeIcon
                               icon={faBars}
@@ -777,7 +777,7 @@ const ChatPage = () => {
             </>
           )}
 
-          {/* GROUP MESSAGE CHAT*/}
+          {/* ****************************************************GROUP MESSAGE CHAT*******************************************************/}
           {sideBarIsActive.group && (
             <>
               <div className="space-y-3 h-full rounded-3xl">
@@ -818,7 +818,7 @@ const ChatPage = () => {
                         </div>
                       </div>
                       <div className="flex items-center mr-4">
-                        <FriendProfile
+                        <DetailProfile
                           button={
                             <FontAwesomeIcon
                               icon={faBars}

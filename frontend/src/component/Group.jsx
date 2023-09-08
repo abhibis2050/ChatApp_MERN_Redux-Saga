@@ -8,6 +8,7 @@ import { setSelectedGroupChatId } from "../redux/app/GroupSlice";
 const Group = () => {
   const dispatch = useDispatch();
   const { allGroups } = useSelector((state) => state.group);
+
   const [groupModalOpen, setGroupModalOpen] = useState(false);
 
   return (
