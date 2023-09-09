@@ -3,11 +3,33 @@ const User = require("../models/user");
 
 const mongoose = require("mongoose");
 var ObjectId = require("mongodb").ObjectId;
+const cloudinary = require("cloudinary");
 
 exports.createGroup = async (req, res) => {
   try {
+    let groupProfilePicture;
     console.log(req.user);
+    console.log(req.body);
+
     req.body.CreatedBy = req.user;
+
+    if (req.files) {
+      if (req.files.groupAvatar) {
+        groupProfilePicture = await cloudinary.v2.uploader.upload(
+          req.files.groupAvatar.tempFilePath,
+          { folder: "Chat_App_Group_Profile_pic" }
+        );
+      }
+      console.log(groupProfilePicture);
+    }
+
+    const groupAvatar = groupProfilePicture && {
+      id: groupProfilePicture.public_id,
+      secure_url: groupProfilePicture.secure_url,
+    };
+
+    req.body.GroupAvatar = groupAvatar;
+
     const checkGroup = await Group.findOne({ groupName: req.body.groupName });
     if (checkGroup) {
       return res.status(400).send({
@@ -172,7 +194,6 @@ exports.RemovefromGroupAdmin = async (req, res) => {
 
 // Remove Member From Group
 
-
 // Get All Groups
 
 exports.getAllGroups = async (req, res) => {
@@ -183,7 +204,7 @@ exports.getAllGroups = async (req, res) => {
     if (!allGroups) {
       return res
         .status(400)
-        .send({ success: false, message: "User Is Not present in any group"});
+        .send({ success: false, message: "User Is Not present in any group" });
     }
 
     return res
@@ -199,11 +220,14 @@ exports.getAllGroups = async (req, res) => {
 exports.getGroupById = async (req, res) => {
   try {
     const { groupId } = req.query;
-    const groupsDetails = await Group.findOne({ _id: groupId });
+    const groupsDetails = await Group.findOne({ _id: groupId }).populate(
+      "groupMembers"
+    );
+
     if (!groupsDetails) {
       return res
         .status(400)
-        .send({ success: false, message: "No Group Found"});
+        .send({ success: false, message: "No Group Found" });
     }
 
     return res

@@ -1,6 +1,6 @@
 import Blank from "../assets/blank.png";
 import NoChat from "../assets/home.jpg";
-import NoGroup from "../assets/groupTwo.png";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faAdd,
@@ -23,6 +23,7 @@ import {
 } from "../redux/app/UserSlice";
 import Group from "../component/Group";
 import DetailProfile from "../component/DetailProfile";
+import GroupMessages from "../component/GroupMessages";
 const socket = io("http://localhost:8080");
 
 const ChatPage = () => {
@@ -142,17 +143,6 @@ const ChatPage = () => {
       type: "GET_ALL_CONTACTS",
     });
   }, []);
-
-  useEffect(() => {
-    if (selectedGroupChatId) {
-      dispatch({
-        type: "GET_ALL_GROUP_MESSAGE",
-        payload: {
-          groupId: selectedGroupChatId,
-        },
-      });
-    }
-  }, [selectedGroupChatId]);
 
   useEffect(() => {
     dispatch({
@@ -300,11 +290,11 @@ const ChatPage = () => {
       <div
         className={`${
           open ? "w-[88%]" : "w-[97%]"
-        } bg-slate-200 flex space-x-4 rounded-3xl my-4 mr-3 p-4`}
+        } bg-blue-100 flex space-x-4 rounded-3xl my-4 mr-3 p-4`}
       >
         {/* contact search and profile */}
 
-        <div className=" w-1/4 rounded-3xl px-2 py-2 bg-white">
+        <div className=" w-1/4 rounded-3xl px-4 py-2 bg-white">
           <div className="flex space-x-2 items-center rounded-full">
             <img
               src={
@@ -690,6 +680,7 @@ const ChatPage = () => {
                       </div>
                       <div className="flex items-center mr-4">
                         <DetailProfile
+                        isMessage={true}
                           button={
                             <FontAwesomeIcon
                               icon={faBars}
@@ -780,129 +771,7 @@ const ChatPage = () => {
           {/* ****************************************************GROUP MESSAGE CHAT*******************************************************/}
           {sideBarIsActive.group && (
             <>
-              <div className="space-y-3 h-full rounded-3xl">
-                {selectedGroupChatId === "" ? (
-                  <>
-                    <div className="rounded-3xl h-full bg-white">
-                      <div></div>
-                      <img
-                        src={NoGroup}
-                        alt=""
-                        className="rounded-3xl h-full mx-auto"
-                      />
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    {/* header profile */}
-                    <div className="flex justify-between bg-white  rounded-3xl py-4 px-4">
-                      <div className="flex space-x-2 items-center">
-                        <div>
-                          <img
-                            src={
-                              selectedChat?.oppositeId?.avatar
-                                ? selectedChat?.oppositeId?.avatar?.secure_url
-                                : Blank
-                            }
-                            alt=""
-                            className=" w-12 h-12 rounded-full"
-                          />
-                        </div>
-                        <div>
-                          <h1>
-                            {selectedChat
-                              ? `${selectedChat?.oppositeId?.firstName} ${selectedChat?.oppositeId?.lastName}`
-                              : ``}
-                          </h1>
-                          {/* <h1 className="text-sm">online</h1> */}
-                        </div>
-                      </div>
-                      <div className="flex items-center mr-4">
-                        <DetailProfile
-                          button={
-                            <FontAwesomeIcon
-                              icon={faBars}
-                              className="text-xl w-12 "
-                            />
-                          }
-                        />
-                      </div>
-                    </div>
-                    {/*chat messages area */}
-
-                    <div className="bg-white rounded-3xl py-4 px-4 h-[71vh] overflow-y-auto no-scrollbar">
-                      {allSingleChatMessages?.map((singleMesssage) => {
-                        {
-                          /* console.log("single message---------->", singleMesssage); */
-                        }
-                        if (singleMesssage.sender === authUser?._id) {
-                          return (
-                            <>
-                              <div className="chat chat-end ">
-                                <div className="chat-bubble bg-blue-800">
-                                  {singleMesssage?.message}
-                                </div>
-                              </div>
-                            </>
-                          );
-                        } else {
-                          return (
-                            <>
-                              <div className="chat chat-start ">
-                                <div className="chat-bubble bg-purple-800">
-                                  {singleMesssage?.message}
-                                </div>
-                              </div>
-                            </>
-                          );
-                        }
-                      })}
-                      <div ref={messageScrollRef}></div>
-                    </div>
-
-                    {/* send messgae area*/}
-                    <div className="flex justify-between items-center bg-white rounded-3xl px-4 py-5">
-                      <div className="flex space-x-4 w-[90%]">
-                        <div className="flex items-center px-4 bg-blue-100 rounded-full">
-                          <FontAwesomeIcon icon={faAdd} className="text-xl" />
-                        </div>
-                        <div className=" rounded-full w-full">
-                          <input
-                            placeholder="type message here"
-                            className="w-full rounded-full px-5 py-3 outline-none bg-blue-50 text-xl"
-                            value={sendMessage}
-                            onChange={(e) => {
-                              setSendMessage(e.target.value);
-                            }}
-                            onKeyDown={(e) => {
-                              if (e.key === "Enter" && sendMessage !== "") {
-                                sendMessageHandler();
-                              }
-                            }}
-                          />
-                        </div>
-                      </div>
-                      <div className="flex space-x-4 ">
-                        <div className="px-3 py-2 ">
-                          <FontAwesomeIcon
-                            icon={faFaceSmile}
-                            className="text-3xl"
-                          />
-                        </div>
-                        <div
-                          className="px-3 flex items-center bg-blue-100 rounded-full"
-                          onClick={sendMessageHandler}
-                        >
-                          <FontAwesomeIcon
-                            icon={faLocationArrow}
-                            className="text-3xl text-[#0059E4]"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </>
-                )}
-              </div>
+            <GroupMessages/>
             </>
           )}
         </div>

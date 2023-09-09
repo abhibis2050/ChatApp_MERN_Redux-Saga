@@ -58,8 +58,10 @@ exports.getAllGroupMessages = async (req, res) => {
 
     const getAllGroupMessages = await Message.find({
       groupId: req.query.groupId,
-    });
-    console.log(getAllGroupMessages);
+    }).populate({
+      path:"sender"
+    })
+    // console.log(getAllGroupMessages);
     return res
       .status(200)
       .send({ success: true, messages: getAllGroupMessages });

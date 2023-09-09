@@ -24,8 +24,7 @@ function* allOneToOneMessageSaga(action) {
 
 function* oneToOneMessageSaga(action) {
   try {
-    const response = yield call(SendOneToOneMessageAction, action?.payload);
-    console.log("oneToOneMessageSaga resposnse", response);
+    yield call(SendOneToOneMessageAction, action?.payload);
   } catch (error) {
     console.log(error);
   }
