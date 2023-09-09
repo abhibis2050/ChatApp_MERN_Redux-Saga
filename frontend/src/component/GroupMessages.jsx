@@ -115,7 +115,7 @@ const GroupMessages = () => {
                         <>
                           <div className="chat chat-start ">
                             <div className="flex space-x-5">
-                              <div className="">
+                              <div className="pt-7">
                                 <img
                                   className=" w-18 h-8 rounded-full "
                                   src={
