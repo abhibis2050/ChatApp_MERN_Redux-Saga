@@ -17,6 +17,7 @@ export const SendOneToOneMessageAction = async (payload) => {
 export const SendGroupMessageAction = async (payload) => {
   const response = await axios.post(
     `${VITE_BASE_URL}/message/sendGroupMessage`,
+    payload.body,
     {
       headers: {
         Authorization: payload.token,

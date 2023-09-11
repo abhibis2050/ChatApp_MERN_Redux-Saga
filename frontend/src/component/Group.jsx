@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { EachChatComponent } from "../pages/ChatPage";
 import Blank from "../assets/blank.png";
 import { setSelectedGroupChatId } from "../redux/app/GroupSlice";
+import { io } from "socket.io-client";
+const socket = io("http://localhost:8080");
 
 const Group = () => {
   const dispatch = useDispatch();
@@ -60,10 +62,15 @@ const Group = () => {
                       groupId: singleGroup?._id,
                     },
                   });
+                  socket.emit("joinGroup", singleGroup?._id);
                 }}
               >
                 <EachChatComponent
-                  profilePic={ singleGroup?.GroupAvatar ? singleGroup?.GroupAvatar?.secure_url : Blank}
+                  profilePic={
+                    singleGroup?.GroupAvatar
+                      ? singleGroup?.GroupAvatar?.secure_url
+                      : Blank
+                  }
                   name={singleGroup?.groupName}
                 />
               </div>

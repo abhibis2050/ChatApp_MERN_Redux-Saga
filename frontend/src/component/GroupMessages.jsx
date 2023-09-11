@@ -9,15 +9,30 @@ import { useDispatch, useSelector } from "react-redux";
 import DetailProfile from "./DetailProfile";
 import NoGroup from "../assets/groupTwo.png";
 import Blank from "../assets/blank.png";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const GroupMessages = () => {
   const dispatch = useDispatch();
-  const { authUser } = useSelector((state) => state.auth);
+  const { authUser,token } = useSelector((state) => state.auth);
   const { selectedGroupChatId, selectedGroupDetails } = useSelector(
     (state) => state.group
   );
   const { allGroupMessages } = useSelector((state) => state.message);
+  const [sendGroupMessage, setSendGroupMessage] = useState("");
+
+  const sendGroupMessageHandler = () => {
+    console.log(sendGroupMessage);
+    dispatch({
+      type: "SEND_GROUP_MESSAGE",
+      payload: {
+        body: {
+          message: sendGroupMessage,
+          groupId: selectedGroupChatId,
+        },
+        token
+      },
+    });
+  };
 
   useEffect(() => {
     if (selectedGroupChatId) {
@@ -151,14 +166,14 @@ const GroupMessages = () => {
                     <input
                       placeholder="type message here"
                       className="w-full rounded-full px-5 py-3 outline-none bg-blue-50 text-xl"
-                      // value={sendMessage}
+                      value={sendGroupMessage}
                       onChange={(e) => {
-                        //   setSendMessage(e.target.value);
+                        setSendGroupMessage(e.target.value);
                       }}
                       onKeyDown={(e) => {
-                        //   if (e.key === "Enter" && sendMessage !== "") {
-                        //     sendMessageHandler();
-                        //   }
+                        if (e.key === "Enter" && sendGroupMessage !== "") {
+                          sendGroupMessageHandler()
+                        }
                       }}
                     />
                   </div>
@@ -169,7 +184,7 @@ const GroupMessages = () => {
                   </div>
                   <div
                     className="px-3 flex items-center bg-blue-100 rounded-full"
-                    //   onClick={sendMessageHandler}
+                    onClick={sendGroupMessageHandler}
                   >
                     <FontAwesomeIcon
                       icon={faLocationArrow}
