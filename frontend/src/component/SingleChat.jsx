@@ -22,6 +22,8 @@ const SingleChat = () => {
                 }}
               >
                 <EachChatComponent
+                  chatId={singleChat._id}
+                  isChat={true}
                   profilePic={
                     singleChat?.oppositeId?.avatar
                       ? singleChat?.oppositeId?.avatar?.secure_url

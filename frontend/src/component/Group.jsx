@@ -60,13 +60,14 @@ const Group = () => {
                 }}
               >
                 <EachChatComponent
+                  isGroup={true}
                   profilePic={
                     singleGroup?.GroupAvatar
                       ? singleGroup?.GroupAvatar?.secure_url
                       : Blank
                   }
                   name={singleGroup?.groupName}
-                  id={singleGroup?._id}
+                  groupId={singleGroup?._id}
                 />
               </div>
             </>
