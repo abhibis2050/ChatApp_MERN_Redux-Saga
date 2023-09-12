@@ -12,7 +12,6 @@ import { faFaceSmile } from "@fortawesome/free-regular-svg-icons";
 import { useEffect, useRef, useState } from "react";
 import Sidebar from "../component/Sidebar";
 import { useDispatch, useSelector } from "react-redux";
-import { io } from "socket.io-client";
 import { setAllSingleChatMessages } from "../redux/app/messageSlice";
 import Select from "react-select";
 import {
@@ -24,12 +23,14 @@ import {
 import Group from "../component/Group";
 import DetailProfile from "../component/DetailProfile";
 import GroupMessages from "../component/GroupMessages";
-const socket = io("http://localhost:8080");
+
+import socket from "../customHooks/SocketHooks";
+import SingleChat from "../component/SingleChat";
 
 const ChatPage = () => {
   const dispatch = useDispatch();
   const { token, authUser } = useSelector((state) => state.auth);
-  const { selectedGroupChatId,selectedGroupDetails } = useSelector((state) => state.group);
+  const { selectedSingleChat } = useSelector((state) => state.chat);
   const messageScrollRef = useRef(null);
   const {
     sideBarIsActive,
@@ -41,10 +42,9 @@ const ChatPage = () => {
     allFriendRequestSentId,
     allFriendRequestRecievedId,
   } = useSelector((state) => state.user);
-  const { allChats } = useSelector((state) => state.chat);
-  const { allSingleChatMessages,allGroupMessages } = useSelector((state) => state.message);
+
+  const { allSingleChatMessages } = useSelector((state) => state.message);
   const [open, setOpen] = useState(false);
-  const [selectedChat, setSelectedChat] = useState(undefined);
   const [sendMessage, setSendMessage] = useState("");
   const [contacts, setContacts] = useState({
     allContact: true,
@@ -52,13 +52,10 @@ const ChatPage = () => {
     friendRequestSent: false,
     friendRequestRecieved: false,
   });
-  const [buttonAddText, setAddButtonText] = useState("Add");
-  const [buttonAcceptText, setAcceptButtonText] = useState("Accept");
 
   // console.log("Contacts--------->", contacts);
 
   // console.log("allFriendList--------->", allFriendList);
-  // console.log("allFriendRequest--------->", allFriendRequest);
 
   useEffect(() => {
     if (authUser?._id) {
@@ -124,7 +121,7 @@ const ChatPage = () => {
   ]);
 
   // console.log("allChats------>", allChats);
-  // console.log("selectedChat------>", selectedChat);
+  console.log("selectedSingleChat------>", selectedSingleChat);
   // console.log("sendMessage------>", sendMessage);
   // console.log("allSingleChatMessages------>", allSingleChatMessages);
   // console.log("allContacts------>", allContacts);
@@ -176,16 +173,16 @@ const ChatPage = () => {
   }, [authUser, contacts]);
 
   useEffect(() => {
-    if (selectedChat?._id !== "") {
+    if (selectedSingleChat?._id !== "") {
       dispatch({
         type: "GET_ALL_ONE_TO_ONE_MESSAGE",
         payload: {
-          selectedChatId: selectedChat?._id,
+          selectedChatId: selectedSingleChat?._id,
           token,
         },
       });
     }
-  }, [dispatch, selectedChat, token]);
+  }, [dispatch, selectedSingleChat, token]);
 
   const scroll = () => {
     console.log("scroll called");
@@ -198,8 +195,8 @@ const ChatPage = () => {
       socket.emit("Send-Message", {
         sender: authUser?._id,
         message: sendMessage,
-        reciever: selectedChat?.oppositeId._id,
-        chatId: selectedChat?._id,
+        reciever: selectedSingleChat?.oppositeId._id,
+        chatId: selectedSingleChat?._id,
       });
       setSendMessage("");
     }
@@ -323,36 +320,7 @@ const ChatPage = () => {
             <div>
               {sideBarIsActive?.message && (
                 <>
-                  {allChats?.map((singleChat) => {
-                    {
-                      /* console.log("singleChat------->", singleChat);  */
-                    }
-
-                    return (
-                      <>
-                        <div
-                          key={singleChat?._id}
-                          onClick={() => {
-                            console.log(
-                              "single chat id-------->",
-                              singleChat?._id
-                            );
-                            console.log("single chat", singleChat);
-                            setSelectedChat(singleChat);
-                          }}
-                        >
-                          <EachChatComponent
-                            profilePic={
-                              singleChat?.oppositeId?.avatar
-                                ? singleChat?.oppositeId?.avatar?.secure_url
-                                : Blank
-                            }
-                            name={`${singleChat?.oppositeId?.firstName} ${singleChat?.oppositeId?.lastName}`}
-                          />
-                        </div>
-                      </>
-                    );
-                  })}
+                  <SingleChat />
                 </>
               )}
             </div>
@@ -643,7 +611,7 @@ const ChatPage = () => {
           {sideBarIsActive?.message && (
             <>
               <div className="space-y-3 h-full rounded-3xl ">
-                {selectedChat === undefined ? (
+                {selectedSingleChat === undefined ? (
                   <>
                     <div className="rounded-3xl h-full bg-white">
                       <img
@@ -661,8 +629,9 @@ const ChatPage = () => {
                         <div>
                           <img
                             src={
-                              selectedChat?.oppositeId?.avatar
-                                ? selectedChat?.oppositeId?.avatar?.secure_url
+                              selectedSingleChat?.oppositeId?.avatar
+                                ? selectedSingleChat?.oppositeId?.avatar
+                                    ?.secure_url
                                 : Blank
                             }
                             alt=""
@@ -671,8 +640,8 @@ const ChatPage = () => {
                         </div>
                         <div>
                           <h1>
-                            {selectedChat
-                              ? `${selectedChat?.oppositeId?.firstName} ${selectedChat?.oppositeId?.lastName}`
+                            {selectedSingleChat
+                              ? `${selectedSingleChat?.oppositeId?.firstName} ${selectedSingleChat?.oppositeId?.lastName}`
                               : ``}
                           </h1>
                           <h1 className="text-sm">online</h1>
@@ -680,7 +649,7 @@ const ChatPage = () => {
                       </div>
                       <div className="flex items-center mr-4">
                         <DetailProfile
-                        isMessage={true}
+                          isMessage={true}
                           button={
                             <FontAwesomeIcon
                               icon={faBars}
@@ -771,7 +740,7 @@ const ChatPage = () => {
           {/* ****************************************************GROUP MESSAGE CHAT*******************************************************/}
           {sideBarIsActive.group && (
             <>
-            <GroupMessages/>
+              <GroupMessages />
             </>
           )}
         </div>
@@ -782,31 +751,6 @@ const ChatPage = () => {
 
 export default ChatPage;
 
-// eslint-disable-next-line react/prop-types
-export const EachChatComponent = ({ isActive, name, profilePic, onClick }) => {
-  return (
-    <div
-      onClick={onClick}
-      className={`flex space-x-3 items-center pl-2 pr-12 py-2 ${
-        isActive
-          ? "bg-blue-500 rounded-full text-white"
-          : "hover:bg-blue-100 hover:rounded-full"
-      }`}
-    >
-      <div>
-        <img src={profilePic} alt="" className=" w-14 h-12 rounded-full" />
-      </div>
-      <div className="w-full">
-        <div className="flex justify-between w-full">
-          <h1>{name}</h1>
-          <div>6:25</div>
-        </div>
-
-        <h1 className="text-sm">last message</h1>
-      </div>
-    </div>
-  );
-};
 
 // eslint-disable-next-line react/prop-types
 export const ContactComponent = ({

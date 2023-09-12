@@ -71,6 +71,7 @@ const DetailProfile = ({ button, isMessage, isGroup }) => {
                           return (
                             <>
                               <UserDetailComponent
+                              key={singleMember._id}
                                 name={
                                   singleMember
                                     ? `${singleMember?.firstName} ${singleMember?.lastName}`

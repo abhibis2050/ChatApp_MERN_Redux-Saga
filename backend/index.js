@@ -98,10 +98,12 @@ io.on("connection", (socket) => {
   console.log(`Socket ${socket.id} connected....`);
 
   socket.on("user_connected", async (data) => {
-    console.log("data----->", data);
+    // console.log("data----->", data);
     await User.findOneAndUpdate({ _id: data?.UserId }, { socketId: socket.id });
   });
 
+
+  // SEND ONE ON ONE MESSAGE
   socket.on("Send-Message", async (data) => {
     console.log("send message Data", data);
 
@@ -114,35 +116,58 @@ io.on("connection", (socket) => {
 
     // console.log(console.log("createdMessage----->", createMessage));
 
-    io.to(socket.id).emit("recieve_message",createMessage);
+    io.to(socket.id).emit("recieve_message", createMessage);
 
     const recieverDetail = await User.findOne({ _id: data.reciever });
-    // console.log(console.log("recieverDetail----->", recieverDetail));
 
     if (recieverDetail?.socketId) {
-      io.to(recieverDetail?.socketId).emit("recieve_message",createMessage);
+      io.to(recieverDetail?.socketId).emit("recieve_message", createMessage);
     }
   });
 
-  socket.on("send_Friend_Request",async(data)=>{
-    console.log(data,socket.id)
-   await User.findOneAndUpdate(
+  // FRIEND REQUEST 
+  socket.on("send_Friend_Request", async (data) => {
+    console.log(data, socket.id);
+    await User.findOneAndUpdate(
       { _id: data.friendId },
       { $push: { friendRequestRecieved: data.userId } }
     );
 
     await User.findOneAndUpdate(
-      { _id:  data.userId },
+      { _id: data.userId },
       { $push: { friendRequestSent: data.friendId } }
     );
 
-    io.to(socket.id).emit("after_add_friend",data.friendId)
-  })
+    io.to(socket.id).emit("after_add_friend", data.friendId);
+  });
 
+  // Join Group and send group message
 
-  // socket.on("Accept_friend_Request",async(data)=>{
-  //   console.log(data)
-  // })
+  // socket.on("CreatingGroupRoom", (groupId) => {
+  //   socket.join(groupId);
+  // });
+
+  // SENDING GROUP MESSAGE
+  socket.on("SendGroupMessage", async (groupMessageData) => {
+    socket.join(groupMessageData.groupId);
+
+    const createGroupMessage = await Message.create(groupMessageData);
+
+    const SenderUserDetail = await User.findOne({
+      _id: groupMessageData.sender,
+    });
+
+    const socketPayload = {
+      ...createGroupMessage._doc,
+      sender: SenderUserDetail,
+    };
+
+    io.to(groupMessageData.groupId).emit(
+      "adding_new_group_message",
+      socketPayload
+    );
+
+  });
 
   socket.on("disconnect", async () => {
     console.log(`Socket ${socket.id} disconnected....`);

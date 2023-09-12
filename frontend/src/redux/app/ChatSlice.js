@@ -2,7 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 
 export const initialState = {
    allChats:[],
-   oppositeChatUser:{}
+   oppositeChatUser:{},
+   selectedSingleChat:undefined
     
 }
 
@@ -15,10 +16,13 @@ export const chatSlice = createSlice({
       },
       setOppositeChatUser:(state,action)=>{
         state.oppositeChatUser=action.payload.oppositeChatUser
+      },
+      setSelectedChat:(state,action)=>{
+        state.selectedSingleChat=action.payload.selectedSingleChat
       }
     }
 })
 
 
-export const {setAllChats,setOppositeChatUser} = chatSlice.actions
+export const {setAllChats,setOppositeChatUser,setSelectedChat} = chatSlice.actions
 export const chatReducer = chatSlice.reducer

@@ -17,7 +17,7 @@ function* getAllGroupsSaga(action) {
 function* getGroupDetailsByIdSaga(action) {
     try {
       const response = yield call(GetGroupsByIdAction, action.payload);
-      console.log("getGroupDetailsByIdSaga---->", response);
+      // console.log("getGroupDetailsByIdSaga---->", response);
       if(response?.status===200){
         yield put(setSelectedGroupDetails({selectedGroupDetails:response?.data?.data}))
     }

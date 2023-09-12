@@ -1,11 +1,9 @@
 import { useState } from "react";
 import ModalComponent from "./Modal";
 import { useDispatch, useSelector } from "react-redux";
-import { EachChatComponent } from "../pages/ChatPage";
 import Blank from "../assets/blank.png";
 import { setSelectedGroupChatId } from "../redux/app/GroupSlice";
-import { io } from "socket.io-client";
-const socket = io("http://localhost:8080");
+import { EachChatComponent } from "./ChatComponent";
 
 const Group = () => {
   const dispatch = useDispatch();
@@ -43,13 +41,10 @@ const Group = () => {
       {/* Group Chats */}
       <div className="overflow-y-auto h-[70vh] no-scrollbar rounded-b-3xl pt-6">
         {allGroups.map((singleGroup) => {
-          {
-            /* console.log("singleGroup--------->",singleGroup) */
-          }
           return (
             <>
               <div
-                key={singleGroup?._id}
+                key={singleGroup._id}
                 onClick={() => {
                   dispatch(
                     setSelectedGroupChatId({
@@ -62,7 +57,6 @@ const Group = () => {
                       groupId: singleGroup?._id,
                     },
                   });
-                  socket.emit("joinGroup", singleGroup?._id);
                 }}
               >
                 <EachChatComponent
@@ -72,6 +66,7 @@ const Group = () => {
                       : Blank
                   }
                   name={singleGroup?.groupName}
+                  id={singleGroup?._id}
                 />
               </div>
             </>

@@ -39,6 +39,16 @@ exports.sendGroupMessage = async (req, res) => {
     
     const createGroupMessage = await Message.create(req.body);
 
+    const SenderUserDetail = await User.findOne({_id:req.user?._id})
+    // const socketPayload = {...createGroupMessage,
+    //   sender:SenderUserDetail
+    // }
+    
+    // console.log("req.body.groupId-->",req.body.groupId);
+    // console.log("SenderUserDetail.socketId-->",SenderUserDetail.socketId);
+
+    // global.io.to(req.body.groupId).emit("sending_group_message","testing message")
+
     return res
       .status(201)
       .send({ success: true, createGroupMessage: createGroupMessage });

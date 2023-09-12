@@ -10,28 +10,52 @@ import DetailProfile from "./DetailProfile";
 import NoGroup from "../assets/groupTwo.png";
 import Blank from "../assets/blank.png";
 import { useEffect, useState } from "react";
+import { setAllGroupMessages } from "../redux/app/messageSlice";
+import socket from "../customHooks/SocketHooks";
 
 const GroupMessages = () => {
   const dispatch = useDispatch();
-  const { authUser,token } = useSelector((state) => state.auth);
+  const { authUser, token } = useSelector((state) => state.auth);
   const { selectedGroupChatId, selectedGroupDetails } = useSelector(
     (state) => state.group
   );
   const { allGroupMessages } = useSelector((state) => state.message);
   const [sendGroupMessage, setSendGroupMessage] = useState("");
 
-  const sendGroupMessageHandler = () => {
-    console.log(sendGroupMessage);
-    dispatch({
-      type: "SEND_GROUP_MESSAGE",
-      payload: {
-        body: {
-          message: sendGroupMessage,
-          groupId: selectedGroupChatId,
-        },
-        token
+  // console.log("sendGroupMessage---------->", sendGroupMessage);
+
+  // useEffect(() => {
+  //   socket.emit("CreatingGroupRoom", selectedGroupChatId);
+  //   return () => {
+  //     socket.emit("leaveGroup", selectedGroupChatId);
+  //   };
+  // }, [selectedGroupChatId,sendGroupMessage]);
+
+  useEffect(() => {
+    socket.on(
+      "adding_new_group_message",
+      (messages) => {
+        console.log("group message recieved---------->", messages);
+        dispatch(
+          setAllGroupMessages({
+            allGroupMessages: [...allGroupMessages, messages],
+          })
+        );
       },
-    });
+      [allGroupMessages,sendGroupMessage]
+    );
+  });
+
+  const sendGroupMessageHandler = () => {
+    if (authUser._id && sendGroupMessage !== "") {
+      socket.emit("SendGroupMessage", {
+        message: sendGroupMessage,
+        groupId: selectedGroupChatId,
+        sender: authUser?._id,
+        isGroupMessage: true,
+      });
+      setSendGroupMessage("");
+    }
   };
 
   useEffect(() => {
@@ -172,7 +196,7 @@ const GroupMessages = () => {
                       }}
                       onKeyDown={(e) => {
                         if (e.key === "Enter" && sendGroupMessage !== "") {
-                          sendGroupMessageHandler()
+                          sendGroupMessageHandler();
                         }
                       }}
                     />
