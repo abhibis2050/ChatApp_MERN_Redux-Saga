@@ -42,7 +42,7 @@ const GroupMessages = () => {
           })
         );
       },
-      [allGroupMessages,sendGroupMessage]
+      [allGroupMessages, sendGroupMessage]
     );
   });
 
@@ -133,12 +133,12 @@ const GroupMessages = () => {
                                     {singleMessage?.message}
                                   </p>
                                 </div>
-                                <div className="pt-7">
+                                <div className="pt-7 w-8 h-8">
                                   <img
-                                    className=" w-18 h-8 rounded-full "
+                                    className=" w-8 h-8 rounded-full "
                                     src={
-                                      selectedGroupDetails?.GroupAvatar
-                                        ? selectedGroupDetails?.GroupAvatar
+                                      singleMessage?.sender?.avatar
+                                        ? singleMessage?.sender?.avatar
                                             ?.secure_url
                                         : Blank
                                     }
@@ -154,12 +154,12 @@ const GroupMessages = () => {
                         <>
                           <div className="chat chat-start ">
                             <div className="flex space-x-5">
-                              <div className="pt-7">
+                              <div className="pt-7 w-8 h-8">
                                 <img
-                                  className=" w-18 h-8 rounded-full "
+                                  className=" w-8 h-8 rounded-full "
                                   src={
-                                    selectedGroupDetails?.GroupAvatar
-                                      ? selectedGroupDetails?.GroupAvatar
+                                    singleMessage?.sender?.avatar
+                                      ? singleMessage?.sender?.avatar
                                           ?.secure_url
                                       : Blank
                                   }

@@ -14,6 +14,7 @@ export const EachChatComponent = ({
 }) => {
   const { selectedGroupChatId } = useSelector((state) => state.group);
   const { selectedSingleChat } = useSelector((state) => state.chat);
+  // console.log("for check----------->",chatId,selectedSingleChat)
   return (
     <div>
       {isChat && (
@@ -22,7 +23,7 @@ export const EachChatComponent = ({
             onClick={onClick}
             className={`flex space-x-3 items-center pl-2 pr-12 py-2 ${
               selectedSingleChat?._id === chatId
-                ? "bg-blue-500 rounded-full text-white"
+                ? "bg-bluebase rounded-full text-white"
                 : "hover:bg-blue-100 hover:rounded-full"
             }`}
           >
@@ -51,7 +52,7 @@ export const EachChatComponent = ({
             onClick={onClick}
             className={`flex space-x-3 items-center pl-2 pr-12 py-2 ${
               selectedGroupChatId === groupId
-                ? "bg-blue-500 rounded-full text-white"
+                ? "bg-bluebase rounded-full text-white"
                 : "hover:bg-blue-100 hover:rounded-full"
             }`}
           >

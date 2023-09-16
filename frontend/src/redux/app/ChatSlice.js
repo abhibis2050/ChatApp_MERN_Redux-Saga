@@ -19,10 +19,13 @@ export const chatSlice = createSlice({
       },
       setSelectedChat:(state,action)=>{
         state.selectedSingleChat=action.payload.selectedSingleChat
+      },
+      updateAllChats:(state,action)=>{
+        state.allChats = [...state.allChats,action.payload.chat]
       }
     }
 })
 
 
-export const {setAllChats,setOppositeChatUser,setSelectedChat} = chatSlice.actions
+export const {setAllChats,setOppositeChatUser,setSelectedChat,updateAllChats} = chatSlice.actions
 export const chatReducer = chatSlice.reducer

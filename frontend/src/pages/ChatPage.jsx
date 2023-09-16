@@ -13,7 +13,6 @@ import { useEffect, useRef, useState } from "react";
 import Sidebar from "../component/Sidebar";
 import { useDispatch, useSelector } from "react-redux";
 import { setAllSingleChatMessages } from "../redux/app/messageSlice";
-import Select from "react-select";
 import {
   setAllFriendListId,
   setAllFriendRequestRecieved,
@@ -26,36 +25,27 @@ import GroupMessages from "../component/GroupMessages";
 
 import socket from "../customHooks/SocketHooks";
 import SingleChat from "../component/SingleChat";
+import Contacts from "../component/Contacts";
+import SearchAndProfile from "../component/SearchAndProfile";
+import Profile from "../component/Profile";
 
 const ChatPage = () => {
   const dispatch = useDispatch();
   const { token, authUser } = useSelector((state) => state.auth);
   const { selectedSingleChat } = useSelector((state) => state.chat);
-  const messageScrollRef = useRef(null);
+  const { allSingleChatMessages } = useSelector((state) => state.message);
   const {
     sideBarIsActive,
-    allContacts,
-    allFriendList,
-    allFriendRequestSent,
     allFriendRequestRecieved,
     allFriendListId,
     allFriendRequestSentId,
     allFriendRequestRecievedId,
   } = useSelector((state) => state.user);
 
-  const { allSingleChatMessages } = useSelector((state) => state.message);
+  const messageScrollRef = useRef(null);
+
   const [open, setOpen] = useState(false);
   const [sendMessage, setSendMessage] = useState("");
-  const [contacts, setContacts] = useState({
-    allContact: true,
-    myContact: false,
-    friendRequestSent: false,
-    friendRequestRecieved: false,
-  });
-
-  // console.log("Contacts--------->", contacts);
-
-  // console.log("allFriendList--------->", allFriendList);
 
   useEffect(() => {
     if (authUser?._id) {
@@ -142,37 +132,6 @@ const ChatPage = () => {
   }, []);
 
   useEffect(() => {
-    dispatch({
-      type: "GET_ALL_CONTACTS",
-    });
-
-    if (token !== "" && authUser) {
-      dispatch({
-        type: "GET_FRIENDLIST",
-        payload: {
-          userId: authUser?._id,
-        },
-      });
-    }
-    if (token !== "" && authUser) {
-      dispatch({
-        type: "GET_ALL_FRIENDREQUEST_SENT",
-        payload: {
-          userId: authUser?._id,
-        },
-      });
-      if (token !== "" && authUser) {
-        dispatch({
-          type: "GET_ALL_FRIENDREQUEST_RECIEVED",
-          payload: {
-            userId: authUser?._id,
-          },
-        });
-      }
-    }
-  }, [authUser, contacts]);
-
-  useEffect(() => {
     if (selectedSingleChat?._id !== "") {
       dispatch({
         type: "GET_ALL_ONE_TO_ONE_MESSAGE",
@@ -202,76 +161,6 @@ const ChatPage = () => {
     }
   };
 
-  const addFriendHandler = (friendId) => {
-    if (authUser._id) {
-      console.log("add button clicked", authUser._id, friendId);
-      socket.emit("send_Friend_Request", {
-        userId: authUser?._id,
-        friendId,
-      });
-    }
-  };
-
-  const acceptFriendHandler = (friendRequestId) => {
-    if (authUser._id) {
-      console.log("accept button clicked", authUser._id, friendRequestId);
-      dispatch({
-        type: "ACCEPT_FRIEND_REQUEST",
-        payload: {
-          userId: authUser?._id,
-          friendRequestId,
-        },
-      });
-    }
-  };
-
-  const cancelSendFriendRequestHandler = (friendId) => {
-    console.log(
-      "cancelSendFriendRequestHandler clicked",
-      authUser?._id,
-      friendId
-    );
-    if (authUser._id) {
-      dispatch({
-        type: "CANCEL_FRIENDREQUEST_SENT",
-        payload: {
-          userId: authUser?._id,
-          friendId,
-        },
-      });
-    }
-  };
-
-  const cancelRecievedFriendRequestHandler = (friendId) => {
-    console.log(
-      "cancelRecievedFriendRequestHandler clicked",
-      authUser?._id,
-      friendId
-    );
-    if (authUser._id) {
-      dispatch({
-        type: "CANCEL_FRIENDREQUEST_RECIEVED",
-        payload: {
-          userId: authUser?._id,
-          friendId,
-        },
-      });
-    }
-  };
-
-  const unfriendHandler = (unfriendId) => {
-    console.log("unfriendHandler clicked", authUser?._id, unfriendId);
-    if (authUser._id) {
-      dispatch({
-        type: "UNFRIEND",
-        payload: {
-          userId: authUser?._id,
-          unfriendId,
-        },
-      });
-    }
-  };
-
   return (
     <div className="bg-bluebase w-full h-screen flex fixed">
       {/* sidebar */}
@@ -292,28 +181,7 @@ const ChatPage = () => {
         {/* contact search and profile */}
 
         <div className=" w-1/4 rounded-3xl px-4 py-2 bg-white">
-          <div className="flex space-x-2 items-center rounded-full">
-            <img
-              src={
-                authUser?.avatar?.secure_url
-                  ? authUser?.avatar?.secure_url
-                  : Blank
-              }
-              alt=""
-              className=" w-12 h-12 rounded-full"
-            />
-            <h1>
-              {authUser?.firstName} {authUser?.lastName}
-            </h1>
-          </div>
-          <div className="flex items-center rounded-full space-x-2 relative my-2">
-            <input
-              placeholder="Search Name"
-              className="rounded-full w-full bg-slate-200 py-3 px-4 outline-none"
-            />
-            <FontAwesomeIcon icon={faSearch} className="absolute right-7" />
-          </div>
-          <div className="my-2">Recent Chats</div>
+          <SearchAndProfile />
           {/* contat area */}
 
           <div className="h-[80%]  space-y-1 rounded-3xl">
@@ -333,276 +201,15 @@ const ChatPage = () => {
             </div>
             {sideBarIsActive.contact && (
               <>
-                <div className="flex text-base justify-between py-2 px-4">
-                  <div
-                    className={`py-2 px-3 ${
-                      contacts.allContact
-                        ? "bg-bluebase text-white rounded-full"
-                        : ""
-                    } cursor-default`}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setContacts({
-                        ...contacts,
-                        allContact: true,
-                        myContact: false,
-                        friendRequestSent: false,
-                        friendRequestRecieved: false,
-                      });
-                    }}
-                  >
-                    Contacts
-                  </div>
-                  <div
-                    className={`py-2 px-3 ${
-                      contacts.myContact
-                        ? "bg-bluebase text-white rounded-full"
-                        : ""
-                    } cursor-default`}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setContacts({
-                        ...contacts,
-                        allContact: false,
-                        myContact: true,
-                        friendRequestSent: false,
-                        friendRequestRecieved: false,
-                      });
-                    }}
-                  >
-                    Friends
-                  </div>
-                  <div>
-                    <Select
-                      className="w-36"
-                      placeholder={"FriendRequest"}
-                      options={[
-                        { value: "Send", label: "Send" },
-                        { value: "recieved", label: "Recieved" },
-                      ]}
-                      onChange={(e) => {
-                        console.log("friend req", e);
-                        if (e.label === "Send") {
-                          setContacts({
-                            ...contacts,
-                            allContact: false,
-                            myContact: false,
-                            friendRequestSent: true,
-                            friendRequestRecieved: false,
-                          });
-                        } else {
-                          setContacts({
-                            ...contacts,
-                            allContact: false,
-                            myContact: false,
-                            friendRequestSent: false,
-                            friendRequestRecieved: true,
-                          });
-                        }
-                      }}
-                    />
-                  </div>
-                </div>
-                <div className="overflow-y-auto h-[70vh] no-scrollbar rounded-b-3xl pt-6">
-                  {contacts.allContact === true && (
-                    <>
-                      <div className="">
-                        {allContacts?.map((singleContact) => {
-                          {
-                            /* console.log(allFriendListId.includes(singleContact?._id),singleContact.firstName,singleContact.lastName) */
-                          }
-                          {
-                            if (
-                              allFriendListId.includes(singleContact?._id) ===
-                              true
-                            ) {
-                              return (
-                                <>
-                                  <AllContactComponent
-                                    key={singleContact?._id}
-                                    name={`${singleContact?.firstName} ${singleContact?.lastName}`}
-                                    email={singleContact?.email}
-                                    Pic={
-                                      singleContact?.avatar
-                                        ? singleContact?.avatar?.secure_url
-                                        : Blank
-                                    }
-                                    onButtonClick={() =>
-                                      unfriendHandler(singleContact?._id)
-                                    }
-                                    tag={"Unfriend"}
-                                  />
-                                </>
-                              );
-                            } else if (
-                              allFriendRequestSentId.includes(
-                                singleContact?._id
-                              ) === true
-                            ) {
-                              return (
-                                <>
-                                  <AllContactComponent
-                                    key={singleContact?._id}
-                                    name={`${singleContact?.firstName} ${singleContact?.lastName}`}
-                                    email={singleContact?.email}
-                                    Pic={
-                                      singleContact?.avatar
-                                        ? singleContact?.avatar?.secure_url
-                                        : Blank
-                                    }
-                                    onButtonClick={() =>
-                                      cancelSendFriendRequestHandler(
-                                        singleContact?._id
-                                      )
-                                    }
-                                    tag={"Unsend"}
-                                  />
-                                </>
-                              );
-                            } else if (
-                              allFriendRequestRecievedId.includes(
-                                singleContact?._id
-                              ) === true
-                            ) {
-                              return (
-                                <>
-                                  <AllContactComponent
-                                    key={singleContact?._id}
-                                    name={`${singleContact?.firstName} ${singleContact?.lastName}`}
-                                    email={singleContact?.email}
-                                    Pic={
-                                      singleContact?.avatar
-                                        ? singleContact?.avatar?.secure_url
-                                        : Blank
-                                    }
-                                    onButtonClick={() =>
-                                      acceptFriendHandler(singleContact?._id)
-                                    }
-                                    tag={"Accept"}
-                                    tagTwo={"Decline"}
-                                    onButtonClickTwo={() =>
-                                      cancelRecievedFriendRequestHandler(
-                                        singleContact?._id
-                                      )
-                                    }
-                                  />
-                                </>
-                              );
-                            } else {
-                              return (
-                                <>
-                                  <AllContactComponent
-                                    key={singleContact?._id}
-                                    name={`${singleContact?.firstName} ${singleContact?.lastName}`}
-                                    email={singleContact?.email}
-                                    Pic={
-                                      singleContact?.avatar
-                                        ? singleContact?.avatar?.secure_url
-                                        : Blank
-                                    }
-                                    onButtonClick={() =>
-                                      addFriendHandler(singleContact?._id)
-                                    }
-                                    tag={"Add"}
-                                  />
-                                </>
-                              );
-                            }
-                          }
-                        })}
-                      </div>
-                    </>
-                  )}
-                  {contacts.myContact == true && (
-                    <>
-                      <div>
-                        {allFriendList?.map((singleFriend) => {
-                          return (
-                            <>
-                              <ContactComponent
-                                key={singleFriend?._id}
-                                name={`${singleFriend?.firstName} ${singleFriend?.lastName}`}
-                                email={singleFriend?.email}
-                                Pic={
-                                  singleFriend?.avatar
-                                    ? singleFriend?.avatar?.secure_url
-                                    : Blank
-                                }
-                                tag={"Unfriend"}
-                                onButtonClick={() =>
-                                  unfriendHandler(singleFriend?._id)
-                                }
-                              />
-                            </>
-                          );
-                        })}
-                      </div>
-                    </>
-                  )}
-                  {contacts.friendRequestRecieved === true && (
-                    <>
-                      <div>
-                        {allFriendRequestRecieved?.map((singleFriendReq) => {
-                          return (
-                            <>
-                              <ContactComponent
-                                key={singleFriendReq?._id}
-                                name={`${singleFriendReq?.firstName} ${singleFriendReq?.lastName}`}
-                                email={singleFriendReq?.email}
-                                Pic={
-                                  singleFriendReq?.avatar
-                                    ? singleFriendReq?.avatar?.secure_url
-                                    : Blank
-                                }
-                                onButtonClick={() =>
-                                  acceptFriendHandler(singleFriendReq?._id)
-                                }
-                                tag={"Accept"}
-                                tagTwo={"Decline"}
-                                onButtonClickTwo={() =>
-                                  cancelRecievedFriendRequestHandler(
-                                    singleFriendReq?._id
-                                  )
-                                }
-                              />
-                            </>
-                          );
-                        })}
-                      </div>
-                    </>
-                  )}
-                  {contacts.friendRequestSent === true && (
-                    <>
-                      <div>
-                        {allFriendRequestSent?.map((singleFriendReq) => {
-                          return (
-                            <>
-                              <ContactComponent
-                                key={singleFriendReq?._id}
-                                name={`${singleFriendReq?.firstName} ${singleFriendReq?.lastName}`}
-                                email={singleFriendReq?.email}
-                                Pic={
-                                  singleFriendReq?.avatar
-                                    ? singleFriendReq?.avatar?.secure_url
-                                    : Blank
-                                }
-                                tag={"Unsent"}
-                                onButtonClick={() =>
-                                  cancelSendFriendRequestHandler(
-                                    singleFriendReq?._id
-                                  )
-                                }
-                              />
-                            </>
-                          );
-                        })}
-                      </div>
-                    </>
-                  )}
-                </div>
+                <Contacts />
               </>
             )}
             {sideBarIsActive.notification && <>notification</>}
+            {sideBarIsActive.profile && (
+              <>
+                <Profile />
+              </>
+            )}
           </div>
         </div>
         {/* chat */}
@@ -751,7 +358,6 @@ const ChatPage = () => {
 
 export default ChatPage;
 
-
 // eslint-disable-next-line react/prop-types
 export const ContactComponent = ({
   name,
@@ -785,13 +391,13 @@ export const ContactComponent = ({
         <h1 className="text-base">{email}</h1>
       </div>
       <div onClick={onButtonClick}>
-        <button className="bg-bluebase text-white text-sm rounded-full px-5 py-2">
+        <button className="bg-bluebase text-white text-sm rounded-full px-3 py-2">
           {tag}
         </button>
       </div>
       {tagTwo && (
         <div onClick={onButtonClickTwo}>
-          <button className="bg-bluebase text-white text-sm rounded-full px-5 py-2">
+          <button className="bg-bluebase text-white text-sm rounded-full px-3 py-2">
             {tagTwo}
           </button>
         </div>

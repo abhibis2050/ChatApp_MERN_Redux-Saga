@@ -4,7 +4,12 @@ import axios from "axios";
 export const createChatAction = async (payload) => {
   const response = await axios.post(
     `${VITE_BASE_URL}/chat/createChat`,
-    payload.body
+    payload.body,
+    {
+      headers: {
+        Authorization: payload.token,
+      },
+    }
   );
   return response;
 };
