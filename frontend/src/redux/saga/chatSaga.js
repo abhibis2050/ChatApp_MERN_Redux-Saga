@@ -2,7 +2,6 @@ import { call, put, takeEvery } from "redux-saga/effects";
 import { GetAllChatsActions, createChatAction } from "../api/ChatAction";
 import {
   setAllChats,
-  setOppositeChatUser,
   setSelectedChat,
   updateAllChats,
 } from "../app/ChatSlice";

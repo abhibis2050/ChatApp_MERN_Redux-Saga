@@ -375,9 +375,11 @@ exports.getAllSendFriendRequestId = async (req, res) => {
 
 exports.CancelSendFriendRequest = async (req, res) => {
   try {
-    const { userId,friendId } = req.query;
+    const { userId, friendId } = req.query;
 
-    const userDetail = await User.findOne({ _id: userId }).select("friendRequestSent");
+    const userDetail = await User.findOne({ _id: userId }).select(
+      "friendRequestSent"
+    );
 
     userDetail.friendRequestSent = userDetail.friendRequestSent.filter(
       (singleContact) => singleContact.toString() !== friendId
@@ -390,23 +392,18 @@ exports.CancelSendFriendRequest = async (req, res) => {
       "friendRequestRecieved"
     );
 
- 
-
-    friendUserDetail.friendRequestRecieved = friendUserDetail.friendRequestRecieved.filter(
-      (singleContact) => singleContact.toString() !== userId
-    );
+    friendUserDetail.friendRequestRecieved =
+      friendUserDetail.friendRequestRecieved.filter(
+        (singleContact) => singleContact.toString() !== userId
+      );
 
     // console.log("userDetail 2", friendUserDetail);
     friendUserDetail.save();
 
-
-
-    
-    return res
-      .status(200)
-      .send({ success: true, message: "Sent Friend Request Cancelled Successfully" });
-
-
+    return res.status(200).send({
+      success: true,
+      message: "Sent Friend Request Cancelled Successfully",
+    });
   } catch (error) {
     return res.status(500).send({ success: false, message: error.message });
   }
@@ -415,14 +412,16 @@ exports.CancelSendFriendRequest = async (req, res) => {
 // cancel Recieved friend request
 exports.CancelRecivedFriendRequest = async (req, res) => {
   try {
-    const { userId,friendId } = req.query;
+    const { userId, friendId } = req.query;
 
-    const userDetail = await User.findOne({ _id: userId }).select("friendRequestRecieved");
+    const userDetail = await User.findOne({ _id: userId }).select(
+      "friendRequestRecieved"
+    );
 
     userDetail.friendRequestRecieved = userDetail.friendRequestRecieved.filter(
       (singleContact) => singleContact.toString() !== friendId
     );
-    
+
     console.log("userDetail", userDetail);
     userDetail.save();
 
@@ -430,11 +429,10 @@ exports.CancelRecivedFriendRequest = async (req, res) => {
       "friendRequestSent"
     );
 
- 
-
-    friendUserDetail.friendRequestSent = friendUserDetail.friendRequestSent.filter(
-      (singleContact) => singleContact.toString() !== userId
-    );
+    friendUserDetail.friendRequestSent =
+      friendUserDetail.friendRequestSent.filter(
+        (singleContact) => singleContact.toString() !== userId
+      );
 
     console.log("userDetail 2", friendUserDetail);
     friendUserDetail.save();
@@ -442,8 +440,6 @@ exports.CancelRecivedFriendRequest = async (req, res) => {
     return res
       .status(200)
       .send({ success: true, message: "Cancelled Successfully" });
-
-
   } catch (error) {
     return res.status(500).send({ success: false, message: error.message });
   }
@@ -466,8 +462,6 @@ exports.Unfriend = async (req, res) => {
       "contacts"
     );
 
- 
-
     unfriendUserDetail.contacts = unfriendUserDetail.contacts.filter(
       (singleContact) => singleContact.toString() !== userId
     );
@@ -478,7 +472,68 @@ exports.Unfriend = async (req, res) => {
     return res
       .status(200)
       .send({ success: true, message: "User Unfriened Successfully" });
+  } catch (error) {
+    return res.status(500).send({ success: false, message: error.message });
+  }
+};
 
+//logot
+exports.logOut = async (req, res) => {
+  try {
+    const { email } = req.query;
+
+    if (!email) {
+      return res
+        .status(400)
+        .send({ success: false, message: "User Not Found" });
+    } else {
+      {
+        await UserModel.findOneAndUpdate(
+          {
+            email: email,
+          },
+          {
+            refresh_token: undefined,
+            refresh_token_expiry: undefined,
+          }
+        );
+      }
+    }
+    return res
+      .status(200)
+      .send({ success: true, message: "logged out successfully" });
+  } catch (error) {
+    return res.status(500).send({ success: false, message: error.message });
+  }
+};
+
+exports.updateProfilePicture = async (req, res) => {
+  try {
+    const { userId } = req.query;
+    let updateProfilePicture;
+    // console.log(req.query, "<----- req.query");
+    if (req.files) {
+      if (req.files.updateAvatar) {
+        console.log(req.files.updateAvatar.tempFilePath, "<----- file");
+        updateProfilePicture = await cloudinary.v2.uploader.upload(
+          req.files.updateAvatar.tempFilePath,
+          { folder: "Chat_Profile_Pictures" }
+        );
+      }
+    }
+    const profileAvatar = updateProfilePicture && {
+      id: updateProfilePicture.public_id,
+      secure_url: updateProfilePicture.secure_url,
+    };
+
+    const updateUserImage = await User.findOneAndUpdate(
+      { _id: userId },
+      { avatar: profileAvatar }
+    );
+
+    return res
+      .status(200)
+      .send({ status: false, message: "Profile picture Update Successfully" });
   } catch (error) {
     return res.status(500).send({ success: false, message: error.message });
   }
