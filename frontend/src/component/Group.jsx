@@ -11,6 +11,7 @@ const Group = () => {
 
   const [groupModalOpen, setGroupModalOpen] = useState(false);
 
+    // console.log(groupModalOpen)
   return (
     <div className="space-y-2">
       <ModalComponent
@@ -20,8 +21,9 @@ const Group = () => {
         closeModal={() => {
           setGroupModalOpen(false);
         }}
+        ButtonlabelTwo={"Cancel"}
         buttonlabel={"Save"}
-        onClickButton={() => {
+        onClickButtonTwo={() => {
           setGroupModalOpen(false);
         }}
       />

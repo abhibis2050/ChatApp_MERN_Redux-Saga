@@ -4,6 +4,7 @@ export const initialState = {
   allGroups: [],
   selectedGroupDetails: {},
   selectedGroupChatId: "",
+  groupIcon:null
 };
 
 export const groupSlice = createSlice({
@@ -19,9 +20,17 @@ export const groupSlice = createSlice({
     setSelectedGroupChatId: (state, action) => {
       state.selectedGroupChatId = action.payload.selectedGroupChatId;
     },
+    setGroupIcon: (state, action) => {
+      console.log(action.payload.groupIcon);
+      state.groupIcon = action.payload.groupIcon;
+    },
   },
 });
 
-export const { setAllGroups, setSelectedGroupDetails, setSelectedGroupChatId } =
-  groupSlice.actions;
+export const {
+  setAllGroups,
+  setSelectedGroupDetails,
+  setSelectedGroupChatId,
+  setGroupIcon,
+} = groupSlice.actions;
 export const groupReducer = groupSlice.reducer;

@@ -28,6 +28,7 @@ import SingleChat from "../component/SingleChat";
 import Contacts from "../component/Contacts";
 import SearchAndProfile from "../component/SearchAndProfile";
 import Profile from "../component/Profile";
+import { ImageCrop } from "../component/ImageCrop";
 
 const ChatPage = () => {
   const dispatch = useDispatch();
@@ -46,7 +47,8 @@ const ChatPage = () => {
 
   const [open, setOpen] = useState(false);
   const [sendMessage, setSendMessage] = useState("");
-
+  const [singleMessageDrawerOpen, setSingleMessageDrawerOpen] = useState(false);
+  const { groupIcon } = useSelector((state) => state.group);
   useEffect(() => {
     if (authUser?._id) {
       socket.emit("user_connected", { UserId: authUser?._id });
@@ -173,13 +175,19 @@ const ChatPage = () => {
         />
       </div>
       {/* contact and chat area */}
+      <div className="z-20 absolute ">
+        {groupIcon !== null ? (
+          <div className="">
+            <ImageCrop pic={groupIcon} />
+          </div>
+        ) : null}
+      </div>
       <div
         className={`${
           open ? "w-[88%]" : "w-[97%]"
         } bg-blue-100 flex space-x-4 rounded-3xl my-4 mr-3 p-4`}
       >
         {/* contact search and profile */}
-
         <div className=" w-1/4 rounded-3xl px-4 py-2 bg-white">
           <SearchAndProfile />
           {/* contat area */}
@@ -254,15 +262,26 @@ const ChatPage = () => {
                           <h1 className="text-sm">online</h1>
                         </div>
                       </div>
-                      <div className="flex items-center mr-4">
+                      {singleMessageDrawerOpen === true ? (
                         <DetailProfile
                           isMessage={true}
-                          button={
-                            <FontAwesomeIcon
-                              icon={faBars}
-                              className="text-xl w-12 "
-                            />
-                          }
+                          isOpen={singleMessageDrawerOpen}
+                          onClose={() => {
+                            setSingleMessageDrawerOpen(
+                              !singleMessageDrawerOpen
+                            );
+                          }}
+                        />
+                      ) : null}
+                      <div
+                        className="flex items-center mr-4"
+                        onClick={() => {
+                          setSingleMessageDrawerOpen(true);
+                        }}
+                      >
+                        <FontAwesomeIcon
+                          icon={faBars}
+                          className="text-xl w-12 "
                         />
                       </div>
                     </div>
@@ -346,9 +365,9 @@ const ChatPage = () => {
 
           {/* ****************************************************GROUP MESSAGE CHAT*******************************************************/}
           {sideBarIsActive.group && (
-            <>
+            <div>
               <GroupMessages />
-            </>
+            </div>
           )}
         </div>
       </div>
