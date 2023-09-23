@@ -25,7 +25,7 @@ const ModalComponent = ({
         <Modal
           className=" bg-blue-100 absolute top-[25%] left-[25%] right-auto bottom-auto space-y-4 w-[900px] pb-5 rounded-2xl"
           isOpen={openModal}
-          // onRequestClose={closeModal}
+          onRequestClose={closeModal}
           contentLabel="Examp Modal"
         >
           <div className="bg-bluebase text-white text-2xl px-6 py-2 rounded-t-2xl">

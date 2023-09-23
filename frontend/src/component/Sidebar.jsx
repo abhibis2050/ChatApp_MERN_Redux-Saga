@@ -24,7 +24,7 @@ const Sidebar = ({ open, changeOpen}) => {
     <div className="space-y-3">
 
     {logOutModalOpen&&(
-      <>
+      <div>
       <ModalComponent
         isLoggedOut={true}
         label={"Logout"}
@@ -35,7 +35,7 @@ const Sidebar = ({ open, changeOpen}) => {
         ButtonlabelTwo={"Cancel"}
         buttonlabel={"Logout"}
       />
-      </>
+      </div>
     )}
       {/* logo */}
       <div className="h-20">
