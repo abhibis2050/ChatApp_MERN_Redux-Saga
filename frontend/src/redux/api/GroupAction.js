@@ -82,3 +82,13 @@ export const RemovefromGroupAdminAction = async (payload) => {
     );
     return response;
   };
+
+
+
+export const uploadGroupProfileIconAction = async (payload) => {
+  const response = await axios.patch(
+    `${VITE_BASE_URL}/group/updateGroupProfilePicture?groupId=${payload?.groupId}`,
+    payload.body
+  );
+  return response;
+};

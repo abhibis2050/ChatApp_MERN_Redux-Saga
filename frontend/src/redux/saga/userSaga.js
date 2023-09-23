@@ -12,6 +12,7 @@ import {
   GetAllSentFriendRequestIdAction,
   GetSingleUserWithIdAction,
   UnfriendAction,
+  uploadProfileIconAction,
 } from "../api/UserAction";
 import {} from "../app/ChatSlice";
 import {
@@ -180,6 +181,16 @@ function* UnfriendSaga(action) {
   }
 }
 
+function* uploadProfileIconSaga(action) {
+  try {
+    const response = yield call(uploadProfileIconAction, action.payload);
+    // console.log("getRecievedFriendRequestIdSaga---->", response);
+
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 
 
 export function* watchUser() {
@@ -199,4 +210,5 @@ export function* watchUser() {
   yield takeEvery("CANCEL_FRIENDREQUEST_SENT", cancelSendFriendRequestSaga);
   yield takeEvery("CANCEL_FRIENDREQUEST_RECIEVED", cancelRecievedFriendRequestSaga);
   yield takeEvery("UNFRIEND", UnfriendSaga);
+  yield takeEvery("UPLOAD_PROFILE_ICON", uploadProfileIconSaga);
 }

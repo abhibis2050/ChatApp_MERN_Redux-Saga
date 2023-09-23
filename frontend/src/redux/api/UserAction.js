@@ -102,3 +102,12 @@ export const UnfriendAction = async (payload) => {
   return response;
 };
 
+
+export const uploadProfileIconAction = async (payload) => {
+  const response = await axios.patch(
+    `${VITE_BASE_URL}/user/updateProfilePicture?userId=${payload?.userId}`,
+    payload.body
+  );
+  return response;
+};
+

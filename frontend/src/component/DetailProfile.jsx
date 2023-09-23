@@ -8,7 +8,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { ButtonComponent } from "./button";
 import { useState } from "react";
-import { ImageCrop } from "./ImageCrop";
 import { setGroupIcon } from "../redux/app/GroupSlice";
 
 // eslint-disable-next-line react/prop-types
@@ -33,7 +32,7 @@ const DetailProfile = ({ button, isMessage, isGroup, isOpen, onClose }) => {
       if (selectedFile) {
         const reader = new FileReader();
         reader.onload = (event) => {
-          setGroupImage(event.target.result);
+          // setGroupImage(event.target.result);
           dispatch(setGroupIcon({ groupIcon: event.target.result }));
         };
         reader.readAsDataURL(selectedFile);

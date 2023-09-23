@@ -237,3 +237,37 @@ exports.getGroupById = async (req, res) => {
     return res.status(500).send({ success: false, message: error.message });
   }
 };
+
+
+
+exports.updateGroupProfilePicture = async (req, res) => {
+  try {
+    const { groupId } = req.query;
+    let updateProfilePicture;
+    // console.log(req.query, "<----- req.query");
+    if (req.files) {
+      if (req.files.updateAvatar) {
+        console.log(req.files.updateAvatar.tempFilePath, "<----- file");
+        updateProfilePicture = await cloudinary.v2.uploader.upload(
+          req.files.updateAvatar.tempFilePath,
+          { folder: "Chat_Profile_Pictures" }
+        );
+      }
+    }
+    const profileAvatar = updateProfilePicture && {
+      id: updateProfilePicture.public_id,
+      secure_url: updateProfilePicture.secure_url,
+    };
+
+    const updateGroupImage = await Group.findOneAndUpdate(
+      { _id: groupId },
+      { GroupAvatar: profileAvatar }
+    );
+
+    return res
+      .status(200)
+      .send({ status: false, message: "Group Profile picture Update Successfully" });
+  } catch (error) {
+    return res.status(500).send({ success: false, message: error.message });
+  }
+};

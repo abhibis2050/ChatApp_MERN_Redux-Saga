@@ -12,11 +12,11 @@ import Blank from "../assets/blank.png";
 import { useEffect, useState } from "react";
 import { setAllGroupMessages } from "../redux/app/messageSlice";
 import socket from "../customHooks/SocketHooks";
-import { ImageCrop } from "./ImageCrop";
+
 
 const GroupMessages = () => {
   const dispatch = useDispatch();
-  const { authUser, token } = useSelector((state) => state.auth);
+  const { authUser } = useSelector((state) => state.auth);
   const { selectedGroupChatId, selectedGroupDetails, groupIcon } = useSelector(
     (state) => state.group
   );

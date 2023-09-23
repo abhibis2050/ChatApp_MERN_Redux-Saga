@@ -1,5 +1,5 @@
 import { call, put, takeEvery } from "redux-saga/effects";
-import { GetAllGroupsAction, GetGroupsByIdAction } from "../api/GroupAction";
+import { GetAllGroupsAction, GetGroupsByIdAction, uploadGroupProfileIconAction } from "../api/GroupAction";
 import {  setAllGroups, setSelectedGroupDetails } from "../app/GroupSlice";
 
 function* getAllGroupsSaga(action) {
@@ -26,9 +26,19 @@ function* getGroupDetailsByIdSaga(action) {
     }
   }
 
-
+  function* uploadGroupProfileIconSaga(action) {
+    try {
+      const response = yield call(uploadGroupProfileIconAction, action.payload);
+      // console.log("getRecievedFriendRequestIdSaga---->", response);
+  
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  
 
 export function* watchGroup() {
   yield takeEvery("GET_ALL_GROUPS", getAllGroupsSaga);
   yield takeEvery("GET_GROUP_DETAIL_BY_ID", getGroupDetailsByIdSaga);
+  yield takeEvery("UPLOAD_GROUP_PROFILE_ICON", uploadGroupProfileIconSaga);
 }

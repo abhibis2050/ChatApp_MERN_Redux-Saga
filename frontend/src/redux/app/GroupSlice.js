@@ -21,7 +21,6 @@ export const groupSlice = createSlice({
       state.selectedGroupChatId = action.payload.selectedGroupChatId;
     },
     setGroupIcon: (state, action) => {
-      console.log(action.payload.groupIcon);
       state.groupIcon = action.payload.groupIcon;
     },
   },

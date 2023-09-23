@@ -28,7 +28,8 @@ import SingleChat from "../component/SingleChat";
 import Contacts from "../component/Contacts";
 import SearchAndProfile from "../component/SearchAndProfile";
 import Profile from "../component/Profile";
-import { ImageCrop } from "../component/ImageCrop";
+import { ImageCrop } from "../component/utils/ImageCrop";
+
 
 const ChatPage = () => {
   const dispatch = useDispatch();
@@ -178,7 +179,7 @@ const ChatPage = () => {
       <div className="z-20 absolute ">
         {groupIcon !== null ? (
           <div className="">
-            <ImageCrop pic={groupIcon} />
+            <ImageCrop pic={groupIcon} isGroup={true}/>
           </div>
         ) : null}
       </div>
