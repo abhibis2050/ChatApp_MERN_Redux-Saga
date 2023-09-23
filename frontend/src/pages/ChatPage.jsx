@@ -43,6 +43,7 @@ const ChatPage = () => {
     allFriendListId,
     allFriendRequestSentId,
     allFriendRequestRecievedId,
+    userIcon
   } = useSelector((state) => state.user);
 
   const messageScrollRef = useRef(null);
@@ -181,6 +182,14 @@ const ChatPage = () => {
         {groupIcon !== null ? (
           <div className="">
             <ImageCrop pic={groupIcon} isGroup={true}/>
+          </div>
+        ) : null}
+      </div>
+
+      <div className="z-20 absolute ">
+        {userIcon !== null ? (
+          <div className="">
+            <ImageCrop pic={userIcon} isSingle={true}/>
           </div>
         ) : null}
       </div>

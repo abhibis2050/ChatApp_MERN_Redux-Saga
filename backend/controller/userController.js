@@ -533,7 +533,7 @@ exports.updateProfilePicture = async (req, res) => {
 
     return res
       .status(200)
-      .send({ status: false, message: "Profile picture Update Successfully" });
+      .send({ status: true, message: "Profile picture Update Successfully" });
   } catch (error) {
     return res.status(500).send({ success: false, message: error.message });
   }

@@ -184,7 +184,7 @@ function* UnfriendSaga(action) {
 function* uploadProfileIconSaga(action) {
   try {
     const response = yield call(uploadProfileIconAction, action.payload);
-    // console.log("getRecievedFriendRequestIdSaga---->", response);
+    console.log("uploadProfileIconSaga---->", response);
 
   } catch (error) {
     console.log(error);

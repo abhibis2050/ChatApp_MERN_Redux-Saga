@@ -30,6 +30,9 @@ function* getGroupDetailsByIdSaga(action) {
     try {
       const response = yield call(uploadGroupProfileIconAction, action.payload);
       // console.log("getRecievedFriendRequestIdSaga---->", response);
+      // if(response.status===200){
+        
+      // }
   
     } catch (error) {
       console.log(error);

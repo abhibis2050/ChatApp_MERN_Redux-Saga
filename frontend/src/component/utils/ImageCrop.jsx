@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setGroupIcon } from "../../redux/app/GroupSlice";
 import { getCroppedImage } from "./getCroppedImage";
 import UrlToFile from "./DataUrlToFile";
+import { setUserIcon } from "../../redux/app/UserSlice";
 
 export const ImageCrop = ({ pic, isGroup, isSingle }) => {
   const formData = new FormData();
@@ -14,6 +15,7 @@ export const ImageCrop = ({ pic, isGroup, isSingle }) => {
   const [zoom, setZoom] = useState(1);
   const [croppedArea, setCroppedArea] = useState(null);
   const { selectedGroupDetails } = useSelector((state) => state.group);
+  const { authUser } = useSelector((state) => state.auth);
   useEffect(() => {
     setImage(pic);
   }, [pic]);
@@ -31,8 +33,10 @@ export const ImageCrop = ({ pic, isGroup, isSingle }) => {
       type: "UPLOAD_PROFILE_ICON",
       payload: {
         body: formData,
+        userId: authUser?._id,
       },
     });
+    dispatch(setUserIcon({ userIcon: null }));
   };
 
   const UploadGroupHandler = async () => {
@@ -46,6 +50,7 @@ export const ImageCrop = ({ pic, isGroup, isSingle }) => {
         groupId: selectedGroupDetails?._id,
       },
     });
+
     dispatch(setGroupIcon({ groupIcon: null }));
   };
 
