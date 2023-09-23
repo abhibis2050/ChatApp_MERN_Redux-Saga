@@ -11,13 +11,32 @@ import Chatzi from "../assets/Chatzi.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useDispatch, useSelector } from "react-redux";
 import { setSideBarIsActive } from "../redux/app/UserSlice";
+import { useState } from "react";
+import ModalComponent from "./Modal";
 
 // eslint-disable-next-line react/prop-types
 const Sidebar = ({ open, changeOpen}) => {
   const dispatch = useDispatch();
   const { sideBarIsActive } = useSelector((state) => state.user);
+  const[logOutModalOpen,setLogOutModalOpen]=useState(false)
+
   return (
     <div className="space-y-3">
+
+    {logOutModalOpen&&(
+      <>
+      <ModalComponent
+        isLoggedOut={true}
+        label={"Logout"}
+        openModal={logOutModalOpen}
+        closeModal={()=>{
+          setLogOutModalOpen(false)
+        }}
+        ButtonlabelTwo={"Cancel"}
+        buttonlabel={"Logout"}
+      />
+      </>
+    )}
       {/* logo */}
       <div className="h-20">
         {!open ? (
@@ -119,7 +138,11 @@ const Sidebar = ({ open, changeOpen}) => {
       </div>
       {/* logout */}
       <div className="">
-        <SidebarComponent icon={faRightFromBracket} value={"Logout"} />
+        <SidebarComponent icon={faRightFromBracket} value={"Logout"} 
+          onClick={()=>{
+            setLogOutModalOpen(true)
+          }}
+        />
       </div>
     </div>
   );

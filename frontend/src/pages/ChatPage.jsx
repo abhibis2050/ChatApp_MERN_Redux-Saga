@@ -29,6 +29,7 @@ import Contacts from "../component/Contacts";
 import SearchAndProfile from "../component/SearchAndProfile";
 import Profile from "../component/Profile";
 import { ImageCrop } from "../component/utils/ImageCrop";
+import ModalComponent from "../component/Modal";
 
 
 const ChatPage = () => {
@@ -183,6 +184,7 @@ const ChatPage = () => {
           </div>
         ) : null}
       </div>
+
       <div
         className={`${
           open ? "w-[88%]" : "w-[97%]"

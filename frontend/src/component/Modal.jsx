@@ -5,13 +5,18 @@ import Select from "react-select";
 
 
 const ModalComponent = ({
-  isAddGroup,
+
   label,
   openModal,
   closeModal,
   buttonlabel,
   onClickButton,
-  ButtonlabelTwo
+  ButtonlabelTwo,
+
+  // adding Group
+  isAddGroup,
+  // logout
+  isLoggedOut
 }) => {
   const { allContacts } = useSelector((state) => state.user);
   return (
@@ -51,6 +56,12 @@ const ModalComponent = ({
                   />
                 </div>
               </div>
+            </>
+          )}
+
+          {isLoggedOut&& (
+            <>
+              <div>Do you want to logout?</div>
             </>
           )}
 
