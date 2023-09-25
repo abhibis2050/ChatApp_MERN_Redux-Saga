@@ -78,7 +78,7 @@ const Profile = () => {
             </div>
           </div>
           <div className="text-3xl font-semibold">
-            {authUser ? `${authUser?.firstName}  ${authUser?.lastName}` : ``}
+            {authUser ? `${authUser?.firstName}  ${authUser?.lastName}` : `User Not Found`}
           </div>
         </div>
       </div>

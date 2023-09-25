@@ -538,3 +538,31 @@ exports.updateProfilePicture = async (req, res) => {
     return res.status(500).send({ success: false, message: error.message });
   }
 };
+
+// Get All Users based on search
+
+exports.allUsersBasedOnSearch = async (req, res) => {
+  try {
+    const keyword = req.query.search
+      ? {
+          $or: [
+            { name: { $regex: req.query.search, $options: "i" } },
+            { email: { $regex: req.query.search, $options: "i" } },
+          ],
+        }
+      : {};
+    // console.log(req.user);
+    console.log(keyword);
+    const users = await User.find(keyword).find({ _id: { $ne: req.user._id } });
+
+    return res
+      .status(200)
+      .send({
+        success: true,
+        message: "users found successfully",
+        data: users,
+      });
+  } catch (error) {
+    return res.status(500).send({ success: false, message: error.message });
+  }
+};
