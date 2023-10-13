@@ -16,7 +16,7 @@ export const CreateGroupAction = async (payload) => {
 
 export const UsersNotPresentInGroupAction = async (payload) => {
   const response = await axios.patch(
-    `${VITE_BASE_URL}/group/UsersNotPresentInGroup?groupId=64d4c39e028e89525aed0d88`,
+    `${VITE_BASE_URL}/group/UsersNotPresentInGroup?groupId=${payload?.groupId}`,
     payload.body,
     {
       headers: {
@@ -29,7 +29,7 @@ export const UsersNotPresentInGroupAction = async (payload) => {
 
 export const AddGroupMembersAction = async (payload) => {
   const response = await axios.patch(
-    `${VITE_BASE_URL}/group/addGroupMembers?groupId=64d4c39e028e89525aed0d88`,
+    `${VITE_BASE_URL}/group/addGroupMembers?groupId=${payload?.groupId}`,
     payload.body,
     {
       headers: {
@@ -42,7 +42,7 @@ export const AddGroupMembersAction = async (payload) => {
 
 export const UpdateAsGroupAdminAction = async (payload) => {
   const response = await axios.patch(
-    `${VITE_BASE_URL}/group/updateAsGroupAdmin?groupId=64d4c39e028e89525aed0d88&userId=64d21e65d1a365dd8e846146`,
+    `${VITE_BASE_URL}/group/updateAsGroupAdmin?groupId=${payload?.groupId}&userId=${payload?.userId}`,
     payload.body,
     {
       headers: {
@@ -55,7 +55,7 @@ export const UpdateAsGroupAdminAction = async (payload) => {
 
 export const RemovefromGroupAdminAction = async (payload) => {
     const response = await axios.patch(
-      `${VITE_BASE_URL}/group/RemovefromGroupAdmin?groupId=64d4c39e028e89525aed0d88&userId=64d21e65d1a365dd8e846146`,
+      `${VITE_BASE_URL}/group/RemovefromGroupAdmin?groupId=${payload?.groupId}&userId=${payload?.userId}`,
       payload.body,
       {
         headers: {

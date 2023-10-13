@@ -13,6 +13,37 @@ const userSchema = new mongoose.Schema({
   about: {
     type: String,
   },
+  from: {
+    type: String,
+  },
+  liveIn: {
+    type: String,
+  },
+  workPlace: [
+    {
+      type: String,
+    },
+  ],
+  studiedAt: [
+    {
+      instituteName: { type: String },
+      locatedAt: { type: String },
+    },
+  ],
+  gender:{
+    type: String,
+  },
+  DOB:{
+    type: String,
+  },
+  languages: [
+    {
+      type: String,
+    },
+  ],
+  relationshipStatus:{
+    type: String,
+  },
   avatar: {
     id: {
       type: String,

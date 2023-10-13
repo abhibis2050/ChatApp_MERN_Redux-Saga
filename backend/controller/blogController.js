@@ -33,10 +33,10 @@ exports.getMyBlog = async (req, res) => {
   try {
     const findBlog = await Blog.find({ user: new ObjectId(req.user._id) });
     if (!findBlog) {
-      return res.status(401).send({ status: false, message: "Blog Not Found" });
+      return res.status(400).send({ status: false, message: "Blog Not Found" });
     }
 
-    return res.status(201).send({
+    return res.status(200).send({
       status: true,
       message: "Blog Fetched succefully",
       data: findBlog,
@@ -55,7 +55,7 @@ exports.getBlogOnCategory = async (req, res) => {
       return res.status(401).send({ status: false, message: "Blogs Not Found" });
     }
 
-    return res.status(201).send({
+    return res.status(200).send({
       status: true,
       message: "Blogs Fetched succefully",
       data: findBlogs,
@@ -73,7 +73,7 @@ exports.getBlogById = async (req, res) => {
       return res.status(401).send({ status: false, message: "Blogs Not Found" });
     }
 
-    return res.status(201).send({
+    return res.status(200).send({
       status: true,
       message: "Blogs Fetched succefully",
       data: findBlogs,
@@ -91,7 +91,7 @@ exports.deleteBlog = async (req, res) => {
         .status(401)
         .send({ status: false, message: "Blogs Not Found" });
     }
-    return res.status(201).send({
+    return res.status(200).send({
       status: true,
       message: "Blog deleted succefully",
       data: blogDelete,
@@ -113,7 +113,7 @@ exports.addComments = async (req, res) => {
       { $push: { comments: comment } }
     );
 
-    return res.status(201).send({
+    return res.status(200).send({
       status: true,
       message: "Blog deleted succefully",
       data: updateComment,

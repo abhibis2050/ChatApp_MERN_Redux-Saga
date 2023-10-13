@@ -12,7 +12,6 @@ const blogSchema = new mongoose.Schema({
   },
   category: {
     type: String,
-    required:true,
     enum: [
       "TECHNOLOGY",
       "FASHION",
@@ -23,8 +22,12 @@ const blogSchema = new mongoose.Schema({
     ],
   },
   image: {
-    id: {},
-    secure_url: {},
+    id: {
+      type: String,
+    },
+    secure_url: {
+      type: String,
+    },
   },
   likes: {
     type: Number,

@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import Blank from "../assets/blank.png";
 import NoChat from "../assets/home.jpg";
 
@@ -29,6 +30,7 @@ import Contacts from "../component/Contacts";
 import SearchAndProfile from "../component/SearchAndProfile";
 import Profile from "../component/Profile";
 import { ImageCrop } from "../component/utils/ImageCrop";
+import MyProfile from "../component/myProfile";
 
 
 const ChatPage = () => {
@@ -378,6 +380,18 @@ const ChatPage = () => {
           {sideBarIsActive.group && (
             <div>
               <GroupMessages />
+            </div>
+          )}
+          {/* ****************************************************Profile*******************************************************/}
+          {sideBarIsActive.contact && (
+            <div>
+              <MyProfile />
+            </div>
+          )}
+           {/* ****************************************************Profile*******************************************************/}
+           {sideBarIsActive.profile && (
+            <div>
+              <MyProfile />
             </div>
           )}
         </div>
