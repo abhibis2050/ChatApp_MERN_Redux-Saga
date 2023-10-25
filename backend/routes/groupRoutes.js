@@ -9,6 +9,7 @@ const {
   getAllGroups,
   getGroupById,
   updateGroupProfilePicture,
+  removeMemberFromGroup,
 } = require("../controller/groupController");
 
 const router = express.Router();
@@ -21,4 +22,5 @@ router.route("/RemovefromGroupAdmin").patch(auth, RemovefromGroupAdmin);
 router.route("/getAllGroups").get( getAllGroups);
 router.route("/getGroupById").get( getGroupById);
 router.route("/updateGroupProfilePicture").patch(updateGroupProfilePicture);
+router.route("/removeMemberFromGroup").patch(removeMemberFromGroup);
 module.exports = router;

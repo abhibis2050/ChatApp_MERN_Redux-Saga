@@ -17,6 +17,7 @@ const DetailProfile = ({ button, isMessage, isGroup, isOpen, onClose }) => {
   const { selectedGroupDetails } = useSelector((state) => state.group);
   const { selectedSingleChat } = useSelector((state) => state.chat);
   const [groupIconDilogBox, setGroupIconDilogBox] = useState(false);
+  const [openGroupAddMembers,setOpenGroupAddMembers] = useState(false)
 
   const fileUploadHandler = (e) => {
     console.log("e---------->", e.target.files[0]);
@@ -45,12 +46,15 @@ const DetailProfile = ({ button, isMessage, isGroup, isOpen, onClose }) => {
     <div>
       <div
         className={
-          " fixed overflow-hidden z-10 bg-gray-900 bg-opacity-60 inset-0 transform ease-in-out py-4" +
+          "fixed overflow-hidden z-10 bg-gray-900 bg-opacity-60 inset-0 transform ease-in-out py-4" +
           (isOpen
             ? " transition-opacity opacity-100 duration-500 translate-x-0  "
             : " transition-all delay-500 opacity-0 translate-x-full  ")
         }
       >
+      {openGroupAddMembers?<>
+        <div className="bg-white absolute">hello</div>
+      </>:null}     
         <section
           className={
             "rounded-l-3xl overflow-y-hidden overflow-x-hidden w-screen max-w-md right-0 absolute h-[97%] shadow-xl delay-400 duration-500 ease-in-out transition-all transform  " +
@@ -154,7 +158,11 @@ const DetailProfile = ({ button, isMessage, isGroup, isOpen, onClose }) => {
                         <div className=" bg-white rounded-3xl px-3 py-2 space-y-1">
                           <div className="flex justify-between items-center py-1">
                             <div className="px-3 text-xl">Members</div>
-                            <div className="bg-bluebase text-white px-4 py-1.5 rounded-full">
+                            <div className="bg-bluebase text-white px-4 py-1.5 rounded-full cursor-pointer" 
+                            onClick={()=>{
+                              setOpenGroupAddMembers(true)
+                            }}
+                            >
                               Add Member
                             </div>
                           </div>
@@ -190,6 +198,9 @@ const DetailProfile = ({ button, isMessage, isGroup, isOpen, onClose }) => {
                                               : Blank
                                           }
                                           isGroupAdmin={true}
+                                          setAdminClick={()=>{
+
+                                          }}
                                         />
                                       </>
                                     );
@@ -311,6 +322,15 @@ export const UserDetailComponent = ({
                   }}
                 >
                   Remove
+                </h1>
+                <h1
+                  className="hover:bg-bluebase hover:text-white hover:rounded-2xl px-2 py-1 cursor-pointer"
+                  onClick={() => {
+                    removeUserClick();
+                    // setUserDilogBox(false);
+                  }}
+                >
+                  Remove As Admin
                 </h1>
               </div>
             ) : null}

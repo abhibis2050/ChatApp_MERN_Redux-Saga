@@ -66,7 +66,18 @@ export const RemovefromGroupAdminAction = async (payload) => {
     return response;
   };
 
-  
+  export const RemovefromGroupAction = async (payload) => {
+    const response = await axios.patch(
+      `${VITE_BASE_URL}/group/removeMemberFromGroup?groupId=${payload?.groupId}&userId=${payload?.userId}`,
+      payload.body,
+      {
+        headers: {
+          Authorization: payload.token,
+        },
+      }
+    );
+    return response;
+  };
   export const GetAllGroupsAction = async (payload) => {
     const response = await axios.get(
       `${VITE_BASE_URL}/group/getAllGroups?userId=${payload?.userId}`,

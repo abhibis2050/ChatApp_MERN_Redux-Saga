@@ -128,11 +128,11 @@ exports.updateAsGroupAdmin = async (req, res) => {
     // console.log(getGroup?.groupMembers.includes(userId));
 
     // getGroup?.groupMembers.includes(userId)
-    if (getGroup?.groupAdmins.includes(req.user._id) !== true) {
-      return res
-        .status(400)
-        .send({ success: false, message: "You Are Not An Admin" });
-    }
+    // if (getGroup?.groupAdmins.includes(req.user._id) !== true) {
+    //   return res
+    //     .status(400)
+    //     .send({ success: false, message: "You Are Not An Admin" });
+    // }
     if (getGroup?.groupMembers.includes(userId) !== true) {
       return res
         .status(400)
@@ -186,14 +186,39 @@ exports.RemovefromGroupAdmin = async (req, res) => {
       { groupAdmins: remainingArray }
     );
 
-    return res.status(200).send({ success: false, message: "Admin Removed" });
+    return res.status(200).send({ success: true, message: "Admin Removed" });
   } catch (error) {
     return res.status(500).send({ success: false, message: error.message });
   }
 };
 
 // Remove Member From Group
+exports.removeMemberFromGroup = async(req,res)=>{
+  try {
+    const { groupId, userId } = req.query;
+    console.log(groupId,userId)
+    const getGroup = await Group.findOne({ _id: groupId });
+    console.log(getGroup) 
 
+    if(getGroup.groupAdmins.includes(userId)===true){
+      getGroup.groupAdmins=getGroup.groupAdmins.filter((u)=>{
+        return u.toString()!==userId
+      })
+    }
+    if(getGroup.groupMembers.includes(userId)===true){
+      getGroup.groupMembers=getGroup.groupMembers.filter((u)=>{
+        return u.toString()!==userId
+      })
+    }
+
+    await getGroup.save()
+  if(getGroup.groupMembers.includes(userId)===false){
+    return res.status(200).send({ success: true, message: "use removed successfully" });
+  }
+  } catch (error) {
+    return res.status(500).send({ success: false, message: error.message });
+  }
+  }
 
 // Get All Groups
 

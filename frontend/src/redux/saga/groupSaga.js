@@ -1,5 +1,5 @@
 import { call, put, takeEvery } from "redux-saga/effects";
-import { GetAllGroupsAction, GetGroupsByIdAction, RemovefromGroupAdminAction, UpdateAsGroupAdminAction, uploadGroupProfileIconAction } from "../api/GroupAction";
+import { GetAllGroupsAction, GetGroupsByIdAction, RemovefromGroupAction, RemovefromGroupAdminAction, UpdateAsGroupAdminAction, uploadGroupProfileIconAction } from "../api/GroupAction";
 import {  setAllGroups, setSelectedGroupDetails } from "../app/GroupSlice";
 
 function* getAllGroupsSaga(action) {
@@ -67,12 +67,26 @@ function* getGroupDetailsByIdSaga(action) {
     }
   }
 
+   
+  function* RemoveFromGroupSaga(action) {
+    try {
+      const response = yield call(RemovefromGroupAction, action.payload);
+      console.log("RemoveFromGroupSaga---->", response);
+      // if(response.status===200){
+        
+      // }
+  
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
 export function* watchGroup() {
   yield takeEvery("GET_ALL_GROUPS", getAllGroupsSaga);
   yield takeEvery("GET_GROUP_DETAIL_BY_ID", getGroupDetailsByIdSaga);
   yield takeEvery("UPLOAD_GROUP_PROFILE_ICON", uploadGroupProfileIconSaga);
   yield takeEvery("SET_AS_GROUP_ADMIN", UpdateAsGroupAdminIdSaga);
   yield takeEvery("REMOVE_AS_GROUP_ADMIN", RemoveFromGroupAdminIdSaga);
-  // yield takeEvery("REMOVE_AS_GROUP_ADMIN", RemoveFromGroupAdminIdSaga);
+  yield takeEvery("REMOVE_FROM_GROUP", RemoveFromGroupSaga);
 
 }
