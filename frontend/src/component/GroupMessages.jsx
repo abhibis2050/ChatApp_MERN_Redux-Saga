@@ -75,7 +75,7 @@ const GroupMessages = () => {
     <div>
       <>
         <div className=" rounded-3xl">
-          <div className="space-y-3 h-full rounded-3xl ">
+          <div className="space-y-3 h-full rounded-3xl">
             {selectedGroupChatId === "" ? (
               <>
                 <div className="rounded-3xl h-full bg-white">

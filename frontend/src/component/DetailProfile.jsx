@@ -10,14 +10,16 @@ import {
 import { ButtonComponent } from "./button";
 import { useState } from "react";
 import { setGroupIcon } from "../redux/app/GroupSlice";
+import Select from "react-select";
 
 // eslint-disable-next-line react/prop-types
 const DetailProfile = ({ button, isMessage, isGroup, isOpen, onClose }) => {
   const dispatch = useDispatch();
   const { selectedGroupDetails } = useSelector((state) => state.group);
+  const { allContacts } = useSelector((state) => state.user);
   const { selectedSingleChat } = useSelector((state) => state.chat);
   const [groupIconDilogBox, setGroupIconDilogBox] = useState(false);
-  const [openGroupAddMembers,setOpenGroupAddMembers] = useState(false)
+  const [openGroupAddMembers, setOpenGroupAddMembers] = useState(false);
 
   const fileUploadHandler = (e) => {
     console.log("e---------->", e.target.files[0]);
@@ -52,9 +54,26 @@ const DetailProfile = ({ button, isMessage, isGroup, isOpen, onClose }) => {
             : " transition-all delay-500 opacity-0 translate-x-full  ")
         }
       >
-      {openGroupAddMembers?<>
-        <div className="bg-white absolute">hello</div>
-      </>:null}     
+        {openGroupAddMembers ? (
+          <>
+            <div className="bg-white absolute left-[800px] top-[300px]">
+              <Select
+                closeMenuOnSelect={false}
+                placeholder="Add New Members"
+                isMulti
+                options={allContacts.map((singleContact) => {
+                  return {
+                    label: `${singleContact?.firstName} ${singleContact?.lastName}`,
+                    value: singleContact?._id,
+                  };
+                })}
+                onChange={(e) => {
+                  console.log(e)
+                }}
+              />
+            </div>
+          </>
+        ) : null}
         <section
           className={
             "rounded-l-3xl overflow-y-hidden overflow-x-hidden w-screen max-w-md right-0 absolute h-[97%] shadow-xl delay-400 duration-500 ease-in-out transition-all transform  " +
@@ -158,10 +177,11 @@ const DetailProfile = ({ button, isMessage, isGroup, isOpen, onClose }) => {
                         <div className=" bg-white rounded-3xl px-3 py-2 space-y-1">
                           <div className="flex justify-between items-center py-1">
                             <div className="px-3 text-xl">Members</div>
-                            <div className="bg-bluebase text-white px-4 py-1.5 rounded-full cursor-pointer" 
-                            onClick={()=>{
-                              setOpenGroupAddMembers(true)
-                            }}
+                            <div
+                              className="bg-bluebase text-white px-4 py-1.5 rounded-full cursor-pointer"
+                              onClick={() => {
+                                setOpenGroupAddMembers(true);
+                              }}
                             >
                               Add Member
                             </div>
@@ -198,9 +218,7 @@ const DetailProfile = ({ button, isMessage, isGroup, isOpen, onClose }) => {
                                               : Blank
                                           }
                                           isGroupAdmin={true}
-                                          setAdminClick={()=>{
-
-                                          }}
+                                          setAdminClick={() => {}}
                                         />
                                       </>
                                     );

@@ -1,7 +1,18 @@
 import { useDispatch, useSelector } from "react-redux";
 import Blank from "../assets/blank.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCamera } from "@fortawesome/free-solid-svg-icons";
+import {
+  faAddressBook,
+  faC,
+  faCake,
+  faCamera,
+  faCity,
+  faEdit,
+  faHeart,
+  faHome,
+  faLocation,
+  faUser,
+} from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 import { setUserIcon } from "../redux/app/UserSlice";
 
@@ -27,14 +38,14 @@ const Profile = () => {
         };
         reader.readAsDataURL(selectedFile);
       }
-      setIconDilogBox(false)
+      setIconDilogBox(false);
     }
   };
 
   return (
-    <div>
-      <div>
-        <div className="bg-white flex flex-col justify-center items-center space-y-3 py-4 rounded-3xl">
+    <div className="h-full space-y-2">
+      <div className=" rounded-3xl">
+        <div className="flex flex-col justify-center items-center space-y-3 py-4 rounded-3xl">
           <div className="">
             <img
               className="rounded-full w-56 h-56 relative"
@@ -78,7 +89,92 @@ const Profile = () => {
             </div>
           </div>
           <div className="text-3xl font-semibold">
-            {authUser ? `${authUser?.firstName}  ${authUser?.lastName}` : `User Not Found`}
+            {authUser
+              ? `${authUser?.firstName}  ${authUser?.lastName}`
+              : `User Not Found`}
+          </div>
+        </div>
+      </div>
+      <div className="px-2 py-1 space-y-3">
+        <div className="text-2xl font-bold pb-1 flex justify-between">
+          <h1>Details</h1>
+          <h1>
+            <FontAwesomeIcon icon={faEdit}/>
+          </h1>
+        </div>
+        <div>
+          <div>
+            <div className="text-xl font-bold border-b-2 border-blue-200 pb-1">
+              Basic Info
+            </div>
+            <ProfileDetailComponent
+              icon={faAddressBook}
+              label={`About`}
+              result={authUser?.about}
+            />
+            <ProfileDetailComponent
+              icon={faHeart}
+              label={`Relationship Status`}
+              result={authUser?.relationshipStatus}
+            />
+            <ProfileDetailComponent
+              icon={faUser}
+              label={`Relationship Status`}
+              result={authUser?.gender}
+            />
+            <ProfileDetailComponent
+              icon={faCake}
+              label={`Birthday`}
+              result={authUser?.DOB}
+            />
+          </div>
+          <div>
+            <div className="text-xl font-bold border-b-2 border-blue-200 pb-1">
+              Places Lived
+            </div>
+            <ProfileDetailComponent
+              icon={faLocation}
+              label={`From`}
+              result={authUser?.from}
+            />
+            <ProfileDetailComponent
+              icon={faHome}
+              label={`Lives In`}
+              result={authUser?.liveIn}
+            />
+          </div>
+          <div>
+            <div className="text-xl font-bold border-b-2 border-blue-200 pb-1">
+              Work
+            </div>
+
+            {authUser?.workPlace?.map((work) => {
+              return (
+                <>
+                  <ProfileDetailComponent
+                    icon={faCity}
+                    label={`Works At`}
+                    result={work}
+                  />
+                </>
+              );
+            })}
+          </div>
+          <div>
+            <div className="text-xl font-bold border-b-2 border-blue-200">
+              Education
+            </div>
+            {authUser?.studiedAt?.map((study) => {
+              return (
+                <>
+                  <ProfileDetailComponent
+                    icon={faCity}
+                    label={`Works At`}
+                    result={study}
+                  />
+                </>
+              );
+            })}
           </div>
         </div>
       </div>
@@ -87,3 +183,17 @@ const Profile = () => {
 };
 
 export default Profile;
+
+export const ProfileDetailComponent = ({ icon, label, result }) => {
+  return (
+    <div>
+      <div className="flex space-x-2 text-lg px-2 py-1">
+        <div className="text-gray-500">
+          <FontAwesomeIcon icon={icon} />
+        </div>
+        <h1 className="">{label}</h1>
+        <h1 className="font-bold">{result}</h1>
+      </div>
+    </div>
+  );
+};

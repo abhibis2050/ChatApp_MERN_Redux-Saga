@@ -20,6 +20,7 @@ const {
   CancelSendFriendRequest,
   updateProfilePicture,
   allUsersBasedOnSearch,
+  updateUserDetail,
 } = require("../controller/userController");
 
 const router = express.Router();
@@ -42,5 +43,5 @@ router.route("/CancelSendFriendRequest").get(CancelSendFriendRequest);
 router.route("/CancelRecivedFriendRequest").get(CancelRecivedFriendRequest);
 router.route("/Unfriend").get(Unfriend);
 router.route("/updateProfilePicture").patch(updateProfilePicture);
-router.route("/getUsersBySearch").get(allUsersBasedOnSearch);
+router.route("/updateUserDetail").patch(updateUserDetail);
 module.exports = router;

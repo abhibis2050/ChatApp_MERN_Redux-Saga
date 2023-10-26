@@ -555,13 +555,26 @@ exports.allUsersBasedOnSearch = async (req, res) => {
     console.log(keyword);
     const users = await User.find(keyword).find({ _id: { $ne: req.user._id } });
 
+    return res.status(200).send({
+      success: true,
+      message: "users found successfully",
+      data: users,
+    });
+  } catch (error) {
+    return res.status(500).send({ success: false, message: error.message });
+  }
+};
+
+exports.updateUserDetail = async (req, res) => {
+  try {
+    const { userId } = req.query;
+
+    const findUser = await User.findOneAndUpdate({ _id: userId }, req.body, {
+      new: true,
+    });
     return res
       .status(200)
-      .send({
-        success: true,
-        message: "users found successfully",
-        data: users,
-      });
+      .send({ success: true, messsage: "Updated Successfully" });
   } catch (error) {
     return res.status(500).send({ success: false, message: error.message });
   }

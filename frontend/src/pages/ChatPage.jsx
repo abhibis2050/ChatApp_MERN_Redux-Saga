@@ -31,6 +31,7 @@ import SearchAndProfile from "../component/SearchAndProfile";
 import Profile from "../component/Profile";
 import { ImageCrop } from "../component/utils/ImageCrop";
 import MyProfile from "../component/myProfile";
+import ContactProfile from "../component/ContactProfile";
 
 
 const ChatPage = () => {
@@ -205,7 +206,7 @@ const ChatPage = () => {
           <SearchAndProfile />
           {/* contat area */}
 
-          <div className="h-[80%]  space-y-1 rounded-3xl">
+          <div className="space-y-1 rounded-3xl">
             <div>
               {sideBarIsActive?.message && (
                 <>
@@ -378,19 +379,19 @@ const ChatPage = () => {
 
           {/* ****************************************************GROUP MESSAGE CHAT*******************************************************/}
           {sideBarIsActive.group && (
-            <div>
+            <div >
               <GroupMessages />
             </div>
           )}
           {/* ****************************************************Profile*******************************************************/}
           {sideBarIsActive.contact && (
-            <div>
-              <MyProfile />
+            <div className="h-full">
+              <ContactProfile />
             </div>
           )}
            {/* ****************************************************Profile*******************************************************/}
            {sideBarIsActive.profile && (
-            <div>
+            <div className="h-full">
               <MyProfile />
             </div>
           )}
