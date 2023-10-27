@@ -3,7 +3,7 @@ import {
   SendGroupMessageAction,
 
 } from "../api/MessageAction";
-import { GetAllMyBlogsActions } from "../api/blogAction";
+import { GetAllMyBlogsActions, createBlogAction } from "../api/blogAction";
 import { setMyBlogs } from "../app/blogSlice";
 
 
@@ -19,7 +19,21 @@ import { setMyBlogs } from "../app/blogSlice";
     }
   }
 
+  
+  function* createBlogSaga(action) {
+    try {
+      const response =yield call(createBlogAction, action?.payload);
+      console.log("createBlogSaga response",response)
+      if(response?.status ===200){
+        // yield put(setMyBlogs({myBlogs:response?.data?.data}))
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
 export function* watchBlog() {
   yield takeEvery("GET_ALL_MY_BLOGS", getAllMyBlogSaga);
+  yield takeEvery("CREATE_BLOGS", createBlogSaga);
 
 }

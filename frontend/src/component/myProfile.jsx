@@ -43,9 +43,13 @@ const MyProfile = () => {
             return (
               <>
                 <div className="space-y-3 bg-white px-5 py-3 h-full rounded-3xl overflow-auto">
-                  <div>
+                  <div className="flex justify-between">
+                   <div>
                    <div className="text-3xl font-bold"> {singleBlog?.title.toUpperCase()}</div>
-                   <div>{`published in ${moment(singleBlog?.updatedAt).format('LLLL')}`}</div>
+                   <div className="mt-2"> {`Category : ${singleBlog?.category.toUpperCase()}`}</div>
+                   <div>{`published on ${moment(singleBlog?.updatedAt).format('LLLL')}`}</div>
+                   </div>
+                   <div>edit</div>
                   </div>
                   <div className="px-28">
                     <img
