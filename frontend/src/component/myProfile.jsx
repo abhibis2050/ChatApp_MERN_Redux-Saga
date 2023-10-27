@@ -1,6 +1,7 @@
 import { useState } from "react";
 import ModalComponent from "./Modal";
 import { useSelector } from "react-redux";
+import moment from "moment";
 
 const MyProfile = () => {
   const [openAddBlogModal, setOpenAddBlogModal] = useState(false);
@@ -44,7 +45,7 @@ const MyProfile = () => {
                 <div className="space-y-3 bg-white px-5 py-3 h-full rounded-3xl overflow-auto">
                   <div>
                    <div className="text-3xl font-bold"> {singleBlog?.title.toUpperCase()}</div>
-                   <div>date</div>
+                   <div>{`published in ${moment(singleBlog?.updatedAt).format('LLLL')}`}</div>
                   </div>
                   <div className="px-28">
                     <img
