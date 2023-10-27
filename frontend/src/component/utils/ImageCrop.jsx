@@ -19,7 +19,7 @@ export const ImageCrop = ({ pic, isGroup, isSingle }) => {
   useEffect(() => {
     setImage(pic);
   }, [pic]);
-  // console.log("image---------->", image);
+  console.log("image---------->", image);
 
   const onCropComplete = (croppedAreaPercentage, croppedAreaPixels) => {
     setCroppedArea(croppedAreaPixels);

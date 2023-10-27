@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const ObjectId = mongoose.Schema.Types.ObjectId;
 
 const blogSchema = new mongoose.Schema({
-  Title: {
+  title: {
     type: String,
     required: [true, "Please Enter The Title"],
   },
@@ -19,6 +19,8 @@ const blogSchema = new mongoose.Schema({
       "FITNESS",
       "BUSINESS",
       "PHOTOGRAPHY",
+      "ENVIRONMENT",
+      "OTHERS",
     ],
   },
   image: {
@@ -42,6 +44,8 @@ const blogSchema = new mongoose.Schema({
     type: ObjectId,
     ref: "User",
   },
+},{
+  timestamps:true
 });
 
 module.exports = mongoose.model("blog", blogSchema);

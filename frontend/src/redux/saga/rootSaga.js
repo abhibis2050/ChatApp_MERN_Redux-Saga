@@ -4,6 +4,7 @@ import { watchChat } from "./chatSaga";
 import { watchMessage } from "./messageSaga";
 import { watchUser } from "./userSaga";
 import { watchGroup } from "./groupSaga";
+import { watchBlog } from "./blogSaga";
 
 
 
@@ -13,6 +14,7 @@ export function* rootSaga(){
         watchChat(),
         watchMessage(),
         watchUser(),
-        watchGroup()
+        watchGroup(),
+        watchBlog()
     ])
 }

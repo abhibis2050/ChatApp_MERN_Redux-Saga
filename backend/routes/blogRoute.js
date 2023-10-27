@@ -1,7 +1,7 @@
 const express = require("express");
 
 const router=express.Router()
-const { createBlog, getMyBlog, deleteBlog, getBlogOnCategory, getBlogById } = require("../controllers/BlogController");
+const { createBlog, getMyBlog, deleteBlog, getBlogOnCategory, getBlogById } = require("../controller/blogController");
 const auth = require("../middlewares/auth");
 
 router.route("/createBlog").post(auth,createBlog);

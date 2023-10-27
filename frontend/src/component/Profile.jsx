@@ -114,12 +114,12 @@ const Profile = () => {
             />
             <ProfileDetailComponent
               icon={faHeart}
-              label={`Relationship Status`}
+              label={`Relationship`}
               result={authUser?.relationshipStatus}
             />
             <ProfileDetailComponent
               icon={faUser}
-              label={`Relationship Status`}
+              label={`Gender`}
               result={authUser?.gender}
             />
             <ProfileDetailComponent

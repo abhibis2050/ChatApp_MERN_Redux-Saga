@@ -3,9 +3,7 @@ import Modal from "react-modal";
 import { useSelector } from "react-redux";
 import Select from "react-select";
 
-
 const ModalComponent = ({
-
   label,
   openModal,
   closeModal,
@@ -16,14 +14,16 @@ const ModalComponent = ({
   // adding Group
   isAddGroup,
   // logout
-  isLoggedOut
+  isLoggedOut,
+  // Adding Blog
+  isAddBlog,
 }) => {
   const { allContacts } = useSelector((state) => state.user);
   return (
     <div>
       <div>
         <Modal
-          className=" bg-blue-100 absolute top-[25%] left-[25%] right-auto bottom-auto space-y-4 w-[900px] pb-5 rounded-2xl"
+          className=" bg-blue-100 absolute top-[25%] left-[25%] right-auto bottom-auto space-y-4 w-[900px] pb-5 rounded-2xl outline-none"
           isOpen={openModal}
           onRequestClose={closeModal}
           contentLabel="Examp Modal"
@@ -59,7 +59,58 @@ const ModalComponent = ({
             </>
           )}
 
-          {isLoggedOut&& (
+          {isAddBlog && (
+            <div className="space-y-3 px-4">
+              <div className="flex space-x-2 items-center ">
+                <div className="text-xl w-36">Title </div>
+                <input
+                  placeholder="Enter Blog Title "
+                  className="px-4 py-1 outline-none text-xl w-full rounded-xl"
+                />
+              </div>
+              <div className="flex space-x-2 items-center">
+                <div className="text-xl w-36">Description </div>
+                <textarea
+                  placeholder="Enter Blog Title "
+                  className="px-4 py-1 outline-none text-xl w-full rounded-xl"
+                />
+              </div>
+              <div className="flex">
+                <div className="text-xl w-32">Category </div>
+                <Select
+                  className="w-48"
+                  closeMenuOnSelect={false}
+                  placeholder="Select Category"
+                  options={[
+                    { value: "TECHNOLOGY", label: "TECHNOLOGY" },
+                    { value: "FASHION", label: "FASHION" },
+                    { value: "TRAVELL", label: "TRAVELL" },
+                    { value: "FITNESS", label: "FITNESS" },
+                    { value: "BUSINESS", label: "BUSINESS" },
+                    { value: "PHOTOGRAPHY", label: "PHOTOGRAPHY" },
+                    { value: "ENVIRONMENT", label: "ENVIRONMENT" },
+                    { value: "OTHERS", label: "OTHERS" },
+                  ]}
+                  onChange={(e) => {
+                    console.log(e);
+                  }}
+                />
+              </div>
+
+              <div className="flex items-center">
+                  <div className="text-xl w-32">Select Image</div>
+                <input
+                  type="file"
+                  id="fileUpload"
+                  onChange={(e) => {
+                    console.log(e.target.files);
+                  }}
+                />
+              </div>
+            </div>
+          )}
+
+          {isLoggedOut && (
             <>
               <div>Do you want to logout?</div>
             </>

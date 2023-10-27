@@ -21,8 +21,9 @@ const DetailProfile = ({ button, isMessage, isGroup, isOpen, onClose }) => {
   const [groupIconDilogBox, setGroupIconDilogBox] = useState(false);
   const [openGroupAddMembers, setOpenGroupAddMembers] = useState(false);
 
-  const fileUploadHandler = (e) => {
-    console.log("e---------->", e.target.files[0]);
+  const groupFileUploadHandler = (e) => {
+    // console.log("e---------->", e.target.files[0]);
+    // console.log("e---------->", e);
     if (e.target.files && e.target.files.length > 0) {
       // const reader = new FileReader();
       // reader.readAsDataURL(e.target.files[0]);
@@ -68,7 +69,7 @@ const DetailProfile = ({ button, isMessage, isGroup, isOpen, onClose }) => {
                   };
                 })}
                 onChange={(e) => {
-                  console.log(e)
+                  console.log(e);
                 }}
               />
             </div>
@@ -153,7 +154,8 @@ const DetailProfile = ({ button, isMessage, isGroup, isOpen, onClose }) => {
                                         id="fileUpload"
                                         className="hidden"
                                         onChange={(e) => {
-                                          fileUploadHandler(e);
+                                          // console.log(e.target)
+                                          groupFileUploadHandler(e);
                                         }}
                                       />
                                     </label>

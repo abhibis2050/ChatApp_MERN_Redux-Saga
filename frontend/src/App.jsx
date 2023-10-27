@@ -36,6 +36,15 @@ function App() {
   }, []);
 
   useEffect(() => {
+    dispatch({
+      type: "GET_ALL_MY_BLOGS",
+      payload: {
+        token,
+      },
+    });
+  }, []);
+
+  useEffect(() => {
     if (token !== "" && authUser) {
       dispatch({
         type: "GET_FRIENDLIST",
@@ -79,6 +88,12 @@ function App() {
         type: "GET_ALL_GROUPS",
         payload: {
           userId: authUser?._id,
+        },
+      });
+      dispatch({
+        type: "GET_ALL_MY_BLOGS",
+        payload: {
+          token,
         },
       });
     }

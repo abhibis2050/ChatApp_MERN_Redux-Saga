@@ -68,6 +68,7 @@ app.use("/api/user", require("./routes/userRoutes"));
 app.use("/api/message", require("./routes/messageRoutes"));
 app.use("/api/group", require("./routes/groupRoutes"));
 app.use("/api/chat", require("./routes/chatRoute"));
+app.use("/api/blog", require("./routes/blogRoute"));
 
 server.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);

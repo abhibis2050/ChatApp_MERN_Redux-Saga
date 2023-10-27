@@ -1,10 +1,31 @@
 const Blog = require("../models/Blog");
 const User = require("../models/user");
 const ObjectId = require("mongodb").ObjectId;
+const cloudinary = require("cloudinary");
 
 exports.createBlog = async (req, res) => {
   try {
-    console.log("todo controller create-->", req.user);
+    console.log("blog controller create-->", req.user);
+    let blogingPictureFile;
+
+    if (req.files) {
+      if (req.files.BlogImage) {
+        blogingPictureFile = await cloudinary.v2.uploader.upload(
+          req.files.BlogImage.tempFilePath,
+          { folder: "Blog_Images" }
+        );
+      }
+      console.log("blogingPictureFile", blogingPictureFile);
+    }
+
+    const blogingImage = blogingPictureFile && {
+      id: blogingPictureFile.public_id,
+      secure_url: blogingPictureFile.secure_url,
+    };
+
+    req.body.image = blogingImage ? blogingImage : "";
+
+    console.log(req.body);
 
     const createdBlog = await Blog.create(req.body);
 
@@ -16,13 +37,11 @@ exports.createBlog = async (req, res) => {
       { _id: req.user.id },
       { blog: createdBlog._id }
     );
-    return  res
-      .status(201)
-      .send({
-        status: true,
-        message: "todo created succefully",
-        data: createdBlog,
-      });
+    return res.status(201).send({
+      status: true,
+      message: "todo created succefully",
+      data: createdBlog,
+    });
   } catch (error) {
     return res.status(500).send({ status: false, message: error.message });
   }
@@ -50,9 +69,12 @@ exports.getMyBlog = async (req, res) => {
 exports.getBlogOnCategory = async (req, res) => {
   try {
     const { category } = req.query;
-    const findBlogs = await Blog.find({ category });
-    if (!findBlogs) {
-      return res.status(401).send({ status: false, message: "Blogs Not Found" });
+    const findBlogs = await Blog.find({ category: category });
+    console.log(findBlogs);
+    if (findBlogs == []) {
+      return res
+        .status(401)
+        .send({ status: false, message: "Blogs Not Found" });
     }
 
     return res.status(200).send({
@@ -70,7 +92,9 @@ exports.getBlogById = async (req, res) => {
     const { userId } = req.query;
     const findBlogs = await Blog.find({ user: userId });
     if (!findBlogs) {
-      return res.status(401).send({ status: false, message: "Blogs Not Found" });
+      return res
+        .status(401)
+        .send({ status: false, message: "Blogs Not Found" });
     }
 
     return res.status(200).send({
