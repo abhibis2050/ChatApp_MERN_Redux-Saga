@@ -112,7 +112,7 @@ const ModalComponent = ({
 
           {isLoggedOut && (
             <>
-              <div>Do you want to logout?</div>
+              <div className="px-5 text-xl ">Are You Sure You Want to Logout?</div>
             </>
           )}
 
