@@ -3,11 +3,11 @@ import ContactImage from "../assets/contact.png";
 
 const ContactProfile = () => {
   const { selectedContact } = useSelector((state) => state.user);
-  console.log(selectedContact);
+  // console.log(selectedContact);
   return (
     <>
       <div className="h-full bg-white space-y-2 rounded-3xl p-2">
-        {selectedContact ? (
+        {selectedContact===null ? (
           <div className="h-full flex justify-center">
             <img src={ContactImage} className="h-full" />
           </div>

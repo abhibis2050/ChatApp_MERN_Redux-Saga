@@ -33,7 +33,6 @@ import { ImageCrop } from "../component/utils/ImageCrop";
 import MyProfile from "../component/myProfile";
 import ContactProfile from "../component/ContactProfile";
 
-
 const ChatPage = () => {
   const dispatch = useDispatch();
   const { token, authUser } = useSelector((state) => state.auth);
@@ -45,7 +44,7 @@ const ChatPage = () => {
     allFriendListId,
     allFriendRequestSentId,
     allFriendRequestRecievedId,
-    userIcon
+    userIcon,
   } = useSelector((state) => state.user);
 
   const messageScrollRef = useRef(null);
@@ -183,7 +182,7 @@ const ChatPage = () => {
       <div className="z-20 absolute ">
         {groupIcon !== null ? (
           <div className="">
-            <ImageCrop pic={groupIcon} isGroup={true}/>
+            <ImageCrop pic={groupIcon} isGroup={true} />
           </div>
         ) : null}
       </div>
@@ -191,7 +190,7 @@ const ChatPage = () => {
       <div className="z-20 absolute ">
         {userIcon !== null ? (
           <div className="">
-            <ImageCrop pic={userIcon} isSingle={true}/>
+            <ImageCrop pic={userIcon} isSingle={true} />
           </div>
         ) : null}
       </div>
@@ -379,7 +378,7 @@ const ChatPage = () => {
 
           {/* ****************************************************GROUP MESSAGE CHAT*******************************************************/}
           {sideBarIsActive.group && (
-            <div >
+            <div>
               <GroupMessages />
             </div>
           )}
@@ -389,8 +388,8 @@ const ChatPage = () => {
               <ContactProfile />
             </div>
           )}
-           {/* ****************************************************Profile*******************************************************/}
-           {sideBarIsActive.profile && (
+          {/* ****************************************************Profile*******************************************************/}
+          {sideBarIsActive.profile && (
             <div className="h-full">
               <MyProfile />
             </div>
@@ -462,26 +461,27 @@ export const AllContactComponent = ({
   tag,
   tagTwo,
   onButtonClickTwo,
+  onContactClick
 }) => {
   return (
     <div
       onClick={onClick}
-      className={`flex space-x-3 items-center pl-2 pr-2 py-2 ${
+      className={`flex justify-between space-x-3 items-center pl-2 pr-2 py-2 text-black ${
         isActive
           ? "bg-blue-500 rounded-full text-white"
           : "hover:bg-blue-100 hover:rounded-full"
       }`}
     >
-      <div>
-        <img src={Pic} alt="" className=" w-14 h-8 rounded-full" />
-      </div>
-      <div className="w-full">
-        <div className="flex justify-between w-full text-lg">
-          <h1>{name}</h1>
-          {/* <div>{email}</div> */}
+      <div className="flex space-x-3 items-center w-full" onClick={onContactClick}>
+        <div>
+          <img src={Pic} alt="" className=" w-12 h-10 rounded-full" />
         </div>
-
-        <h1 className="text-base">{email}</h1>
+        <div className="w-full">
+          <div className="flex justify-between w-full text-lg">
+            <h1>{name}</h1>
+          </div>
+          <h1 className="text-base">{email}</h1>
+        </div>
       </div>
       <div onClick={onButtonClick}>
         <button className="bg-bluebase text-white text-sm rounded-full px-5 py-2">

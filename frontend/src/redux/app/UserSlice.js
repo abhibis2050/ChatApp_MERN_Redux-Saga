@@ -16,7 +16,8 @@ const initialState = {
   allFriendRequestSentId: [],
   allFriendRequestRecievedId: [],
   userIcon:null,
-  selectedContact:null
+  selectedContact:null,
+  
 };
 
 export const userSlice = createSlice({
@@ -52,7 +53,7 @@ export const userSlice = createSlice({
     },
     setSelectedContact: (state, action) => {
       state.selectedContact = action.payload.selectedContact;
-    },
+    },    
   },
 });
 
@@ -65,6 +66,8 @@ export const {
   setAllFriendListId,
   setAllFriendRequestSentId,
   setAllFriendRequestRecievedId,
-  setUserIcon
+  setUserIcon,
+  setSelectedContact,
+  
 } = userSlice.actions;
 export const userReducer = userSlice.reducer;

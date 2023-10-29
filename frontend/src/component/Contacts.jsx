@@ -4,11 +4,15 @@ import socket from "../customHooks/SocketHooks";
 import { AllContactComponent, ContactComponent } from "../pages/ChatPage";
 import Blank from "../assets/blank.png";
 import Select from "react-select";
+import { setSelectedContact} from "../redux/app/UserSlice";
 
 const Contacts = () => {
   const dispatch = useDispatch();
-  const { token, authUser } = useSelector((state) => state.auth);
+  const { token, authUser} = useSelector((state) => state.auth);
+  const { selectedContact } = useSelector((state) => state.user);
   const { allChats } = useSelector((state) => state.chat);
+
+  console.log("selectedContact---->",selectedContact);
 
   const [contacts, setContacts] = useState({
     allContact: true,
@@ -27,6 +31,7 @@ const Contacts = () => {
     allFriendRequestRecievedId,
   } = useSelector((state) => state.user);
 
+  
   useEffect(() => {
     dispatch({
       type: "GET_ALL_CONTACTS",
@@ -57,6 +62,17 @@ const Contacts = () => {
       }
     }
   }, [authUser, contacts]);
+
+  useEffect(()=>{
+    if(selectedContact!==null){
+      dispatch({
+        type:"GET_BLOGS_BY_ID",
+        payload:{
+          userId:selectedContact
+        }
+      })
+    }
+  },[selectedContact])
 
   const addFriendHandler = (friendId) => {
     if (authUser._id) {
@@ -201,9 +217,6 @@ const Contacts = () => {
             <div className="">
               {allContacts?.map((singleContact) => {
                 {
-                  /* console.log(allFriendListId.includes(singleContact?._id),singleContact.firstName,singleContact.lastName) */
-                }
-                {
                   if (allFriendListId.includes(singleContact?._id) === true) {
                     return (
                       <>
@@ -288,6 +301,9 @@ const Contacts = () => {
                             addFriendHandler(singleContact?._id)
                           }
                           tag={"Add"}
+                          onContactClick={()=>{
+                            dispatch(setSelectedContact({selectedContact:singleContact?._id}))
+                          }}
                         />
                       </>
                     );

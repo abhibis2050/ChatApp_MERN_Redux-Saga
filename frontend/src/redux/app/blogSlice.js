@@ -2,8 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 
 export const initialState = {
    myBlogs:[],
-   contactBlogs:[]
-    
+   contactBlogs:[],
+   singleContactBlogs:[]
 }
 
 export const blogSlice = createSlice({
@@ -16,10 +16,12 @@ export const blogSlice = createSlice({
       setAllContactBlogs:(state,action)=>{
         state.contactBlogs=action.payload.contactBlogs
       },
-      
+      setSingleContactBlogs: (state, action) => {
+        state.singleContactBlogs = action.payload.singleContactBlogs;
+      },
     }
 })
 
 
-export const {setMyBlogs,setAllContactBlogs} = blogSlice.actions
+export const {setMyBlogs,setAllContactBlogs,setSingleContactBlogs} = blogSlice.actions
 export const blogReducer = blogSlice.reducer
