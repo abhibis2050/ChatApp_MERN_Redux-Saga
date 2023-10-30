@@ -2,6 +2,7 @@ const VITE_BASE_URL = import.meta.env.VITE_BASE_URL;
 import axios from "axios";
 
 export const createBlogAction = async (payload) => {
+  console.log(payload.body)
   const response = await axios.post(
     `${VITE_BASE_URL}/blog/createBlog`,
     payload.body,

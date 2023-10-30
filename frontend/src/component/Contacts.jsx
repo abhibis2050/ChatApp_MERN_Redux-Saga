@@ -222,6 +222,7 @@ const Contacts = () => {
                       <>
                         <AllContactComponent
                           key={singleContact?._id}
+                          contactId={singleContact?._id}
                           name={`${singleContact?.firstName} ${singleContact?.lastName}`}
                           email={singleContact?.email}
                           Pic={
@@ -233,6 +234,9 @@ const Contacts = () => {
                             unfriendHandler(singleContact?._id)
                           }
                           tag={"Unfriend"}
+                          onContactClick={()=>{
+                            dispatch(setSelectedContact({selectedContact:singleContact?._id}))
+                          }}
                         />
                       </>
                     );
@@ -243,6 +247,7 @@ const Contacts = () => {
                       <>
                         <AllContactComponent
                           key={singleContact?._id}
+                          contactId={singleContact?._id}
                           name={`${singleContact?.firstName} ${singleContact?.lastName}`}
                           email={singleContact?.email}
                           Pic={
@@ -254,6 +259,9 @@ const Contacts = () => {
                             cancelSendFriendRequestHandler(singleContact?._id)
                           }
                           tag={"Unsend"}
+                          onContactClick={()=>{
+                            dispatch(setSelectedContact({selectedContact:singleContact?._id}))
+                          }}
                         />
                       </>
                     );
@@ -265,6 +273,7 @@ const Contacts = () => {
                       <>
                         <AllContactComponent
                           key={singleContact?._id}
+                          contactId={singleContact?._id}
                           name={`${singleContact?.firstName} ${singleContact?.lastName}`}
                           email={singleContact?.email}
                           Pic={
@@ -282,6 +291,9 @@ const Contacts = () => {
                               singleContact?._id
                             )
                           }
+                          onContactClick={()=>{
+                            dispatch(setSelectedContact({selectedContact:singleContact?._id}))
+                          }}
                         />
                       </>
                     );
@@ -290,6 +302,7 @@ const Contacts = () => {
                       <>
                         <AllContactComponent
                           key={singleContact?._id}
+                          contactId={singleContact?._id}
                           name={`${singleContact?.firstName} ${singleContact?.lastName}`}
                           email={singleContact?.email}
                           Pic={

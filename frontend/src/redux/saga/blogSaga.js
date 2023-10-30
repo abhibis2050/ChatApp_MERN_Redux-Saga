@@ -4,7 +4,7 @@ import {
 
 } from "../api/MessageAction";
 import { GetAllMyBlogsActions, createBlogAction, getAllBlogsBasedOnCategoryActions, getAllBlogsbyIdActions } from "../api/blogAction";
-import { setMyBlogs, setSingleContactBlogs } from "../app/blogSlice";
+import { addBlog, setMyBlogs, setSingleContactBlogs } from "../app/blogSlice";
 
 
   function* getAllMyBlogSaga(action) {
@@ -22,10 +22,11 @@ import { setMyBlogs, setSingleContactBlogs } from "../app/blogSlice";
   
   function* createBlogSaga(action) {
     try {
+      console.log("createBlogSaga response",action)
       const response =yield call(createBlogAction, action?.payload);
       console.log("createBlogSaga response",response)
-      if(response?.status ===200){
-        // yield put(setMyBlogs({myBlogs:response?.data?.data}))
+      if(response?.status ===201){
+        yield put(addBlog({myBlogs:response?.data?.data}))
       }
     } catch (error) {
       console.log(error);

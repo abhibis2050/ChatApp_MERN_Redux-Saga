@@ -39,7 +39,7 @@ exports.createBlog = async (req, res) => {
     );
     return res.status(201).send({
       status: true,
-      message: "todo created succefully",
+      message: "Blog created succefully",
       data: createdBlog,
     });
   } catch (error) {
@@ -109,7 +109,7 @@ exports.getBlogById = async (req, res) => {
 
 exports.deleteBlog = async (req, res) => {
   try {
-    const blogDelete = await Blog.findByIdAndRemove({ _id: req.query.id });
+    const blogDelete = await Blog.findByIdAndRemove({ _id: req.query.blogId });
     if (!blogDelete) {
       return res
         .status(401)
@@ -146,3 +146,19 @@ exports.addComments = async (req, res) => {
     return res.status(500).send({ status: false, message: error.message });
   }
 };
+
+
+
+exports.editMyBlog=async(req,res)=>{
+  try {
+    const{blogId} = req.query
+    const updateBlog = await Blog.findOneAndUpdate({_id:blogId},req.body)
+    return res.status(200).send({
+      status: true,
+      message: "Blog Updated succefully",
+      data: updateBlog,
+    });
+  } catch (error) {
+    return res.status(500).send({ status: false, message: error.message });
+  }
+}

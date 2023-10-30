@@ -452,27 +452,31 @@ export const ContactComponent = ({
 
 // eslint-disable-next-line react/prop-types
 export const AllContactComponent = ({
+  contactId,
   name,
   Pic,
   onClick,
   email,
-  isActive,
   onButtonClick,
   tag,
   tagTwo,
   onButtonClickTwo,
-  onContactClick
+  onContactClick,
 }) => {
+  const { selectedContact } = useSelector((state) => state.user);
   return (
     <div
       onClick={onClick}
       className={`flex justify-between space-x-3 items-center pl-2 pr-2 py-2 text-black ${
-        isActive
-          ? "bg-blue-500 rounded-full text-white"
+        selectedContact === contactId
+          ? "bg-bluebase rounded-full text-white"
           : "hover:bg-blue-100 hover:rounded-full"
       }`}
     >
-      <div className="flex space-x-3 items-center w-full" onClick={onContactClick}>
+      <div
+        className="flex space-x-3 items-center w-full cursor-pointer"
+        onClick={onContactClick}
+      >
         <div>
           <img src={Pic} alt="" className=" w-12 h-10 rounded-full" />
         </div>
@@ -484,13 +488,25 @@ export const AllContactComponent = ({
         </div>
       </div>
       <div onClick={onButtonClick}>
-        <button className="bg-bluebase text-white text-sm rounded-full px-5 py-2">
+        <button
+          className={` ${
+            selectedContact === contactId
+              ? "bg-white text-blue-700 text-sm rounded-full px-5 py-2 font-medium"
+              : "bg-bluebase text-white text-sm rounded-full px-5 py-2 "
+          }`}
+        >
           {tag}
         </button>
       </div>
       {tagTwo && (
         <div onClick={onButtonClickTwo}>
-          <button className="bg-bluebase text-white text-sm rounded-full px-5 py-2">
+          <button
+            className={` ${
+              selectedContact === contactId
+                ? "bg-white text-blue-700 text-sm rounded-full px-5 py-2 font-medium"
+                : "bg-bluebase text-white text-sm rounded-full px-5 py-2 "
+            }`}
+          >
             {tagTwo}
           </button>
         </div>

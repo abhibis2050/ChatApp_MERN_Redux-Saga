@@ -28,11 +28,11 @@ const ContactProfile = () => {
                   <img src={noPost} className=""/>
                 </div>
               ) : (
-                <>
+                <div className="space-y-10 h-full rounded-3xl overflow-auto">
                   {singleContactBlogs?.map((singleBlog) => {
                     return (
                       <>
-                        <div className="space-y-3 bg-white px-5 py-3 h-full rounded-3xl overflow-auto">
+                        <div className="space-y-3 px-5 py-3 h-fit rounded-3xl">
                           <div className="flex justify-between">
                             <div>
                               <div className="text-3xl font-bold">
@@ -47,9 +47,9 @@ const ContactProfile = () => {
                                 singleBlog?.updatedAt
                               ).format("LLLL")}`}</div>
                             </div>
-                            <div>edit</div>
+                            {/* <div>edit</div> */}
                           </div>
-                          <div className="px-28">
+                          <div className="px-28 flex justify-center">
                             <img
                               src={
                                 singleBlog?.image?.secure_url
@@ -65,7 +65,7 @@ const ContactProfile = () => {
                       </>
                     );
                   })}
-                </>
+                </div>
               )}
             </div>
           </>

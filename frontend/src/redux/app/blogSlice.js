@@ -10,6 +10,9 @@ export const blogSlice = createSlice({
     name:"blog",
     initialState,
     reducers:{
+      addBlog:(state,action)=>{
+        state.myBlogs=[...state.myBlogs,action.payload.myBlogs]
+      },
       setMyBlogs:(state,action)=>{
         state.myBlogs=action.payload.myBlogs
       },
@@ -19,9 +22,10 @@ export const blogSlice = createSlice({
       setSingleContactBlogs: (state, action) => {
         state.singleContactBlogs = action.payload.singleContactBlogs;
       },
+      
     }
 })
 
 
-export const {setMyBlogs,setAllContactBlogs,setSingleContactBlogs} = blogSlice.actions
+export const {addBlog,setMyBlogs,setAllContactBlogs,setSingleContactBlogs} = blogSlice.actions
 export const blogReducer = blogSlice.reducer

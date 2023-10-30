@@ -10,13 +10,19 @@ const ModalComponent = ({
   buttonlabel,
   onClickButton,
   ButtonlabelTwo,
-
+  onClickButtonTwo,
   // adding Group
   isAddGroup,
   // logout
   isLoggedOut,
   // Adding Blog
   isAddBlog,
+  titleValue,
+  titleChange,
+  descriptionValue,
+  descriptionChange,
+  categoryChange,
+  fileUploadChange
 }) => {
   const { allContacts } = useSelector((state) => state.user);
   return (
@@ -66,13 +72,17 @@ const ModalComponent = ({
                 <input
                   placeholder="Enter Blog Title "
                   className="px-4 py-1 outline-none text-xl w-full rounded-xl"
+                  value={titleValue}
+                  onChange={titleChange}
                 />
               </div>
               <div className="flex space-x-2 items-center">
                 <div className="text-xl w-36">Description </div>
                 <textarea
-                  placeholder="Enter Blog Title "
+                  placeholder="Enter Blog Description "
                   className="px-4 py-1 outline-none text-xl w-full rounded-xl"
+                  value={descriptionValue}
+                  onChange={descriptionChange}
                 />
               </div>
               <div className="flex">
@@ -91,9 +101,7 @@ const ModalComponent = ({
                     { value: "ENVIRONMENT", label: "ENVIRONMENT" },
                     { value: "OTHERS", label: "OTHERS" },
                   ]}
-                  onChange={(e) => {
-                    console.log(e);
-                  }}
+                  onChange={categoryChange}
                 />
               </div>
 
@@ -102,9 +110,7 @@ const ModalComponent = ({
                 <input
                   type="file"
                   id="fileUpload"
-                  onChange={(e) => {
-                    console.log(e.target.files);
-                  }}
+                  onChange={fileUploadChange}
                 />
               </div>
             </div>
@@ -118,7 +124,7 @@ const ModalComponent = ({
 
           <div className="flex space-x-3 justify-end px-3">
             <button
-              onClick={closeModal}
+              onClick={onClickButtonTwo}
               className="border border-blue-700 px-6 py-2 rounded-full bg-blue-700 text-white font-normal text-base "
             >
               {ButtonlabelTwo}
