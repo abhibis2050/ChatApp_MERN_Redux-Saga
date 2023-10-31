@@ -1,30 +1,42 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ModalComponent from "./Modal";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faFileEdit,
-  faPen,
-  faTrash,
-  faUserEdit,
-} from "@fortawesome/free-solid-svg-icons";
+import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { setSelectBlogForAction } from "../redux/app/blogSlice";
 
 const MyProfile = () => {
   const formData = new FormData();
   const dispatch = useDispatch();
   const [openAddBlogModal, setOpenAddBlogModal] = useState(false);
   const [openEditBlogModal, setOpenEditBlogModal] = useState(false);
-  const { myBlogs } = useSelector((state) => state.blog);
+  const [openDeleteBlogModal, setOpenDeleteBlogModal] = useState(false);
+  const { myBlogs, selectedBlogForAction } = useSelector((state) => state.blog);
   const { token } = useSelector((state) => state.auth);
   const [blogImage, setBlogImage] = useState();
+  const [editBlogImage, setEditBlogImage] = useState();
   const [blogInput, setBlogInput] = useState({
     title: "",
     description: "",
     category: "",
   });
 
-  // console.log("blogInput",blogInput)
+  const [blogEdit, setBlogEdit] = useState({
+    title: selectedBlogForAction?.title,
+    description: selectedBlogForAction?.description,
+    image: selectedBlogForAction?.image,
+  });
+
+  useEffect(() => {
+    setBlogEdit({
+      ...blogEdit,
+      title: selectedBlogForAction?.title,
+      description: selectedBlogForAction?.description,
+      image: selectedBlogForAction?.image,
+    });
+  }, [selectedBlogForAction]);
+
   const handleAddBlog = () => {
     if (blogImage === undefined) {
       formData.append("title", blogInput?.title);
@@ -52,6 +64,40 @@ const MyProfile = () => {
       description: "",
       category: "",
     });
+  };
+
+  const handleEditBlog = () => {
+    if (editBlogImage === undefined) {
+      formData.append("title", blogEdit?.title);
+      formData.append("description", blogEdit?.description);
+      formData.append("image", blogEdit?.image);
+    } else {
+      formData.append("title", blogEdit?.title);
+      formData.append("description", blogEdit?.description);
+      formData.append("BlogImage", editBlogImage);
+    }
+
+    dispatch({
+      type: "EDIT_MY_BLOGS",
+      payload: {
+        body: formData,
+        blogId: selectedBlogForAction?._id,
+      },
+    });
+    setOpenEditBlogModal(false);
+    setEditBlogImage(undefined);
+    dispatch(setSelectBlogForAction({ selectedBlogForAction: null }));
+  };
+
+  const handleDeleteBlog = () => {
+    dispatch({
+      type: "DELETE_MY_BLOGS",
+      payload: {
+        blogId: selectedBlogForAction?._id,
+      },
+    });
+    setOpenDeleteBlogModal(false);
+    dispatch(setSelectBlogForAction({ selectedBlogForAction: null }));
   };
 
   return (
@@ -93,10 +139,59 @@ const MyProfile = () => {
           setBlogInput({ ...blogInput, category: e.value });
         }}
         fileUploadChange={(e) => {
-          // console.log(e.target.files);
           setBlogImage(e.target.files[0]);
         }}
       />
+
+      <ModalComponent
+        isEditBlog={true}
+        label={"Edit Blog"}
+        openModal={openEditBlogModal}
+        closeModal={() => {
+          setOpenEditBlogModal(false);
+          dispatch(setSelectBlogForAction({ selectedBlogForAction: null }));
+        }}
+        ButtonlabelTwo={"Cancel"}
+        buttonlabel={"Save"}
+        onClickButton={() => {
+          handleEditBlog();
+        }}
+        onClickButtonTwo={() => {
+          setOpenEditBlogModal(false);
+          dispatch(setSelectBlogForAction({ selectedBlogForAction: null }));
+        }}
+        editTitleValue={blogEdit?.title}
+        editdescriptionValue={blogEdit?.description}
+        editTitleChange={(e) => {
+          setBlogEdit({ ...blogEdit, title: e.target.value });
+        }}
+        editdescriptionChange={(e) => {
+          setBlogEdit({ ...blogEdit, description: e.target.value });
+        }}
+        editfileUploadChange={(e) => {
+          setEditBlogImage(e.target.files[0]);
+        }}
+      />
+
+      <ModalComponent
+        isDeleteBlog={true}
+        label={"Delete Blog"}
+        openModal={openDeleteBlogModal}
+        closeModal={() => {
+          setOpenDeleteBlogModal(false);
+          dispatch(setSelectBlogForAction({ selectedBlogForAction: null }));
+        }}
+        ButtonlabelTwo={"Cancel"}
+        buttonlabel={"Delete"}
+        onClickButton={() => {
+          handleDeleteBlog();
+        }}
+        onClickButtonTwo={() => {
+          setOpenDeleteBlogModal(false);
+          dispatch(setSelectBlogForAction({ selectedBlogForAction: null }));
+        }}
+      />
+
       <div className="h-full rounded-3xl space-y-2">
         <div className="bg-white rounded-3xl h-[9%] flex justify-between px-2 items-center">
           <div></div>
@@ -120,11 +215,9 @@ const MyProfile = () => {
                     <div className="flex justify-between items-center">
                       <div>
                         <div className="text-3xl font-bold">
-                          {" "}
                           {singleBlog?.title.toUpperCase()}
                         </div>
                         <div className="mt-2">
-                          {" "}
                           {`Category : ${singleBlog?.category.toUpperCase()}`}
                         </div>
                         <div>{`published on ${moment(
@@ -136,17 +229,33 @@ const MyProfile = () => {
                           className="text-2xl p-4"
                           onClick={() => {
                             setOpenEditBlogModal(true);
+                            dispatch(
+                              setSelectBlogForAction({
+                                selectedBlogForAction: singleBlog,
+                              })
+                            );
                           }}
                         >
-                          <FontAwesomeIcon icon={faPen} className="text-green-600 cursor-pointer" />
+                          <FontAwesomeIcon
+                            icon={faPen}
+                            className="text-green-600 cursor-pointer"
+                          />
                         </div>
                         <div
                           className="text-2xl p-4 cursor-pointer"
-                          // onClick={() => {
-                          //   setOpenEditBlogModal(true);
-                          // }}
+                          onClick={() => {
+                            setOpenDeleteBlogModal(true);
+                            dispatch(
+                              setSelectBlogForAction({
+                                selectedBlogForAction: singleBlog,
+                              })
+                            );
+                          }}
                         >
-                          <FontAwesomeIcon icon={faTrash} className="text-red-600" />
+                          <FontAwesomeIcon
+                            icon={faTrash}
+                            className="text-red-600"
+                          />
                         </div>
                       </div>
                     </div>

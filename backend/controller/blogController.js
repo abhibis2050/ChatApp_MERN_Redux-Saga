@@ -151,8 +151,28 @@ exports.addComments = async (req, res) => {
 
 exports.editMyBlog=async(req,res)=>{
   try {
+    let blogEditImageFile;
     const{blogId} = req.query
-    const updateBlog = await Blog.findOneAndUpdate({_id:blogId},req.body)
+ 
+
+    if(req.files){
+      if(req.files.BlogImage){
+        console.log(req.files.BlogImage)
+        blogEditImageFile = await cloudinary.v2.uploader.upload(
+          req.files.BlogImage.tempFilePath,
+          { folder: "Blog_Images" }
+        )
+      }
+    }
+
+    const blogingImage = blogEditImageFile && {
+      id: blogEditImageFile.public_id,
+      secure_url: blogEditImageFile.secure_url,
+    };
+
+    req.body.image = blogingImage ? blogingImage : "";
+
+    const updateBlog = await Blog.findOneAndUpdate({_id:blogId},req.body,{new:true})
     return res.status(200).send({
       status: true,
       message: "Blog Updated succefully",

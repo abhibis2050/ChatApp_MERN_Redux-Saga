@@ -22,7 +22,18 @@ const ModalComponent = ({
   descriptionValue,
   descriptionChange,
   categoryChange,
-  fileUploadChange
+  fileUploadChange,
+
+  // Edit Blog
+  isEditBlog,
+  editTitleValue,
+  editTitleChange,
+  editdescriptionValue,
+  editdescriptionChange,
+  editfileUploadChange,
+
+  // Delete Blog
+  isDeleteBlog,
 }) => {
   const { allContacts } = useSelector((state) => state.user);
   return (
@@ -106,7 +117,7 @@ const ModalComponent = ({
               </div>
 
               <div className="flex items-center">
-                  <div className="text-xl w-32">Select Image</div>
+                <div className="text-xl w-32">Select Image</div>
                 <input
                   type="file"
                   id="fileUpload"
@@ -116,9 +127,50 @@ const ModalComponent = ({
             </div>
           )}
 
+          {isEditBlog && (
+            <div className="space-y-3 px-4">
+              <div className="flex space-x-2 items-center ">
+                <div className="text-xl w-36">Title </div>
+                <input
+                  placeholder="Enter Blog Title "
+                  className="px-4 py-1 outline-none text-xl w-full rounded-xl"
+                  value={editTitleValue}
+                  onChange={editTitleChange}
+                />
+              </div>
+              <div className="flex space-x-2 items-center">
+                <div className="text-xl w-36">Description </div>
+                <textarea
+                  placeholder="Enter Blog Description "
+                  className="px-4 py-1 outline-none text-xl w-full rounded-xl"
+                  value={editdescriptionValue}
+                  onChange={editdescriptionChange}
+                />
+              </div>
+              <div className="flex items-center">
+                <div className="text-xl w-32">Edit Image</div>
+                <input
+                  type="file"
+                  id="fileUpload"
+                  onChange={editfileUploadChange}
+                />
+              </div>
+            </div>
+          )}
+
+          {isDeleteBlog && (
+            <>
+              <div className="px-5 text-xl ">
+              Are You Sure You Want to Delete The Blog?
+              </div>
+            </>
+          )}
+
           {isLoggedOut && (
             <>
-              <div className="px-5 text-xl ">Are You Sure You Want to Logout?</div>
+              <div className="px-5 text-xl ">
+                Are You Sure You Want to Logout?
+              </div>
             </>
           )}
 

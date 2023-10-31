@@ -8,7 +8,7 @@ router.route("/createBlog").post(auth,createBlog);
 router.route("/getMyBlogs").get(auth,getMyBlog);
 router.route("/getBlogOnCategory").get(getBlogOnCategory);
 router.route("/getBlogById").get(getBlogById);
-router.route("/remove").delete(deleteBlog);
+router.route("/deleteBlog").delete(deleteBlog);
 router.route("/editMyBlog").patch(editMyBlog);
 
 module.exports= router

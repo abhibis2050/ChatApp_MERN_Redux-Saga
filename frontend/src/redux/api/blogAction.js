@@ -42,3 +42,21 @@ export const GetAllMyBlogsActions = async (payload) => {
   });
   return response;
 };
+
+export const editBlogAction = async (payload) => {
+  console.log(payload.body)
+  const response = await axios.patch(
+    `${VITE_BASE_URL}/blog/editMyBlog?blogId=${payload.blogId}`,
+    payload.body,
+  );
+  return response;
+};
+
+export const deleteBlogAction = async (payload) => {
+  console.log(payload.body)
+  const response = await axios.delete(
+    `${VITE_BASE_URL}/blog/deleteBlog?blogId=${payload.blogId}`,
+    payload.body,
+  );
+  return response;
+};
