@@ -15,11 +15,14 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 import { setUserIcon } from "../redux/app/UserSlice";
+import ModalComponent from "./Modal";
 
 const Profile = () => {
   const { authUser } = useSelector((state) => state.auth);
   const [iconDilogBox, setIconDilogBox] = useState(false);
+  const [openEditUserModal, setOpenEditUserModal] = useState(false);
   const dispatch = useDispatch();
+
   const fileUploadHandler = (e) => {
     console.log("e---------->", e.target.files[0]);
     if (e.target.files && e.target.files.length > 0) {
@@ -42,8 +45,38 @@ const Profile = () => {
     }
   };
 
+  const handleEditUser =()=>{
+
+  }
+
   return (
     <div className="h-full space-y-2">
+
+       <ModalComponent
+        isEditUser={true}
+        label={"Edit User Details"}
+        openModal={openEditUserModal}
+        closeModal={() => {
+          setOpenEditUserModal(false);
+        }}
+        ButtonlabelTwo={"Cancel"}
+        buttonlabel={"Save"}
+        onClickButton={() => {
+          handleEditUser();
+        }}
+        onClickButtonTwo={() => {
+          setOpenEditUserModal(false);
+        }}
+        // editTitleValue={blogEdit?.title}
+        // editdescriptionValue={blogEdit?.description}
+        editTitleChange={(e) => {
+          // setBlogEdit({ ...blogEdit, title: e.target.value });
+        }}
+        editdescriptionChange={(e) => {
+          // setBlogEdit({ ...blogEdit, description: e.target.value });
+        }}
+      />
+
       <div className=" rounded-3xl">
         <div className="flex flex-col justify-center items-center space-y-3 py-4 rounded-3xl">
           <div className="">
@@ -98,9 +131,13 @@ const Profile = () => {
       <div className="px-2 py-1 space-y-3">
         <div className="text-2xl font-bold pb-1 flex justify-between">
           <h1>Details</h1>
-          <h1>
+          <div
+          className="cursor-pointer"
+           onClick={()=>{
+            setOpenEditUserModal(true)
+          }} >
             <FontAwesomeIcon icon={faEdit}/>
-          </h1>
+          </div>
         </div>
         <div>
           <div>

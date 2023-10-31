@@ -16,6 +16,7 @@ const MyProfile = () => {
   const { token } = useSelector((state) => state.auth);
   const [blogImage, setBlogImage] = useState();
   const [editBlogImage, setEditBlogImage] = useState();
+
   const [blogInput, setBlogInput] = useState({
     title: "",
     description: "",
