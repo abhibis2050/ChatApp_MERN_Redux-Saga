@@ -378,7 +378,7 @@ const ChatPage = () => {
 
           {/* ****************************************************GROUP MESSAGE CHAT*******************************************************/}
           {sideBarIsActive.group && (
-            <div>
+            <div className="h-full">
               <GroupMessages />
             </div>
           )}

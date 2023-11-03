@@ -1,4 +1,6 @@
 /* eslint-disable react/prop-types */
+import { faAdd } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Modal from "react-modal";
 import { useSelector } from "react-redux";
 import Select from "react-select";
@@ -13,6 +15,10 @@ const ModalComponent = ({
   onClickButtonTwo,
   // adding Group
   isAddGroup,
+  groupNameValue,
+  groupNameChange,
+  groupIconUploadChange,
+  addGroupMemberChange,
   // logout
   isLoggedOut,
   // Adding Blog
@@ -34,6 +40,34 @@ const ModalComponent = ({
 
   // Delete Blog
   isDeleteBlog,
+  // Edit USer
+  isEditUser,
+  editFirstName,
+  editFirstNameChange,
+  editLastName,
+  editLastNameChange,
+  editFrom,
+  editFromChange,
+  editLiveIn,
+  editLiveInChange,
+  editDob,
+  editDobChange,
+  editRelationship,
+  editRelationChange,
+  editGender,
+  editGenderChange,
+  editAbout,
+  editAboutChange,
+  editWorkPlace,
+  addWorkInputValue,
+  changeSingleWorkPlace,
+  editLanguage,
+  addLanguagesInputValue,
+  editLanguagesInputChange,
+  editStudiedAt,
+  addStudiedAt,
+  editInstituteLocationChange,
+  editInstituteNameChange,
 }) => {
   const { allContacts } = useSelector((state) => state.user);
   return (
@@ -52,10 +86,20 @@ const ModalComponent = ({
             <>
               <div className="space-y-4 px-3">
                 <div className="flex space-x-2 items-center">
+                  <div className="text-xl w-36">Group Icon</div>
+                  <input
+                    type="file"
+                    className="px-4 py-1 outline-none text-xl w-full rounded-xl"
+                    onChange={groupIconUploadChange}
+                  />
+                </div>
+                <div className="flex space-x-2 items-center">
                   <div className="text-xl w-36">Group Name</div>
                   <input
                     placeholder="Enter Group Name "
                     className="px-4 py-1 outline-none text-xl w-full rounded-xl"
+                    value={groupNameValue}
+                    onChange={groupNameChange}
                   />
                 </div>
                 <div className="">
@@ -69,7 +113,7 @@ const ModalComponent = ({
                         value: singleContact?._id,
                       };
                     })}
-                    onChange={(e) => {}}
+                    onChange={addGroupMemberChange}
                   />
                 </div>
               </div>
@@ -161,11 +205,208 @@ const ModalComponent = ({
           {isDeleteBlog && (
             <>
               <div className="px-5 text-xl ">
-              Are You Sure You Want to Delete The Blog?
+                Are You Sure You Want to Delete The Blog?
               </div>
             </>
           )}
 
+          {isEditUser && (
+            <>
+              <div className="px-2">
+                <div className="bg-red-300 space-y-2">
+                  <div className="text-2xl border-b-2 border-b-blue-700">
+                    Basic
+                  </div>
+                  <div className="flex space-x-8">
+                    <div className="flex space-x-2">
+                      <h1 className="w-20">Firstname</h1>
+                      <input
+                        placeholder="Enter your First Name"
+                        value={editFirstName}
+                        onChange={editFirstNameChange}
+                      />
+                    </div>
+                    <div>
+                      <div className="flex space-x-2">
+                        <h1 className="w-20">Lastname</h1>
+                        <input
+                          placeholder="Enter your Last Name"
+                          value={editLastName}
+                          onChange={editLastNameChange}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex space-x-8">
+                    <div className="flex space-x-2">
+                      <h1 className="w-20">From</h1>
+                      <input
+                        placeholder="From"
+                        value={editFrom}
+                        onChange={editFromChange}
+                      />
+                    </div>
+                    <div>
+                      <div className="flex space-x-2">
+                        <h1 className="w-20">Live In</h1>
+                        <input
+                          placeholder="Live In"
+                          value={editLiveIn}
+                          onChange={editLiveInChange}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex space-x-8">
+                    <div className="flex space-x-2">
+                      <h1 className="w-20">DOB</h1>
+                      <input
+                        placeholder="DOB"
+                        value={editDob}
+                        onChange={editDobChange}
+                      />
+                    </div>
+                    <div>
+                      <div className="flex space-x-s">
+                        <h1 className="w-20">Relation</h1>
+                        <input
+                          placeholder="Relation"
+                          value={editRelationship}
+                          onChange={editRelationChange}
+                        />
+                      </div>
+                    </div>
+                    <div className="flex space-x-2">
+                      <h1 className="w-20">Gender</h1>
+                      <input
+                        placeholder="Gender"
+                        value={editGender}
+                        onChange={editGenderChange}
+                      />
+                    </div>
+                  </div>
+                  <div className="flex space-x-8">
+                    <div className="flex space-x-2 w-full">
+                      <h1 className="w-20 mr-2">About</h1>
+                      <textArea
+                        placeholder="Enter About yourself"
+                        className="w-full outline-none"
+                        value={editAbout}
+                        onChange={editAboutChange}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="bg-purple-500 space-x-2 flex justify-between">
+                  <div className="bg-yellow-200 w-[65%]">
+                    <div className="flex justify-between text-2xl border-b-2 border-b-blue-700">
+                      <h1> Work Place</h1>
+                      <div
+                        className="px-1 bg-white cursor-pointer"
+                        onClick={addWorkInputValue}
+                      >
+                        <FontAwesomeIcon icon={faAdd} />
+                      </div>
+                    </div>
+                    <div>
+                      <div className="space-y-3">
+                        {editWorkPlace?.map((singleWorkPlace, index) => {
+                          {
+                            /* console.log(singleWorkPlace,"index-------------->",index) */
+                          }
+                          return (
+                            <>
+                              <div className="flex space-x-2 w-full">
+                                <div>Worked At </div>
+                                <input
+                                  value={singleWorkPlace}
+                                  onChange={(e) => {
+                                    changeSingleWorkPlace(e, index);
+                                  }}
+                                />
+                              </div>
+                            </>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="bg-yellow-200 w-[34%]">
+                    <div className="flex justify-between text-2xl border-b-2 border-b-blue-700">
+                      <h1> Language</h1>
+                      <div
+                        className="px-1 bg-white cursor-pointer"
+                        onClick={addLanguagesInputValue}
+                      >
+                        <FontAwesomeIcon icon={faAdd} />
+                      </div>
+                    </div>
+                    <div>
+                      <div className="space-y-3">
+                        {editLanguage?.map((singleLanguage, index) => {
+                          return (
+                            <>
+                              <div className="flex space-x-2 w-full">
+                                <input
+                                  value={singleLanguage}
+                                  onChange={(e) => {
+                                    editLanguagesInputChange(e, index);
+                                  }}
+                                />
+                              </div>
+                            </>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="bg-orange-400">
+                  <div className="flex justify-between text-2xl border-b-2 border-b-blue-700">
+                    <div>Education</div>
+                    <div
+                      className="px-1 bg-white cursor-pointer"
+                      onClick={addStudiedAt}
+                    >
+                      <FontAwesomeIcon icon={faAdd} />
+                    </div>
+                  </div>
+                  <div className="">
+                    {editStudiedAt?.map((singleStudiedAt, index) => {
+                      console.log(singleStudiedAt);
+                      return (
+                        <div
+                          key={singleStudiedAt?._id}
+                          className="flex justify-between"
+                        >
+                          <div className="bg-yellow-200 flex space-x-2 w-[65%]">
+                            <h1>Institute</h1>
+                            <input
+                              placeholder="Add Insitute Name"
+                              value={singleStudiedAt?.instituteName}
+                              onChange={(e) => {
+                                editInstituteNameChange(e, index);
+                              }}
+                            />
+                          </div>
+                          <div className="flex space-x-2 w-[35%] bg-yellow-200">
+                            <h1>Located At</h1>
+                            <input
+                              placeholder="Add Insitute Location"
+                              value={singleStudiedAt?.locatedAt}
+                              onChange={(e) => {
+                                editInstituteLocationChange(e, index);
+                              }}
+                            />
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
           {isLoggedOut && (
             <>
               <div className="px-5 text-xl ">

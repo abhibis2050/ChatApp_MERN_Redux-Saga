@@ -10,8 +10,16 @@ const Group = () => {
   const { allGroups } = useSelector((state) => state.group);
 
   const [groupModalOpen, setGroupModalOpen] = useState(false);
+  const [groupAvatar, setGroupAvatar] = useState(false);
+  const [createGroup, , setCreateGroup] = useState({
+    groupName: "",
+    groupMembers: [],
+  });
 
-    // console.log(groupModalOpen)
+  console.log(createGroup);
+
+  const addGroupHandler = () => {};
+
   return (
     <div className="space-y-2">
       <ModalComponent
@@ -23,8 +31,19 @@ const Group = () => {
         }}
         ButtonlabelTwo={"Cancel"}
         buttonlabel={"Save"}
+        onClickButton={addGroupHandler}
         onClickButtonTwo={() => {
           setGroupModalOpen(false);
+        }}
+        groupNameValue={createGroup?.groupName}
+        groupNameChange={(e)=>{
+          setCreateGroup({...createGroup,groupName:e.target.value})
+        }}
+        groupIconUploadChange={(e) => {
+          setGroupAvatar(e.target.files[0]);
+        }}
+        addGroupMemberChange={(e) => {
+          setCreateGroup({ ...createGroup, groupMembers: e });
         }}
       />
 

@@ -28,7 +28,7 @@ const userSchema = new mongoose.Schema({
     {
       instituteName: { type: String },
       locatedAt: { type: String },
-    },
+    }
   ],
   gender:{
     type: String,

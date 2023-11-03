@@ -13,7 +13,7 @@ import {
   faLocation,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { setUserIcon } from "../redux/app/UserSlice";
 import ModalComponent from "./Modal";
 
@@ -22,6 +22,38 @@ const Profile = () => {
   const [iconDilogBox, setIconDilogBox] = useState(false);
   const [openEditUserModal, setOpenEditUserModal] = useState(false);
   const dispatch = useDispatch();
+
+  const [userEdit, setUserEdit] = useState({
+    firstName: authUser.firstName || "",
+    lastName: authUser.lastName || "",
+    about: authUser.about || "",
+    liveIn: authUser.liveIn || "",
+    from: authUser.from || "",
+    gender: authUser.gender || "",
+    DOB: authUser.DOB || "",
+    relationshipStatus: authUser.relationshipStatus || "",
+    workPlace: authUser.workPlace || [],
+    studiedAt: authUser.studiedAt || [],
+    languages: authUser.languages || [],
+  });
+
+  console.log(userEdit);
+  useEffect(() => {
+    setUserEdit({
+      ...userEdit,
+      firstName: authUser.firstName,
+      lastName: authUser.lastName,
+      about: authUser.about,
+      liveIn: authUser.liveIn,
+      from: authUser.from,
+      gender: authUser.gender,
+      DOB: authUser.DOB,
+      relationshipStatus: authUser.relationshipStatus,
+      workPlace: authUser.workPlace,
+      studiedAt: authUser.studiedAt,
+      languages: authUser.languages,
+    });
+  }, [authUser]);
 
   const fileUploadHandler = (e) => {
     console.log("e---------->", e.target.files[0]);
@@ -45,14 +77,11 @@ const Profile = () => {
     }
   };
 
-  const handleEditUser =()=>{
-
-  }
+  const handleEditUser = () => {};
 
   return (
     <div className="h-full space-y-2">
-
-       <ModalComponent
+      <ModalComponent
         isEditUser={true}
         label={"Edit User Details"}
         openModal={openEditUserModal}
@@ -67,13 +96,72 @@ const Profile = () => {
         onClickButtonTwo={() => {
           setOpenEditUserModal(false);
         }}
-        // editTitleValue={blogEdit?.title}
-        // editdescriptionValue={blogEdit?.description}
-        editTitleChange={(e) => {
-          // setBlogEdit({ ...blogEdit, title: e.target.value });
+        editFirstName={userEdit?.firstName}
+        editFirstNameChange={(e) => {
+          setUserEdit({ ...userEdit, firstName: e.target.value });
         }}
-        editdescriptionChange={(e) => {
-          // setBlogEdit({ ...blogEdit, description: e.target.value });
+        editLastName={userEdit?.lastName}
+        editLastNameChange={(e) => {
+          setUserEdit({ ...userEdit, lastName: e.target.value });
+        }}
+        editFrom={userEdit?.from}
+        editFromChange={(e) => {
+          setUserEdit({ ...userEdit, from: e.target.value });
+        }}
+        editLiveIn={userEdit?.liveIn}
+        editLiveInChange={(e) => {
+          setUserEdit({ ...userEdit, liveIn: e.target.value });
+        }}
+        editDob={userEdit?.DOB}
+        editDobChange={(e) => {
+          setUserEdit({ ...userEdit, DOB: e.target.value });
+        }}
+        editRelationship={userEdit?.relationshipStatus}
+        editRelationChange={(e) => {
+          setUserEdit({ ...userEdit, relationshipStatus: e.target.value });
+        }}
+        editGender={userEdit?.gender}
+        editGenderChange={(e) => {
+          setUserEdit({ ...userEdit, gender: e.target.value });
+        }}
+        editAbout={userEdit?.about}
+        editAboutChange={(e) => {
+          setUserEdit({ ...userEdit, about: e.target.value });
+        }}
+        editWorkPlace={userEdit?.workPlace}
+        addWorkInputValue={() => {
+          const newWorkInputArray = [...userEdit.workPlace, ""];
+          setUserEdit({ ...userEdit, workPlace: newWorkInputArray });
+        }}
+        changeSingleWorkPlace={(e, index) => {
+          const newWorkInputArray = [...userEdit.workPlace];
+          newWorkInputArray[index] = e.target.value;
+          setUserEdit({ ...userEdit, workPlace: newWorkInputArray });
+        }}
+        editLanguage={userEdit?.languages}
+        addLanguagesInputValue={() => {
+          const newLangArr = [...userEdit.languages, ""];
+          setUserEdit({ ...userEdit, languages: newLangArr });
+        }}
+        editLanguagesInputChange={(e, index) => {
+          const newLangArr = [...userEdit.languages];
+          newLangArr[index] = e.target.value;
+          setUserEdit({ ...userEdit, languages: newLangArr });
+        }}
+        editStudiedAt={userEdit?.studiedAt}
+        addStudiedAt={() => {
+          const newLangArr = [...userEdit.studiedAt, {}];
+          setUserEdit({ ...userEdit, studiedAt: newLangArr });
+        }}
+        editInstituteNameChange={(e, index) => {
+          const instituteNameChangeArray = [...userEdit.studiedAt];
+          instituteNameChangeArray[index].instituteName = e.target.value;
+          setUserEdit({ ...userEdit, studiedAt: instituteNameChangeArray });
+        }}
+        editInstituteLocationChange={(e, index) => {
+          const instituteNameChangeArray = [...userEdit.studiedAt];
+          instituteNameChangeArray[index].locatedAt = e.target.value;
+          setUserEdit({ ...userEdit, studiedAt: instituteNameChangeArray });
         }}
       />
 
@@ -132,11 +220,12 @@ const Profile = () => {
         <div className="text-2xl font-bold pb-1 flex justify-between">
           <h1>Details</h1>
           <div
-          className="cursor-pointer"
-           onClick={()=>{
-            setOpenEditUserModal(true)
-          }} >
-            <FontAwesomeIcon icon={faEdit}/>
+            className="cursor-pointer"
+            onClick={() => {
+              setOpenEditUserModal(true);
+            }}
+          >
+            <FontAwesomeIcon icon={faEdit} />
           </div>
         </div>
         <div>

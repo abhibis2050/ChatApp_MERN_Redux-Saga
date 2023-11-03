@@ -72,15 +72,14 @@ const GroupMessages = () => {
   }, [selectedGroupChatId]);
 
   return (
-    <div>
-      <>
-        <div className=" rounded-3xl">
-          <div className="space-y-3 h-full rounded-3xl">
+    <div className="h-full">
+        <div className=" rounded-3xl h-full">
+          <div className="space-y-3 h-full rounded-3xl ">
             {selectedGroupChatId === "" ? (
               <>
                 <div className="rounded-3xl h-full bg-white">
                   <img
-                    //   src={NoGroup}
+                      src={NoGroup}
                     alt=""
                     className="rounded-3xl h-full mx-auto"
                   />
@@ -232,7 +231,7 @@ const GroupMessages = () => {
             )}
           </div>
         </div>
-      </>
+     
     </div>
   );
 };

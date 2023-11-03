@@ -147,21 +147,18 @@ exports.addComments = async (req, res) => {
   }
 };
 
-
-
-exports.editMyBlog=async(req,res)=>{
+exports.editMyBlog = async (req, res) => {
   try {
     let blogEditImageFile;
-    const{blogId} = req.query
- 
+    const { blogId } = req.query;
 
-    if(req.files){
-      if(req.files.BlogImage){
-        console.log(req.files.BlogImage)
+    if (req.files) {
+      if (req.files.BlogImage) {
+        console.log(req.files.BlogImage);
         blogEditImageFile = await cloudinary.v2.uploader.upload(
           req.files.BlogImage.tempFilePath,
           { folder: "Blog_Images" }
-        )
+        );
       }
     }
 
@@ -172,7 +169,9 @@ exports.editMyBlog=async(req,res)=>{
 
     req.body.image = blogingImage ? blogingImage : "";
 
-    const updateBlog = await Blog.findOneAndUpdate({_id:blogId},req.body,{new:true})
+    const updateBlog = await Blog.findOneAndUpdate({ _id: blogId }, req.body, {
+      new: true,
+    });
     return res.status(200).send({
       status: true,
       message: "Blog Updated succefully",
@@ -181,4 +180,4 @@ exports.editMyBlog=async(req,res)=>{
   } catch (error) {
     return res.status(500).send({ status: false, message: error.message });
   }
-}
+};
