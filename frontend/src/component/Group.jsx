@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import Blank from "../assets/blank.png";
 import { setSelectedGroupChatId } from "../redux/app/GroupSlice";
 import { EachChatComponent } from "./ChatComponent";
-import { createTracing } from "trace_events";
 
 const Group = () => {
   const dispatch = useDispatch();
@@ -71,17 +70,17 @@ const Group = () => {
           setGroupAvatar(e.target.files[0]);
         }}
         addGroupMemberChange={(e) => {
-          console.log(e);
-          e.map((singleGroupMember) => {
-            // console.log(singleGroupMember)
-            if (
-              createGroup.groupMembers.includes(singleGroupMember.value) ===
-              false
-            ) {
-              createGroup.groupMembers.push(singleGroupMember.value);
-            }
-          });
-          console.log("2---->",createGroup.groupMembers);
+          // console.log(e);
+          // e.map((singleGroupMember) => {
+          //   // console.log(singleGroupMember)
+          //   if (
+          //     createGroup.groupMembers.includes(singleGroupMember.value) ===
+          //     false
+          //   ) {
+          //     createGroup.groupMembers.push(singleGroupMember.value);
+          //   }
+          // });
+          // console.log("2---->",createGroup.groupMembers);
 
 
         }}
