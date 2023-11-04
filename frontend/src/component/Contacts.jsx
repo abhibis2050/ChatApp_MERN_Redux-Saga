@@ -4,15 +4,16 @@ import socket from "../customHooks/SocketHooks";
 import { AllContactComponent, ContactComponent } from "../pages/ChatPage";
 import Blank from "../assets/blank.png";
 import Select from "react-select";
-import { setSelectedContact} from "../redux/app/UserSlice";
+import { setSelectedContact, setSideBarIsActive } from "../redux/app/UserSlice";
+import { setSelectedChat } from "../redux/app/ChatSlice";
 
 const Contacts = () => {
   const dispatch = useDispatch();
-  const { token, authUser} = useSelector((state) => state.auth);
+  const { token, authUser } = useSelector((state) => state.auth);
   const { selectedContact } = useSelector((state) => state.user);
   const { allChats } = useSelector((state) => state.chat);
 
-  console.log("selectedContact---->",selectedContact);
+  console.log("selectedContact---->", selectedContact);
 
   const [contacts, setContacts] = useState({
     allContact: true,
@@ -31,7 +32,6 @@ const Contacts = () => {
     allFriendRequestRecievedId,
   } = useSelector((state) => state.user);
 
-  
   useEffect(() => {
     dispatch({
       type: "GET_ALL_CONTACTS",
@@ -63,16 +63,16 @@ const Contacts = () => {
     }
   }, [authUser, contacts]);
 
-  useEffect(()=>{
-    if(selectedContact!==null){
+  useEffect(() => {
+    if (selectedContact !== null) {
       dispatch({
-        type:"GET_BLOGS_BY_ID",
-        payload:{
-          userId:selectedContact
-        }
-      })
+        type: "GET_BLOGS_BY_ID",
+        payload: {
+          userId: selectedContact,
+        },
+      });
     }
-  },[selectedContact])
+  }, [selectedContact]);
 
   const addFriendHandler = (friendId) => {
     if (authUser._id) {
@@ -234,8 +234,12 @@ const Contacts = () => {
                             unfriendHandler(singleContact?._id)
                           }
                           tag={"Unfriend"}
-                          onContactClick={()=>{
-                            dispatch(setSelectedContact({selectedContact:singleContact?._id}))
+                          onContactClick={() => {
+                            dispatch(
+                              setSelectedContact({
+                                selectedContact: singleContact?._id,
+                              })
+                            );
                           }}
                         />
                       </>
@@ -259,8 +263,12 @@ const Contacts = () => {
                             cancelSendFriendRequestHandler(singleContact?._id)
                           }
                           tag={"Unsend"}
-                          onContactClick={()=>{
-                            dispatch(setSelectedContact({selectedContact:singleContact?._id}))
+                          onContactClick={() => {
+                            dispatch(
+                              setSelectedContact({
+                                selectedContact: singleContact?._id,
+                              })
+                            );
                           }}
                         />
                       </>
@@ -291,8 +299,12 @@ const Contacts = () => {
                               singleContact?._id
                             )
                           }
-                          onContactClick={()=>{
-                            dispatch(setSelectedContact({selectedContact:singleContact?._id}))
+                          onContactClick={() => {
+                            dispatch(
+                              setSelectedContact({
+                                selectedContact: singleContact?._id,
+                              })
+                            );
                           }}
                         />
                       </>
@@ -314,8 +326,12 @@ const Contacts = () => {
                             addFriendHandler(singleContact?._id)
                           }
                           tag={"Add"}
-                          onContactClick={()=>{
-                            dispatch(setSelectedContact({selectedContact:singleContact?._id}))
+                          onContactClick={() => {
+                            dispatch(
+                              setSelectedContact({
+                                selectedContact: singleContact?._id,
+                              })
+                            );
                           }}
                         />
                       </>
@@ -343,18 +359,42 @@ const Contacts = () => {
                       }
                       tag={"Message"}
                       onButtonClick={() => {
-                        console.log(singleFriend);
-                        dispatch({
-                          type: "CREATE_CHAT",
-                          payload: {
-                            body: {
-                              userOne: singleFriend?._id,
-                              userTwo: authUser?._id,
-                            },
-                            oppositeId: singleFriend,
-                            token,
-                          },
-                        });
+                        {
+                          allChats.map((singleChat) => {
+                            if (
+                              singleChat?.oppositeId?._id.toString() ===
+                              singleFriend?._id
+                            ) {
+                              // console.log(singleFriend);
+                              // console.log(
+                              //   singleChat?.oppositeId?._id.toString()
+                              // );
+                              dispatch(
+                                setSideBarIsActive({
+                                  message: true,
+                                  group: false,
+                                  contact: false,
+                                  notification: false,
+                                  profile: false,
+                                })
+                              );
+                              dispatch(setSelectedChat({selectedSingleChat:singleChat}));
+                            } else {
+                              console.log(singleFriend);
+                              // dispatch({
+                              //   type: "CREATE_CHAT",
+                              //   payload: {
+                              //     body: {
+                              //       userOne: singleFriend?._id,
+                              //       userTwo: authUser?._id,
+                              //     },
+                              //     oppositeId: singleFriend,
+                              //     token,
+                              //   },
+                              // });
+                            }
+                          });
+                        }
                       }}
                       tagTwo={"Unfriend"}
                       onButtonClickTwo={() =>
