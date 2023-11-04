@@ -1,24 +1,48 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ModalComponent from "./Modal";
 import { useDispatch, useSelector } from "react-redux";
 import Blank from "../assets/blank.png";
 import { setSelectedGroupChatId } from "../redux/app/GroupSlice";
 import { EachChatComponent } from "./ChatComponent";
+import { createTracing } from "trace_events";
 
 const Group = () => {
   const dispatch = useDispatch();
+  const formData = new FormData();
   const { allGroups } = useSelector((state) => state.group);
+  const { token } = useSelector((state) => state.auth);
 
   const [groupModalOpen, setGroupModalOpen] = useState(false);
-  const [groupAvatar, setGroupAvatar] = useState(false);
-  const [createGroup, , setCreateGroup] = useState({
+  const [groupAvatar, setGroupAvatar] = useState(undefined);
+  const [createGroup, setCreateGroup] = useState({
     groupName: "",
     groupMembers: [],
   });
 
   console.log(createGroup);
 
-  const addGroupHandler = () => {};
+  const addGroupHandler = () => {
+    if (groupAvatar === undefined) {
+      formData.append("groupName", createGroup?.groupName);
+      formData.append("groupMembers", createGroup?.groupMembers);
+    } else {
+      formData.append("groupName", createGroup?.groupName);
+      formData.append("groupMembers", createGroup?.groupMembers);
+      formData.append("groupAvatar", groupAvatar);
+    }
+
+    dispatch({
+      type: "CREATE_GROUP",
+      payload: {
+        body: formData,
+        token: token,
+      },
+    });
+
+    setGroupModalOpen(false);
+    setGroupModalOpen(false);
+    setGroupAvatar(undefined);
+  };
 
   return (
     <div className="space-y-2">
@@ -34,19 +58,34 @@ const Group = () => {
         onClickButton={addGroupHandler}
         onClickButtonTwo={() => {
           setGroupModalOpen(false);
+          setCreateGroup({
+            groupName: "",
+            groupMembers: [],
+          });
         }}
         groupNameValue={createGroup?.groupName}
-        groupNameChange={(e)=>{
-          setCreateGroup({...createGroup,groupName:e.target.value})
+        groupNameChange={(e) => {
+          setCreateGroup({ ...createGroup, groupName: e.target.value });
         }}
         groupIconUploadChange={(e) => {
           setGroupAvatar(e.target.files[0]);
         }}
         addGroupMemberChange={(e) => {
-          setCreateGroup({ ...createGroup, groupMembers: e });
+          console.log(e);
+          e.map((singleGroupMember) => {
+            // console.log(singleGroupMember)
+            if (
+              createGroup.groupMembers.includes(singleGroupMember.value) ===
+              false
+            ) {
+              createGroup.groupMembers.push(singleGroupMember.value);
+            }
+          });
+          console.log("2---->",createGroup.groupMembers);
+
+
         }}
       />
-
       {/* ADD Group */}
       <div className="flex justify-end">
         <button
@@ -58,7 +97,6 @@ const Group = () => {
           Add Group
         </button>
       </div>
-
       {/* Group Chats */}
       <div className="overflow-y-auto h-[70vh] no-scrollbar rounded-b-3xl pt-6">
         {allGroups.map((singleGroup) => {

@@ -1,6 +1,6 @@
 import { call, put, takeEvery } from "redux-saga/effects";
-import { GetAllGroupsAction, GetGroupsByIdAction, RemovefromGroupAction, RemovefromGroupAdminAction, UpdateAsGroupAdminAction, uploadGroupProfileIconAction } from "../api/GroupAction";
-import {  setAllGroups, setSelectedGroupDetails } from "../app/GroupSlice";
+import { CreateGroupAction, GetAllGroupsAction, GetGroupsByIdAction, RemovefromGroupAction, RemovefromGroupAdminAction, UpdateAsGroupAdminAction, uploadGroupProfileIconAction } from "../api/GroupAction";
+import {  setAllGroups, setCreateGroup, setSelectedGroupDetails } from "../app/GroupSlice";
 
 function* getAllGroupsSaga(action) {
   try {
@@ -81,7 +81,23 @@ function* getGroupDetailsByIdSaga(action) {
     }
   }
 
+  function* getCreateGroup(action) {
+    try {
+      const response = yield call(CreateGroupAction, action.payload);
+      console.log("getCreateGroup---->", response);
+      if(response.status===201){
+        yield put(setCreateGroup({newGroup:response?.data?.data}))
+      }
+  
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+
+
 export function* watchGroup() {
+  yield takeEvery("CREATE_GROUP", getCreateGroup);
   yield takeEvery("GET_ALL_GROUPS", getAllGroupsSaga);
   yield takeEvery("GET_GROUP_DETAIL_BY_ID", getGroupDetailsByIdSaga);
   yield takeEvery("UPLOAD_GROUP_PROFILE_ICON", uploadGroupProfileIconSaga);

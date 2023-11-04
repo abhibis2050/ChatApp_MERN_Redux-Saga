@@ -23,6 +23,9 @@ export const groupSlice = createSlice({
     setGroupIcon: (state, action) => {
       state.groupIcon = action.payload.groupIcon;
     },
+    setCreateGroup: (state, action) => {
+      state.allGroups = [...state.allGroups, action.payload.newGroup];
+    },
   },
 });
 
@@ -31,5 +34,6 @@ export const {
   setSelectedGroupDetails,
   setSelectedGroupChatId,
   setGroupIcon,
+  setCreateGroup
 } = groupSlice.actions;
 export const groupReducer = groupSlice.reducer;
