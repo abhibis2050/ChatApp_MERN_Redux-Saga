@@ -359,16 +359,44 @@ const Contacts = () => {
                       }
                       tag={"Message"}
                       onButtonClick={() => {
+                        // console.log(singleFriend);
+                        if(allChats.length===0){
+                          console.log(singleFriend);
+                          dispatch({
+                              type: "CREATE_CHAT",
+                              payload: {
+                                body: {
+                                  userOne: singleFriend?._id,
+                                  userTwo: authUser?._id,
+                                },
+                                oppositeId: singleFriend,
+                                token,
+                              },
+                            });
+                        }
                         {
-                          allChats.map((singleChat) => {
+                          allChats?.map((singleChat) => {
                             if (
-                              singleChat?.oppositeId?._id.toString() ===
-                              singleFriend?._id
+                              singleChat?.oppositeId?._id.toString() !==
+                              singleFriend?._id.toString()
                             ) {
-                              // console.log(singleFriend);
-                              // console.log(
-                              //   singleChat?.oppositeId?._id.toString()
-                              // );
+                              console.log(singleFriend);
+                              dispatch({
+                                type: "CREATE_CHAT",
+                                payload: {
+                                  body: {
+                                    userOne: singleFriend?._id,
+                                    userTwo: authUser?._id,
+                                  },
+                                  oppositeId: singleFriend,
+                                  token,
+                                },
+                              });
+                            } else {
+                              console.log(singleFriend);
+                              console.log(
+                                singleChat?.oppositeId?._id.toString()
+                              );
                               dispatch(
                                 setSideBarIsActive({
                                   message: true,
@@ -378,20 +406,11 @@ const Contacts = () => {
                                   profile: false,
                                 })
                               );
-                              dispatch(setSelectedChat({selectedSingleChat:singleChat}));
-                            } else {
-                              console.log(singleFriend);
-                              // dispatch({
-                              //   type: "CREATE_CHAT",
-                              //   payload: {
-                              //     body: {
-                              //       userOne: singleFriend?._id,
-                              //       userTwo: authUser?._id,
-                              //     },
-                              //     oppositeId: singleFriend,
-                              //     token,
-                              //   },
-                              // });
+                              dispatch(
+                                setSelectedChat({
+                                  selectedSingleChat: singleChat,
+                                })
+                              );
                             }
                           });
                         }
